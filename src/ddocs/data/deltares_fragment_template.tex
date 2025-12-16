@@ -1,0 +1,17 @@
+%------------------------------------------------------------------------------
+% Pandoc compatibility commands
+%------------------------------------------------------------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\providecommand{\passthrough}[1]{#1}
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+%------------------------------------------------------------------------------
+% Content (no document structure)
+%------------------------------------------------------------------------------
+$body$
+

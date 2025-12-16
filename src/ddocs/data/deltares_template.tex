@@ -1,0 +1,69 @@
+\documentclass{deltares_manual}
+
+%------------------------------------------------------------------------------
+% Document metadata
+%------------------------------------------------------------------------------
+$if(title)$
+\title{$title$}
+$endif$
+
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+
+$if(date)$
+\date{$date$}
+$endif$
+
+%------------------------------------------------------------------------------
+% Additional packages and settings
+%------------------------------------------------------------------------------
+\usepackage{graphicx}
+\graphicspath{{pictures/}{./pictures/}{../pictures/}}
+
+% Configure listings for code blocks
+\usepackage{listings}
+\lstset{
+  breaklines=true,
+  breakatwhitespace=true,
+  basicstyle=\ttfamily\small,
+  columns=flexible,
+  keepspaces=true,
+  showstringspaces=false,
+  postbreak=\mbox{\textcolor{red}{$$\hookrightarrow$$}\space},
+}
+
+%------------------------------------------------------------------------------
+% Pandoc compatibility commands
+%------------------------------------------------------------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\newcommand{\passthrough}[1]{#1}
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+%------------------------------------------------------------------------------
+% Document
+%------------------------------------------------------------------------------
+\begin{document}
+
+  $if(title)$
+  \maketitle
+  $endif$
+
+  $if(abstract)$
+  \begin{abstract}
+    $abstract$
+  \end{abstract}
+  $endif$
+
+  $if(toc)$
+  \tableofcontents
+  $endif$
+
+  $body$
+
+\end{document}
