@@ -45,6 +45,7 @@ jobs:
 
       - name: check pandoc installation
         run: |
+          uv run  --active python -c "import ddocs"
           pandoc --version
 
       - name: tests
