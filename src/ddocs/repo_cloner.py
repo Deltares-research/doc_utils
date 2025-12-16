@@ -1,9 +1,9 @@
+import os
 import tempfile
 import shutil
 from pathlib import Path
 from typing import Optional
 from git import Repo
-import argparse
 
 
 class RepoCloner:
@@ -37,7 +37,15 @@ class RepoCloner:
         repo_name = self.repo_url.rstrip('/').split('/')[-1].replace('.git', '')
         self.repo_path = self.temp_dir / repo_name
 
-        self.repo = Repo.clone_from(self.repo_url, str(self.repo_path))
+        # Configure git environment to not prompt for credentials (needed for public repos in CI)
+        env = os.environ.copy()
+        env['GIT_TERMINAL_PROMPT'] = '0'
+
+        self.repo = Repo.clone_from(
+            self.repo_url,
+            str(self.repo_path),
+            env=env
+        )
 
         return self.repo_path
 
