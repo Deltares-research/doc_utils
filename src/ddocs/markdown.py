@@ -6,10 +6,11 @@ that can be included in PDF documentation. It uses Pandoc for the conversion.
 
 from pathlib import Path
 import subprocess
-import argparse
-import sys
 from ddocs.pandoc_utils import sanity_check
-from ddocs import __path__, __version__
+import argparse
+from ddocs import __path__
+from ddocs.pandoc_utils import check_pandoc_installed
+
 data_dir = Path(__path__[0]) / 'data'
 
 
@@ -342,82 +343,9 @@ def convert_all_markdown_files(
     return success_count, len(md_files)
 
 
-def create_parser():
-    parser = argparse.ArgumentParser(
-        prog='ddocs',
-        description='Deltares HMS documentation utility tool',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  # Convert all markdown files in user_docs
-  python scripts/markdown_to_latex.py
-  
-  # Convert with custom input/output directories
-  python scripts/markdown_to_latex.py --input docs/mkdocs/guides --output docs/latex/guides
-  
-  # Generate standalone LaTeX documents
-  python scripts/markdown_to_latex.py --standalone
-  
-  # Use a custom template
-  python scripts/markdown_to_latex.py --template my_template.tex
-        """
-    )
-    parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}"
-    )
+def mark_down_to_latex_cli(args: argparse.Namespace) -> int:
+    check_pandoc_installed()
 
-    subparsers = parser.add_subparsers(
-        title='operation type',
-        description='Select the operation to perform',
-        dest='command',
-        required=True,
-        help='Available operations: markdown_to_latex'
-    )
-
-    # sub-command
-    markdown_to_latex = subparsers.add_parser(
-        'markdown_to_latex',
-        help='Convert Markdown to LaTeX',
-    )
-
-    markdown_to_latex.add_argument(
-        '--input',
-        "-i",
-        type=Path,
-        required=True,
-        help='Input directory with Markdown files'
-    )
-    markdown_to_latex.add_argument(
-        '--output',
-        type=Path,
-        required=True,
-        help='Output directory for LaTeX files'
-    )
-    markdown_to_latex.add_argument(
-        '--template',
-        type=Path,
-        help='Custom Pandoc LaTeX template'
-    )
-    markdown_to_latex.add_argument(
-        '--standalone',
-        action='store_true',
-        help='Generate standalone LaTeX documents (vs. fragments for inclusion)'
-    )
-    markdown_to_latex.add_argument(
-        '--pattern',
-        type=str,
-        default='*.md',
-        help='Glob pattern for matching files (default: *.md)'
-    )
-    return parser
-
-
-def converter():
-    """Main entry point for the script."""
-    parser = create_parser()
-    args = parser.parse_args()
-
-    # Check if Pandoc is installed
     if not sanity_check():
         print("Error: Pandoc is not installed or not in PATH")
         print("Please install Pandoc: https://pandoc.org/installing.html")
@@ -465,8 +393,4 @@ def converter():
         return 1
 
     return 0
-
-
-if __name__ == '__main__':
-    sys.exit(converter())
 

@@ -54,7 +54,7 @@ docs = [
 "Bug Tracker" = "https://github.com/Deltares/toets-svkw/issues"
 
 [project.scripts]
-ddocs = "ddocs.markdown:converter"
+ddocs = "ddocs.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ddocs"]

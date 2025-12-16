@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 from typing import Optional
 from git import Repo
+import argparse
 
 
 class RepoCloner:
@@ -142,3 +143,25 @@ class RepoCloner:
         """Context manager exit - cleanup temporary directory."""
         self.cleanup()
         return False
+
+
+def clone_repo_cli(output_dir: Path):
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"Cloning LatexInstallation repository...")
+    cloner = RepoCloner("https://github.com/Deltares/LatexInstallation")
+    cloner.clone()
+
+    # Copy the template paths
+    paths = [
+        "MiKTeX/tex/latex/deltares",
+        "MiKTeX/tex/latex/nomentbl/deltares",
+        "MiKTeX/bibtex/bst/deltares"
+    ]
+
+    for path in paths:
+        print(f"Copying {path}...")
+        cloner.copy_file(path, output_dir)
+
+    print(f"✓ Template files copied to {output_dir}")
+    return 0
