@@ -344,7 +344,7 @@ def convert_all_markdown_files(
 
 
 def mark_down_to_latex_cli(args: argparse.Namespace) -> int:
-    check_pandoc_installed()
+    # check_pandoc_installed()
 
     if not sanity_check():
         print("Error: Pandoc is not installed or not in PATH")
