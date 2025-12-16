@@ -1,7 +1,7 @@
 import subprocess
 from pypandoc.pandoc_download import download_pandoc
 
-def check_pandoc_installed() -> bool:
+def check_pandoc_installed():
     """Check if Pandoc is installed and available.
 
     Returns:
