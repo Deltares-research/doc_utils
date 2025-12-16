@@ -1,5 +1,5 @@
 [project]
-name = "Deltares-Docs"
+name = "Deltares-HMS-Docs"
 version = "0.1.0"
 description = "Documentation utility "
 authors = [
@@ -53,7 +53,7 @@ docs = [
 "Bug Tracker" = "https://github.com/Deltares/toets-svkw/issues"
 
 [project.scripts]
-toets-svkw = "tsvkw.cli:main"
+ddocs = "ddocs.markdown:converter"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ddocs"]
