@@ -1,0 +1,466 @@
+% Pandoc compatibility commands
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\providecommand{\passthrough}[1]{#1}
+
+%------------------------------------------------------------------------------
+% Pandoc compatibility commands
+%------------------------------------------------------------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\providecommand{\passthrough}[1]{#1}
+
+
+%------------------------------------------------------------------------------
+% Content (no document structure)
+%------------------------------------------------------------------------------
+\section{Installation Guide using the Zip
+File}\label{installation-guide-using-the-zip-file}
+
+This guide explains how to install the CIP-tool from a zip file
+containing all necessary components. This method is for users who
+received the complete package (zip file).
+
+\subsection{Table of Contents}\label{table-of-contents}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \hyperref[whats-included]{What's Included}
+\item
+  \hyperref[prerequisites]{Prerequisites}
+\item
+  \hyperref[installation-steps]{Installation Steps}
+\item
+  \hyperref[configuration]{Configuration}
+\item
+  \hyperref[verifying-installation]{Verifying Installation}
+\item
+  \hyperref[next-steps]{Next Steps}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{What's Included}\label{whats-included}
+
+The zip file contains:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Wheel file} (\passthrough{\lstinline!.whl!}) - The CIP-tool
+  Python package
+\item
+  \textbf{bin/} - External dependencies (RGWM and DIMR runners)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \passthrough{\lstinline!rgwm\_versie2.4.3/!} - Randvoorwaarden
+    Generator Water Modellen
+  \item
+    \passthrough{\lstinline!dimr\_runners/sobek\_dimr/!} - DIMR with
+    Sobek support
+  \item
+    \passthrough{\lstinline!SingleRunner/!} - SingleRunner wheel (if
+    applicable)
+  \end{itemize}
+\item
+  \textbf{examples/} - Example configuration and input files
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \passthrough{\lstinline!config.yaml!} - Pre-configured example
+  \item
+    \passthrough{\lstinline!inputs/!} - Sample input files
+  \item
+    \passthrough{\lstinline!test\_model/!} - Example model for testing
+  \end{itemize}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Prerequisites}\label{prerequisites}
+
+Before installing CIP-tool, ensure you have:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python 3.11.x} - The tool requires Python version 3.11
+\item
+  \textbf{pip} - Python package installer (usually included with Python)
+\item
+  \textbf{Windows OS} - Required for running Sobek simulations
+\end{itemize}
+
+\subsubsection{Check Your Python
+Version}\label{check-your-python-version}
+
+\begin{lstlisting}
+python --version
+\end{lstlisting}
+
+You should see output like: \passthrough{\lstinline!Python 3.11.x!}
+
+If you don't have Python 3.11, you'll need to install it from the
+official Python installer or contact your system administrator.
+
+\subsubsection{Install with Conda
+(Optional)}\label{install-with-conda-optional}
+
+If you prefer using Conda for Python environment management, you can
+create a dedicated environment for CIP-tool with Python 3.11:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Create a new conda environment:}
+
+\begin{lstlisting}
+conda create -n cip-tool python=3.11
+\end{lstlisting}
+\item
+  \textbf{Activate the environment:}
+
+\begin{lstlisting}
+conda activate cip-tool
+\end{lstlisting}
+\item
+  \textbf{Verify the Python version:}
+
+\begin{lstlisting}
+python --version
+\end{lstlisting}
+\end{enumerate}
+
+Once activated, you can proceed with the installation steps below using
+this conda environment. Remember to activate the environment each time
+you want to use CIP-tool.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Installation Steps}\label{installation-steps}
+
+\subsubsection{Step 1: Extract the Zip
+File}\label{step-1-extract-the-zip-file}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Locate the downloaded zip file (e.g.,
+  \passthrough{\lstinline!CIP-tool-offline-v1.1.0.zip!})
+\item
+  Extract it to a location on your system, for example:
+
+\begin{lstlisting}
+C:\tools\CIP-tool\
+\end{lstlisting}
+\end{enumerate}
+
+After extraction, your directory should look like:
+
+\begin{lstlisting}
+C:\tools\CIP-tool\
+|-- CIP_tool-1.1.0-py3-none-any.whl
+|-- bin/
+|   |-- dimr_runners/
+|   |   `-- sobek_dimr/
+|   |       `-- x64/
+|   |-- rgwm_versie2.4.3/
+|   |   |-- bin/
+|   |   |   `-- rgwm.exe
+|   |   |-- data/
+|   |   `-- ...
+|   `-- SingleRunner/
+|       `-- singlerunner-2.0.1-py3-none-any.whl
+`-- examples/
+    |-- config.yaml
+    |-- inputs/
+    `-- test_model/
+\end{lstlisting}
+
+\subsubsection{Step 2: Install the
+Wheel}\label{step-2-install-the-wheel}
+
+Open PowerShell or Command Prompt and navigate to the extraction
+directory:
+
+\begin{lstlisting}
+cd C:\tools\CIP-tool
+\end{lstlisting}
+
+Install the CIP-tool wheel using pip:
+
+\begin{lstlisting}
+pip install CIP_tool-1.1.0-py3-none-any.whl
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Note:} Replace \passthrough{\lstinline!1.1.0!} with the actual
+version number in your wheel file name.
+\end{quote}
+
+\subsubsection{Step 3: Verify
+Installation}\label{step-3-verify-installation}
+
+Check that the installation was successful:
+
+\begin{lstlisting}
+cip-tool --version
+\end{lstlisting}
+
+You should see the installed version number.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Configuration}\label{configuration}
+
+\subsubsection{Update Configuration
+File}\label{update-configuration-file}
+
+Edit the \passthrough{\lstinline!config.yaml!} file to point to the
+correct paths for the external tools.
+
+If you extracted to \passthrough{\lstinline!C:\\tools\\CIP-tool\\!},
+your \passthrough{\lstinline!config.yaml!} should look like:
+
+\begin{lstlisting}
+DIMR:
+    path: C:/tools/CIP-tool/bin/dimr_runners/sobek_dimr/x64/dimr/scripts
+
+RGWM:
+    path: C:/tools/CIP-tool/bin/rgwm_versie2.4.3/bin/rgwm.exe
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Important:} - Use forward slashes (\passthrough{\lstinline!/!})
+in paths, even on Windows, or use escaped backslashes
+(\passthrough{\lstinline!\\\\!}) - Adjust the paths if you extracted to
+a different location
+\end{quote}
+
+\subsubsection{Verify Tool Paths}\label{verify-tool-paths}
+
+Check that the paths in your config file are correct (open a powershell
+and type the following commands):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Verify RGWM executable exists:}
+
+\begin{lstlisting}
+Test-Path C:\tools\CIP-tool\bin\rgwm_versie2.4.3\bin\rgwm.exe
+\end{lstlisting}
+\item
+  \textbf{Verify DIMR scripts folder exists:}
+
+\begin{lstlisting}
+Test-Path C:\tools\CIP-tool\bin\dimr_runners\sobek_dimr\x64\dimr\scripts
+\end{lstlisting}
+\end{enumerate}
+
+Both commands should return \passthrough{\lstinline!True!}.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Verifying Installation}\label{verifying-installation}
+
+\subsubsection{Test CIP-tool Commands}\label{test-cip-tool-commands}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Check version:}
+
+\begin{lstlisting}
+cip-tool --version
+\end{lstlisting}
+\item
+  \textbf{View available commands:}
+
+\begin{lstlisting}
+cip-tool --help
+\end{lstlisting}
+\end{enumerate}
+
+\subsubsection{Run a Test Scenario}\label{run-a-test-scenario}
+
+If you have the complete examples folder, you can test the full
+workflow:
+
+\begin{lstlisting}
+# Generate boundary conditions
+cip-tool generate -i examples/inputs/invoer_CIP_tabel.csv -o output
+
+# Run Sobek simulation 
+cip-tool run-sobek -o output
+
+# extract results
+cip-tool extract -i examples/inputs/variabelen_voor_bc_file_deelmodel.csv -o examples/extract-results/rmm_results
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Directory Structure
+Reference}\label{directory-structure-reference}
+
+Your working project structure should follow this pattern:
+
+\begin{lstlisting}
+your-project/
+|-- config.yaml              # Configuration file (points to bin/ folder)
+|-- inputs/
+|   |-- invoer_CIP_tabel.csv              # Input scenarios
+|   `-- variabelen_voor_bc_file_deelmodel.csv  # Variables config
+|-- output/                  # Output directory (created automatically)
+|   |-- rgwm_results/
+|   `-- rmm_results/
+`-- test_model/              # Your Sobek model (if running simulations)
+    |-- dimr.xml
+    `-- dflow1d/
+\end{lstlisting}
+
+The \passthrough{\lstinline!bin/!} folder can remain in the extraction
+location (e.g., \passthrough{\lstinline!C:\\tools\\CIP-tool\\bin\\!})
+and be referenced from multiple projects via their
+\passthrough{\lstinline!config.yaml!} files.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Next Steps}\label{next-steps}
+
+After installation:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Read the next chapter
+  \passthrough{\lstinline!Command Line Interface!}} to learn how to use
+  CIP-tool commands
+\item
+  \textbf{Explore the examples folder} to understand the input file
+  formats
+\item
+  \textbf{Prepare your own scenario data} following the example formats
+\item
+  \textbf{Start using CIP-tool} with your models
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Troubleshooting}\label{troubleshooting}
+
+\subsubsection{Python Not Found}\label{python-not-found}
+
+If you get ``python is not recognized'':
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Make sure Python 3.11 is installed
+\item
+  Add Python to your PATH environment variable
+\item
+  Try using \passthrough{\lstinline!py -3.11!} instead of
+  \passthrough{\lstinline!python!}
+\end{enumerate}
+
+\subsubsection{Wheel Installation Fails}\label{wheel-installation-fails}
+
+If pip fails to install the wheel:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Ensure you have pip installed:
+  \passthrough{\lstinline!python -m ensurepip --upgrade!}
+\item
+  Try upgrading pip:
+  \passthrough{\lstinline!python -m pip install --upgrade pip!}
+\item
+  Use the full pip command:
+  \passthrough{\lstinline!python -m pip install CIP\_tool-1.1.0-py3-none-any.whl!}
+\end{enumerate}
+
+\subsubsection{External Tools Not Found}\label{external-tools-not-found}
+
+If CIP-tool can't find RGWM or DIMR:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Verify the paths in your \passthrough{\lstinline!config.yaml!} are
+  correct
+\item
+  Use absolute paths in the config file
+\item
+  Make sure the executables exist at the specified locations
+\item
+  Check file permissions (executables should be runnable)
+\end{enumerate}
+
+\subsubsection{Permission Issues}\label{permission-issues}
+
+If you get permission errors:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Run PowerShell as Administrator
+\item
+  Or install to a user directory:
+  \passthrough{\lstinline!pip install --user CIP\_tool-1.1.0-py3-none-any.whl!}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Need Help?}\label{need-help}
+
+For additional support:
+
+\begin{itemize}
+\tightlist
+\item
+  Contact support: software.support@deltares.nl
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Updating CIP-tool}\label{updating-cip-tool}
+
+To update to a newer version:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Uninstall the current version:
+
+\begin{lstlisting}
+pip uninstall cip-tool
+\end{lstlisting}
+\item
+  Install the new wheel file:
+
+\begin{lstlisting}
+pip install CIP_tool-X.X.X-py3-none-any.whl
+\end{lstlisting}
+\item
+  Update the \passthrough{\lstinline!bin/!} folder if new versions of
+  external tools are included
+\end{enumerate}
+
+\begin{quote}
+\textbf{Note:} Your configuration files and project data will not be
+affected by the update.
+\end{quote}

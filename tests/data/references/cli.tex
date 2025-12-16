@@ -1,0 +1,885 @@
+% Pandoc compatibility commands
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\providecommand{\passthrough}[1]{#1}
+
+%------------------------------------------------------------------------------
+% Pandoc compatibility commands
+%------------------------------------------------------------------------------
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}%
+}
+\providecommand{\passthrough}[1]{#1}
+
+
+%------------------------------------------------------------------------------
+% Content (no document structure)
+%------------------------------------------------------------------------------
+\section{Command Line Interface (CLI)}\label{command-line-interface-cli}
+
+The CIP-tool provides a powerful command-line interface for generating,
+running, and extracting boundary conditions for hydraulic models. This
+guide covers all available commands, their options, and detailed usage
+examples.
+
+\subsection{Overview}\label{overview}
+
+The CIP-tool CLI consists of three main commands:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{\passthrough{\lstinline!generate!}} - Generate boundary
+  conditions from input scenarios
+\item
+  \textbf{\passthrough{\lstinline!run-sobek!}} - Execute Sobek hydraulic
+  model simulations
+\item
+  \textbf{\passthrough{\lstinline!extract!}} - Process and extract
+  boundary conditions for a nested model
+\end{enumerate}
+
+\subsubsection{General Usage}\label{general-usage}
+
+\begin{lstlisting}[language=bash]
+cip-tool [--version] [--help] <command> [<args>]
+\end{lstlisting}
+
+\subsubsection{Getting Help}\label{getting-help}
+
+View general help:
+
+\begin{lstlisting}[language=bash]
+cip-tool --help
+\end{lstlisting}
+
+View help for a specific command:
+
+\begin{lstlisting}[language=bash]
+cip-tool generate --help
+cip-tool run-sobek --help
+cip-tool extract --help
+\end{lstlisting}
+
+Check version:
+
+\begin{lstlisting}[language=bash]
+cip-tool --version
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Commands}\label{commands}
+
+\subsubsection{1. Generate Command}\label{generate-command}
+
+The \passthrough{\lstinline!generate!} command creates boundary
+conditions for hydraulic models based on input scenario data. The
+CIP-tool is configured to create boundary conditions for a 1D SOBEK
+model for the Rhine-Meuse estuary (\textbf{sobek-rmm-j15\_5-v4}). Under
+the hood, the CIP-tool creates the boundary conditions with the
+Randvoorwaarden Generator Water Modellen (\textbf{RGWM}). It sets all
+the input files for the RGWM and executes it.
+
+Typically, the scenarios to consider are so-called `Conditionele
+Illustratie Punten' (CIP's). These are the scenarios that have to be
+studied in the context of permitting for projects in the Dutch main
+rivers. The tool can also be used to create other scenarios.
+
+\paragraph{Syntax}\label{syntax}
+
+\begin{lstlisting}[language=bash]
+cip-tool generate -i INPUT_FILE -o OUTPUT_DIR [-c CONFIG_FILE] [--calculate-surge]
+\end{lstlisting}
+
+\paragraph{Arguments}\label{arguments}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.16}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.07}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.22}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.10}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.35}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Argument
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Short
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Long
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Required
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Input file & \passthrough{\lstinline!-i!} &
+\passthrough{\lstinline!--input-file!} & Yes & Path to the CSV file
+containing scenario data \\
+Output directory & \passthrough{\lstinline!-o!} &
+\passthrough{\lstinline!--output-dir!} & Yes & Path to output directory
+(created if it doesn't exist) \\
+Config file & \passthrough{\lstinline!-c!} &
+\passthrough{\lstinline!--config!} & No & Path to custom config.yaml
+file \\
+Calculate surge & & \passthrough{\lstinline!--calculate-surge!} & No &
+Enable iterative boundary condition generation \\
+\end{longtable}
+
+\paragraph{Input File Format}\label{input-file-format}
+
+The scenarios to consider are configured in a CSV input file. This file
+must contain the following columns, each row of the file contains the
+inut for one scenario:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.28}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.30}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.12}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.30}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Column
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Unit
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Required
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Scenario & Scenario identifier/number & - & Yes \\
+\seqsplit{Keringstoestand[}open/gesloten{]} & Barrier state (open/closed) & - &
+Yes \\
+Rijnafvoer te Lobith{[}m3/s{]} & Rhine discharge at Lobith & m³/s &
+Yes \\
+Maasafvoer te Lith{[}m3/s{]} & Meuse discharge at Lith & m³/s & Yes \\
+\seqsplit{Stormopzet[}m + NAP{]} & Maximum storm surge & m + NAP & Only without
+\passthrough{\lstinline!--calculate-surge!} \\
+\seqsplit{Zeewaterstand[}m + NAP{]} & Maximum total sea water level & m + NAP &
+Only with \passthrough{\lstinline!--calculate-surge!} \\
+\seqsplit{Windsnelheid[}m/s{]} & Wind speed & m/s & Yes \\
+\seqsplit{Windrichting[}-{]} & Wind direction & - & Yes \\
+\end{longtable}
+
+\textbf{Example input file
+(\passthrough{\lstinline!invoer\_CIP\_tabel.csv!}):}
+
+\begin{lstlisting}
+Scenario,Keringstoestand[open/gesloten],Rijnafvoer te Lobith[m3/s],Maasafvoer te Lith[m3/s],Stormopzet[m + NAP],Zeewaterstand[m + NAP],Windsnelheid[m/s],Windrichting[-]
+1,Open,9000,1861,3,5,19.38,WNW
+2,Gesloten,11500,2448,4.5,6,27.41,WNW
+\end{lstlisting}
+
+\paragraph{\texorpdfstring{Using the \texttt{-\/-calculate-surge}
+flag}{Using the -\/-calculate-surge flag}}\label{using-the---calculate-surge-flag}
+
+To generate the correct waterlevel timeseries at the downstream
+boundaries, the user should choose oe of two options: 1. Enter the
+maximum amount of storm surge in the column
+\passthrough{\lstinline!Stormopzet[m + NAP]!} and run the
+\passthrough{\lstinline!generate!} command \textbf{without} the flag
+\passthrough{\lstinline!--calculate-surge!}. The resulting downstream
+water level for each scenario is the sum of astronomical tides, sea
+level rise and the amount of storm surge entered in the input file. The
+storm surge is variable in time and reaches the set maximum. 2. Enter
+the maximum total water level at the Maasmondin the column
+\passthrough{\lstinline!Zeewaterstand[m + NAP]!} and the run the
+\passthrough{\lstinline!generate!} command \textbf{with} the flag
+\passthrough{\lstinline!--calculate-surge!}. The CIP tool will now
+calculate the amount of max storm surge that together with astronomical
+tides and sea level rise reaches the expected maximum water level. This
+option should be taken when creating scenarios for set CIP's in
+permitting projects.
+
+When \passthrough{\lstinline!--calculate-surge!} is enabled:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The tool performs iterative simulations to find the correct storm
+  surge values
+\item
+  Each iteration adjusts the surge to match target water levels
+\item
+  The process continues until convergence (typically 3-5 iterations)
+\item
+  Final adjusted surge values are saved for the model runs
+\item
+  The column \passthrough{\lstinline!Zeewaterstand[m + NAP]!} becomes
+  \textbf{required} in the input file
+\end{enumerate}
+
+\paragraph{Output}\label{output}
+
+The command creates the following outputs in the specified directory:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!rgwm\_results/!} - RGWM model input files and
+  scenarios
+\item
+  \passthrough{\lstinline!rmm\_results/!} - RMM model setup, including
+  boundary conditions and batch files to run the models.
+\item
+  Scenario-specific folders (e.g., \passthrough{\lstinline!Q0/!},
+  \passthrough{\lstinline!Q1/!}, etc.)
+\item
+  Log files and configuration files
+\end{itemize}
+
+\paragraph{Examples}\label{examples}
+
+\subparagraph{Basic Generation (Default
+Configuration)}\label{basic-generation-default-configuration}
+
+Generate boundary conditions using default tool paths:
+
+\begin{lstlisting}[language=bash]
+cip-tool generate -i examples/inputs/invoer_CIP_tabel.csv -o examples/output
+\end{lstlisting}
+
+\textbf{Output:}
+
+\begin{lstlisting}
+Done.
+\end{lstlisting}
+
+\subparagraph{Generation with Custom
+Configuration}\label{generation-with-custom-configuration}
+
+Use a custom configuration file to specify tool paths:
+
+\begin{lstlisting}[language=bash]
+cip-tool generate -i examples/inputs/invoer_CIP_tabel.csv -o examples/output -c examples/config.yaml
+\end{lstlisting}
+
+\subparagraph{Generation with Surge
+Calculation}\label{generation-with-surge-calculation}
+
+Enable iterative surge calculation to achieve target water levels:
+
+\begin{lstlisting}[language=bash]
+cip-tool generate -i examples/inputs/invoer_CIP_tabel.csv -o examples/output --calculate-surge
+\end{lstlisting}
+
+\textbf{Output:}
+
+\begin{lstlisting}
+Iteratie 1
+Done.
+Maximale waterstand in scenario Q0: 3.71 m +NAP
+Verschil met beoogde CIP maximale waterstand: -1.29 m + NAP
+Maximale waterstand in scenario Q1: 5.14 m +NAP
+Verschil met beoogde CIP maximale waterstand: -0.86 m + NAP
+Iteratie 2
+Done.
+Maximale waterstand in scenario Q0: 4.94 m +NAP
+Verschil met beoogde CIP maximale waterstand: -0.06 m + NAP
+Maximale waterstand in scenario Q1: 5.98 m +NAP
+Verschil met beoogde CIP maximale waterstand: -0.02 m + NAP
+Iteratie 3
+Done.
+Maximale waterstand in scenario Q0: 4.99 m +NAP
+Verschil met beoogde CIP maximale waterstand: -0.01 m + NAP
+Maximale waterstand in scenario Q1: 6.0 m +NAP
+Verschil met beoogde CIP maximale waterstand: 0.0 m + NAP
+Iteratie 4
+Done.
+Maximale waterstand in scenario Q0: 5.0 m +NAP
+Verschil met beoogde CIP maximale waterstand: 0.0 m + NAP
+Maximale waterstand in scenario Q1: 6.0 m +NAP
+Verschil met beoogde CIP maximale waterstand: 0.0 m + NAP
+Geconvergeerd na 4 iteraties
+
+Beoogde CIP condities:
+   Scenario  Zeewaterstand[m + NAP]
+0         1                     5.0
+1         2                     6.0
+
+Condities voor RGWM:
+   Scenario  Stormopzet[m + NAP]
+0         1                 4.36
+1         2                 5.38
+
+Verschillen:
+[0. 0.]
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{2. Run-Sobek Command}\label{run-sobek-command}
+
+The \passthrough{\lstinline!run-sobek!} command executes Sobek hydraulic
+model batch jobs and streams output to both the console and a log file.
+For scenarios with closing storm surge barriers, the Singlerunner is
+employed to account for correct operation of the storm surge barriers.
+
+\paragraph{Syntax}\label{syntax-1}
+
+\begin{lstlisting}[language=bash]
+cip-tool run-sobek (-o OUTPUT_DIR | -b BATCH_FILE)
+\end{lstlisting}
+
+\paragraph{Arguments}\label{arguments-1}
+
+You must provide \textbf{exactly one} of the following:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.25}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.09}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.22}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.44}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Argument
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Short
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Long
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Output directory & \passthrough{\lstinline!-o!} &
+\passthrough{\lstinline!--output-dir!} & Path to output directory in
+which the models were prepare using the
+\passthrough{\lstinline!generate!} command earlier (the run script is
+auto-resolved within this file) \\
+Batch file & \passthrough{\lstinline!-b!} &
+\passthrough{\lstinline!--batch-file!} & Direct path to the run bscript
+atch (.bat) file \\
+\end{longtable}
+
+\paragraph{System Requirements}\label{system-requirements}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Windows only} - Batch files require Windows operating system
+\item
+  Sobek/DIMR must be properly installed
+\item
+  Required environment variables should be set
+\end{itemize}
+
+\paragraph{Behavior}\label{behavior}
+
+\begin{itemize}
+\tightlist
+\item
+  Executes the Sobek batch file through Windows command processor
+\item
+  Streams all output to the console in real-time
+\item
+  Saves complete log to a \passthrough{\lstinline!.log!} file next to
+  the batch file
+\item
+  Returns the exit code of the batch process
+\item
+  Handles paths with spaces correctly
+\end{itemize}
+
+\paragraph{Examples}\label{examples-1}
+
+\subparagraph{Run with Output
+Directory}\label{run-with-output-directory}
+
+Automatically locate and run the batch file in the RMM results folder:
+
+\begin{lstlisting}[language=bash]
+cip-tool run-sobek -o examples/output
+\end{lstlisting}
+
+The tool looks for the batch file at:
+
+\begin{lstlisting}
+examples/output/rmm_results/bsub_joblist.bat
+\end{lstlisting}
+
+\textbf{Output:}
+
+\begin{lstlisting}
+C:\...\examples\output\rmm_results>set OMP_NUM_THREADS=2
+
+C:\...\examples\output\rmm_results>start ''[started in Q0]'' /d ''Q0/model_output'' /w /b run_sobekdimr.bat
+
+C:\...\examples\output\rmm_results\Q0\model_output>C:\...\dimr\scripts\run_dimr.bat dimr.xml
+Configfile:dimr.xml
+OMP_NUM_THREADS is already defined
+OMP_NUM_THREADS is 2
+Working directory: C:\...\examples\output\rmm_results\Q0\model_output
+executing: ''C:\...\dimr\bin\dimr.exe''  dimr.xml
+Dimr [2025-12-08 14:30:24.920] #0 >> Deltares, DIMR_EXE Version 2.00.00.68167M
+Dimr [2025-12-08 14:30:24.987] #0 >> Deltares, DIMR_LIB Version 1.02.00.68167M
+...
+[Simulation progress output]
+...
+\end{lstlisting}
+
+\subparagraph{Run with Explicit Batch
+File}\label{run-with-explicit-batch-file}
+
+Directly execute a specific batch file:
+
+\begin{lstlisting}[language=bash]
+cip-tool run-sobek -b examples/output/rmm_results/bsub_joblist.bat
+\end{lstlisting}
+
+\subparagraph{Log File Location}\label{log-file-location}
+
+The log file is automatically created alongside the batch file:
+
+\begin{itemize}
+\tightlist
+\item
+  Batch file:
+  \passthrough{\lstinline!examples/output/rmm\_results/bsub\_joblist.bat!}
+\item
+  Log file:
+  \passthrough{\lstinline!examples/output/rmm\_results/bsub\_joblist.log!}
+\end{itemize}
+
+\paragraph{Error Handling}\label{error-handling}
+
+If the batch execution fails (non-zero exit code), the command will exit
+with the same error code:
+
+\begin{lstlisting}[language=bash]
+cip-tool run-sobek -o examples/output
+# Returns non-zero exit code on failure
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsubsection{3. Extract Command}\label{extract-command}
+
+The \passthrough{\lstinline!extract!} command processes simulation
+results and extracts boundary condition data for a nested model. By
+default, the CIP-tool is configured to generate boundary conditions for
+the 2D D-HYDRO model of the Biesbosch. Boundary conditions that are
+prepared for the model are:
+
+\begin{itemize}
+\tightlist
+\item
+  Wind speed and direction
+\item
+  Waterlevels at downstream boundariers
+\item
+  River discharges at upstream boundaries
+\end{itemize}
+
+Lateral discharges are not created, however these can be re-used from
+the SOBEK model boundary conditions that were generated with the
+\passthrough{\lstinline!generate!} command.
+
+\paragraph{Syntax}\label{syntax-2}
+
+\begin{lstlisting}[language=bash]
+cip-tool extract -i INPUT_FILE -o OUTPUT_DIR [-c CONFIG_FILE]
+\end{lstlisting}
+
+\paragraph{Arguments}\label{arguments-2}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.19}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.08}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.18}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.12}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.33}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Argument
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Short
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Long
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Required
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Input file & \passthrough{\lstinline!-i!} &
+\passthrough{\lstinline!--input-file!} & Yes & Path to extraction
+configuration CSV \\
+Output directory & \passthrough{\lstinline!-o!} &
+\passthrough{\lstinline!--output-dir!} & Yes & Path to directory
+containing simulation results \\
+Config file & \passthrough{\lstinline!-c!} &
+\passthrough{\lstinline!--config!} & No & Path to custom config.yaml
+file \\
+\end{longtable}
+
+\paragraph{Input File Format}\label{input-file-format-1}
+
+The extraction configuration CSV must contain the following columns:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Column & Description & Example \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+file & Name of the NetCDF result file &
+\passthrough{\lstinline!observations.nc!} \\
+location & Location identifier in the model &
+\passthrough{\lstinline!BE\_976.00!} \\
+new\_name\_loc & New name for the location &
+\passthrough{\lstinline!Beneden-Merwede\_0001!} \\
+variabele & Variable name to extract &
+\passthrough{\lstinline!water\_level!} \\
+new\_name\_var & New name for the variable &
+\passthrough{\lstinline!waterlevelbnd!} \\
+\end{longtable}
+
+\textbf{Example extraction file
+(\passthrough{\lstinline!variabelen\_voor\_bc\_file\_deelmodel.csv!}):}
+
+\begin{lstlisting}
+file,location,new_name_loc,variabele,new_name_var
+observations.nc,BE_976.00,Beneden-Merwede_0001,water_level,waterlevelbnd
+observations.nc,WL_935.00,Waal_0001,water_discharge,dischargebnd
+observations.nc,HD_983.00,Nieuwe-Merwede_0001,water_level,waterlevelbnd
+observations.nc,MA_230.00,Maas_0001,water_discharge,dischargebnd
+\end{lstlisting}
+
+\paragraph{Output}\label{output-1}
+
+The command extracts data from simulation results and creates:
+
+\begin{itemize}
+\tightlist
+\item
+  Processed boundary condition files
+\item
+  Renamed and reformatted data for nested models
+\end{itemize}
+
+\paragraph{Examples}\label{examples-2}
+
+\subparagraph{Basic Extraction}\label{basic-extraction}
+
+Extract results
+
+\begin{lstlisting}[language=bash]
+cip-tool extract -i examples/inputs/variabelen_voor_bc_file_deelmodel.csv -o examples/extract-results/rmm_results
+\end{lstlisting}
+
+\textbf{Output:}
+
+\begin{lstlisting}
+File : observations.nc Locatie : BE_976.00 Variabel : water_level
+File : observations.nc Locatie : WL_935.00 Variabel : water_discharge
+File : observations.nc Locatie : HD_983.00 Variabel : water_level
+File : observations.nc Locatie : MA_230.00 Variabel : water_discharge
+Done.
+\end{lstlisting}
+
+\subparagraph{Extracting from Specific Result
+Directory}\label{extracting-from-specific-result-directory}
+
+If results are in a subdirectory:
+
+\begin{lstlisting}[language=bash]
+cip-tool extract -i examples/inputs/variabelen_voor_bc_file_deelmodel.csv -o examples/output/rmm_results
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Configuration}\label{configuration}
+
+\subsubsection{Default Configuration}\label{default-configuration}
+
+When the \passthrough{\lstinline!--config!} argument is \textbf{not}
+specified, the tool uses default paths relative to the current
+directory:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{DIMR path:}
+  \passthrough{\lstinline!bin/dimr\_runners/sobek\_dimr/x64/dimr/scripts!}
+\item
+  \textbf{RGWM path:}
+  \passthrough{\lstinline!bin/rgwm\_versie2.4.3/bin/rgwm.exe!}
+\end{itemize}
+
+\subsubsection{Custom Configuration}\label{custom-configuration}
+
+You can provide a custom \passthrough{\lstinline!config.yaml!} file to
+override default paths.
+
+\paragraph{Config File Structure}\label{config-file-structure}
+
+\begin{lstlisting}
+DIMR:
+    path: bin/dimr_runners/sobek_dimr/x64/dimr/scripts
+
+RGWM:
+    path: bin/rgwm_versie2.4.3/bin/rgwm.exe
+\end{lstlisting}
+
+\paragraph{Configuration Requirements}\label{configuration-requirements}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Both sections required:} DIMR and RGWM paths must be specified
+\item
+  \textbf{DIMR path:} Must point to an existing directory
+\item
+  \textbf{RGWM path:} Must point to an executable file (rgwm.exe)
+\item
+  \textbf{Path types:} Can be absolute or relative to the config file
+  location
+\end{itemize}
+
+\paragraph{Example Configuration
+Files}\label{example-configuration-files}
+
+\textbf{Absolute paths:}
+
+\begin{lstlisting}
+DIMR:
+    path: C:/tools/sobek/dimr/scripts
+
+RGWM:
+    path: C:/tools/rgwm/bin/rgwm.exe
+\end{lstlisting}
+
+\textbf{Relative paths (relative to config.yaml location):}
+
+\begin{lstlisting}
+DIMR:
+    path: ../bin/dimr_runners/sobek_dimr/x64/dimr/scripts
+
+RGWM:
+    path: ../bin/rgwm_versie2.4.3/bin/rgwm.exe
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Workflow Example}\label{workflow-example}
+
+Here's a complete workflow from scenario generation to result
+extraction:
+
+\subsubsection{Step 1: Prepare Input
+Files}\label{step-1-prepare-input-files}
+
+Create your scenario input file:
+
+\begin{lstlisting}
+Scenario,Keringstoestand[open/gesloten],Rijnafvoer te Lobith[m3/s],Maasafvoer te Lith[m3/s],Stormopzet[m + NAP],Zeewaterstand[m + NAP],Windsnelheid[m/s],Windrichting[-]
+1,Open,9000,1861,3,5,19.38,WNW
+2,Gesloten,11500,2448,4.5,6,27.41,WNW
+3,Open,12000,2600,5,6.5,30.5,W
+\end{lstlisting}
+
+\subsubsection{Step 2: Generate Boundary
+Conditions}\label{step-2-generate-boundary-conditions}
+
+\begin{lstlisting}[language=bash]
+cip-tool generate -i scenarios.csv -o output --calculate-surge
+\end{lstlisting}
+
+\subsubsection{Step 3: Run Sobek
+Simulations}\label{step-3-run-sobek-simulations}
+
+\begin{lstlisting}[language=bash]
+cip-tool run-sobek -o output
+\end{lstlisting}
+
+\subsubsection{Step 4: Extract Results}\label{step-4-extract-results}
+
+\begin{lstlisting}[language=bash]
+cip-tool extract -i extraction_config.csv -o output
+\end{lstlisting}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Troubleshooting}\label{troubleshooting}
+
+\subsubsection{Common Issues}\label{common-issues}
+
+\paragraph{Input File Not Found}\label{input-file-not-found}
+
+\textbf{Error:}
+
+\begin{lstlisting}
+ArgumentTypeError: 'input.csv' is not an existing file.
+\end{lstlisting}
+
+\textbf{Solution:} - Verify the file path is correct - Use absolute
+paths or ensure relative paths are correct - Check file permissions
+
+\paragraph{Output Directory Creation
+Failed}\label{output-directory-creation-failed}
+
+\textbf{Error:}
+
+\begin{lstlisting}
+PermissionError: [Errno 13] Permission denied
+\end{lstlisting}
+
+\textbf{Solution:} - Check write permissions on the target directory -
+Ensure the path is valid - Try running with elevated privileges if
+necessary
+
+\paragraph{Batch File Not Found
+(run-sobek)}\label{batch-file-not-found-run-sobek}
+
+\textbf{Error:}
+
+\begin{lstlisting}
+FileNotFoundError: Batch file not found: ...
+\end{lstlisting}
+
+\textbf{Solution:} - Ensure you've run the
+\passthrough{\lstinline!generate!} command first - Verify the output
+directory contains the \passthrough{\lstinline!rmm\_results!} folder -
+Use absolute paths or check your current working directory
+
+\paragraph{Wrong Operating System
+(run-sobek)}\label{wrong-operating-system-run-sobek}
+
+\textbf{Error:}
+
+\begin{lstlisting}
+RuntimeError: Running a .bat file requires Windows.
+\end{lstlisting}
+
+\textbf{Solution:} - The \passthrough{\lstinline!run-sobek!} command
+only works on Windows - Use a Windows machine or WSL with Windows
+interop enabled
+
+\paragraph{Missing Configuration
+Paths}\label{missing-configuration-paths}
+
+\textbf{Error:}
+
+\begin{lstlisting}
+FileNotFoundError: DIMR path does not exist
+\end{lstlisting}
+
+\textbf{Solution:} - Verify paths in config.yaml are correct - Ensure
+DIMR and RGWM are properly installed - Check that paths are relative to
+the config file location
+
+\paragraph{Surge Calculation Not
+Converging}\label{surge-calculation-not-converging}
+
+\textbf{Issue:} Iterative surge calculation takes too many iterations or
+doesn't converge
+
+\textbf{Solution:} - Check that input water levels are realistic -
+Verify model setup is correct - Review initial storm surge estimates -
+Check for model stability issues
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Best Practices}\label{best-practices}
+
+\subsubsection{File Organization}\label{file-organization}
+
+\begin{lstlisting}
+project/
+|-- config.yaml
+|-- inputs/
+|   |-- scenarios.csv
+|   `-- extraction_config.csv
+|-- output/
+|   |-- rgwm_results/
+|   `-- rmm_results/
+`-- bin/
+    |-- dimr_runners/
+    `-- rgwm_versie2.4.3/
+\end{lstlisting}
+
+\subsubsection{Tips}\label{tips}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Use version control} for input files and configuration
+\item
+  \textbf{Create template files} for consistent scenario definitions
+\item
+  \textbf{Document your scenarios} with meaningful names/numbers
+\item
+  \textbf{Back up results} before re-running simulations
+\item
+  \textbf{Use meaningful output directory names} (e.g.,
+  \passthrough{\lstinline!output\_2025\_flood\_study!})
+\item
+  \textbf{Check logs} after Sobek runs for warnings or errors
+\item
+  \textbf{Validate extracted data} before using in downstream analyses
+\end{enumerate}
+
+\subsubsection{Performance
+Considerations}\label{performance-considerations}
+
+\begin{itemize}
+\tightlist
+\item
+  Large scenario sets may take considerable time to run
+\item
+  Surge calculation adds multiple iterations (typically 3-5x runtime)
+\item
+  Consider parallel execution for independent scenarios
+\item
+  Monitor disk space for large result files
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Additional Resources}\label{additional-resources}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{../api/cli-quick-reference.md}{Quick Reference Guide}
+\item
+  \href{installation-zip-file.md}{Installation Guide}
+\item
+  \href{../api/cli.md}{API Documentation}
+\item
+  \href{../change-log.md}{Change Log}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{Support}\label{support}
+
+For issues, questions, or contributions:
+
+\begin{itemize}
+\tightlist
+\item
+  Check the \href{../index.md}{documentation}
+\item
+  Review the \href{installation-zip-file.md}{installation guide}
+\item
+  Contact support: software.support@deltares.nl
+\end{itemize}

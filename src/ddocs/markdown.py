@@ -223,6 +223,13 @@ def convert_markdown_to_latex(
     Returns:
         True if conversion succeeded, False otherwise
     """
+    if standalone:
+        if not template:
+            template = data_dir / 'deltares_template.tex'
+    else:
+        if not template:
+            template = data_dir / 'deltares_fragment_template.tex'
+
     cmd = [
         'pandoc',
         str(input_file),
