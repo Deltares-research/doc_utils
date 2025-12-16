@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 import argparse
 import sys
-from ddocs.pandoc_utils import check_pandoc_installed
+from ddocs.pandoc_utils import sanity_check
 from ddocs import __path__, __version__
 data_dir = Path(__path__[0]) / 'data'
 
@@ -418,7 +418,7 @@ def converter():
     args = parser.parse_args()
 
     # Check if Pandoc is installed
-    if not check_pandoc_installed():
+    if not sanity_check():
         print("Error: Pandoc is not installed or not in PATH")
         print("Please install Pandoc: https://pandoc.org/installing.html")
         print()

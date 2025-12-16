@@ -26,12 +26,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Pandoc
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pandoc
-          pandoc --version
-
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
@@ -48,6 +42,10 @@ jobs:
       - name: list env contents
         run: |
           uv pip list
+
+      - name: check pandoc installation
+        run: |
+          pandoc --version
 
       - name: tests
         run: |

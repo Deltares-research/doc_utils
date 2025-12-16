@@ -1,4 +1,5 @@
 import subprocess
+from pypandoc.pandoc_download import download_pandoc
 
 def check_pandoc_installed() -> bool:
     """Check if Pandoc is installed and available.
@@ -6,6 +7,10 @@ def check_pandoc_installed() -> bool:
     Returns:
         True if Pandoc is available, False otherwise
     """
+    if not sanity_check():
+        download_pandoc()
+
+def sanity_check() -> bool:
     try:
         result = subprocess.run(
             ['pandoc', '--version'],
@@ -18,7 +23,3 @@ def check_pandoc_installed() -> bool:
     except (subprocess.CalledProcessError, FileNotFoundError):
         print("Pandoc not found.")
         return False
-
-
-
-
