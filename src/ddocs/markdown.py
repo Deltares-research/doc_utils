@@ -8,6 +8,8 @@ from pathlib import Path
 import subprocess
 import argparse
 import sys
+from ddocs import __path__
+data_dir = Path(__path__[0]) / 'data'
 
 
 def check_pandoc_installed() -> bool:
@@ -400,7 +402,7 @@ Examples:
     return parser
 
 
-def main():
+def converter():
     """Main entry point for the script."""
     parser = create_parser()
     args = parser.parse_args()
@@ -456,5 +458,5 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(converter())
 
