@@ -9,14 +9,18 @@ from git import Repo
 class RepoCloner:
     """Class to clone a git repository into a temporary directory and manage file operations."""
 
-    def __init__(self, repo_url: str):
+    def __init__(self, repo_url: str, username: Optional[str] = None, password: Optional[str] = None):
         """
         Initialize the RepoCloner with a repository URL.
 
         Args:
             repo_url: The URL of the git repository to clone
+            username: Optional username for authentication (defaults to SVN_USERNAME env var)
+            password: Optional password/token for authentication (defaults to SVN_PASSWORD env var)
         """
         self.repo_url = repo_url
+        self.username = username or os.getenv('SVN_USERNAME')
+        self.password = password or os.getenv('SVN_PASSWORD')
         self.temp_dir: Optional[Path] = None
         self.repo_path: Optional[Path] = None
         self.repo: Optional[Repo] = None
@@ -37,15 +41,14 @@ class RepoCloner:
         repo_name = self.repo_url.rstrip('/').split('/')[-1].replace('.git', '')
         self.repo_path = self.temp_dir / repo_name
 
-        # Configure git environment to not prompt for credentials (needed for public repos in CI)
-        env = os.environ.copy()
-        env['GIT_TERMINAL_PROMPT'] = '0'
+        # Build authenticated URL if credentials are provided
+        clone_url = self.repo_url
+        if self.username and self.password:
+            # Insert credentials into HTTPS URL
+            if clone_url.startswith('https://'):
+                clone_url = clone_url.replace('https://', f'https://{self.username}:{self.password}@')
 
-        self.repo = Repo.clone_from(
-            self.repo_url,
-            str(self.repo_path),
-            env=env
-        )
+        self.repo = Repo.clone_from(clone_url, str(self.repo_path))
 
         return self.repo_path
 

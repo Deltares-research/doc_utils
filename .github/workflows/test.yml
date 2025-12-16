@@ -3,6 +3,10 @@ name: ci
 permissions:
     contents: read
 
+env:
+  SVN_USERNAME: x-access-token
+  SVN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
 on:
   push:
   workflow_dispatch:
