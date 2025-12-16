@@ -42,11 +42,11 @@ class RepoCloner:
         self.repo_path = self.temp_dir / repo_name
 
         # Build authenticated URL if credentials are provided
-        clone_url = self.repo_url
+        clone_url = self.repo_url.rstrip('/')  # Remove trailing slash
         if self.username and self.password:
             # Insert credentials into HTTPS URL
             if clone_url.startswith('https://'):
-                clone_url = clone_url.replace('https://', f'https://{self.username}:{self.password}@')
+                clone_url = clone_url.replace('https://', f'https://{self.username}:{self.password}@', 1)
 
         self.repo = Repo.clone_from(clone_url, str(self.repo_path))
 
