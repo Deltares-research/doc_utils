@@ -396,13 +396,13 @@ Examples:
         "-i",
         type=Path,
         required=True,
-        help='Input directory with Markdown files (default: docs/mkdocs/user_docs)'
+        help='Input directory with Markdown files'
     )
     markdown_to_latex.add_argument(
         '--output',
         type=Path,
         required=True,
-        help='Output directory for LaTeX files (default: docs/latex/user_docs)'
+        help='Output directory for LaTeX files'
     )
     markdown_to_latex.add_argument(
         '--template',
