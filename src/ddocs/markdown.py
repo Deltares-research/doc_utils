@@ -8,27 +8,10 @@ from pathlib import Path
 import subprocess
 import argparse
 import sys
+from ddocs.pandoc_utils import check_pandoc_installed
 from ddocs import __path__, __version__
 data_dir = Path(__path__[0]) / 'data'
 
-
-def check_pandoc_installed() -> bool:
-    """Check if Pandoc is installed and available.
-
-    Returns:
-        True if Pandoc is available, False otherwise
-    """
-    try:
-        result = subprocess.run(
-            ['pandoc', '--version'],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        print(f"Found Pandoc: {result.stdout.split()[1]}")
-        return True
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return False
 
 
 def replace_utf8_tree_chars(content: str) -> str:
@@ -388,7 +371,6 @@ Examples:
     markdown_to_latex = subparsers.add_parser(
         'markdown_to_latex',
         help='Convert Markdown to LaTeX',
-        # descrption='Convert Markdown files to LaTeX'
     )
 
     markdown_to_latex.add_argument(
