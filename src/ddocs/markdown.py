@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 import argparse
 import sys
-from ddocs import __path__
+from ddocs import __path__, __version__
 data_dir = Path(__path__[0]) / 'data'
 
 
@@ -354,7 +354,8 @@ def convert_all_markdown_files(
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        description='Convert Markdown documentation to LaTeX format',
+        prog='ddocs',
+        description='Deltares HMS documentation utility tool',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -372,28 +373,48 @@ Examples:
         """
     )
     parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
+
+    subparsers = parser.add_subparsers(
+        title='operation type',
+        description='Select the operation to perform',
+        dest='command',
+        required=True,
+        help='Available operations: markdown_to_latex'
+    )
+
+    # sub-command
+    markdown_to_latex = subparsers.add_parser(
+        'markdown_to_latex',
+        help='Convert Markdown to LaTeX',
+        # descrption='Convert Markdown files to LaTeX'
+    )
+
+    markdown_to_latex.add_argument(
         '--input',
+        "-i",
         type=Path,
-        default=Path('docs/mkdocs/user_docs'),
+        required=True,
         help='Input directory with Markdown files (default: docs/mkdocs/user_docs)'
     )
-    parser.add_argument(
+    markdown_to_latex.add_argument(
         '--output',
         type=Path,
-        default=Path('docs/latex/user_docs'),
+        required=True,
         help='Output directory for LaTeX files (default: docs/latex/user_docs)'
     )
-    parser.add_argument(
+    markdown_to_latex.add_argument(
         '--template',
         type=Path,
         help='Custom Pandoc LaTeX template'
     )
-    parser.add_argument(
+    markdown_to_latex.add_argument(
         '--standalone',
         action='store_true',
         help='Generate standalone LaTeX documents (vs. fragments for inclusion)'
     )
-    parser.add_argument(
+    markdown_to_latex.add_argument(
         '--pattern',
         type=str,
         default='*.md',
