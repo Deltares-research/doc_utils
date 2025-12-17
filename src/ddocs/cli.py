@@ -5,6 +5,7 @@ import argparse
 from pathlib import Path
 from ddocs import __version__
 from ddocs.markdown import mark_down_to_latex_cli
+from ddocs.repo_cloner import clone_repo_cli
 
 
 def create_parser():
@@ -72,6 +73,18 @@ Examples:
         help='Glob pattern for matching files (default: *.md)'
     )
 
+    # sub-command: get-tex-template
+    get_tex_template = subparsers.add_parser(
+        'get-tex-template',
+        help='Clone Deltares LatexInstallation repo and copy template files',
+    )
+    get_tex_template.add_argument(
+        '--output-dir',
+        type=Path,
+        required=True,
+        help='Output directory for the template files'
+    )
+
     return parser
 
 
@@ -80,7 +93,10 @@ def main():
     parser = create_parser()
     args = parser.parse_args()
 
-    if args.command == 'markdown-to-latex':
+    # Handle get-tex-template command
+    if args.command == 'get-tex-template':
+        clone_repo_cli(args.output_dir)
+    elif args.command == 'markdown-to-latex':
         # Handle markdown_to_latex command
         mark_down_to_latex_cli(args)
     else:
