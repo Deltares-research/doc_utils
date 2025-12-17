@@ -329,7 +329,7 @@ def convert_all_markdown_files(
         return 0, 0
 
     print(f"Found {len(md_files)} markdown file(s) to convert")
-    print()
+
 
     # Convert each file
     success_count = 0
@@ -374,7 +374,7 @@ def mark_down_to_latex_cli(args: argparse.Namespace) -> int:
     print(f"Output: {args.output}")
     if args.template:
         print(f"Template: {args.template}")
-    print()
+
 
     # Convert files
     success_count, total_count = convert_all_markdown_files(
