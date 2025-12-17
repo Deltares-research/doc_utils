@@ -52,6 +52,7 @@ Examples:
     )
     markdown_to_latex.add_argument(
         '--output',
+        "-o",
         type=Path,
         required=True,
         help='Output directory for LaTeX files'
@@ -80,6 +81,7 @@ Examples:
     )
     get_tex_template.add_argument(
         '--output-dir',
+        "-o",
         type=Path,
         required=True,
         help='Output directory for the template files'
