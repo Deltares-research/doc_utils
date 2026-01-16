@@ -16,10 +16,10 @@ def create_parser():
         epilog="""
 Examples:
   # Convert all markdown files in user_docs
-  ddocs markdown_to_latex --input docs/mkdocs --output docs/latex
+  ddocs markdown-to-latex --input docs/mkdocs --output docs/latex
 
   # Generate standalone LaTeX documents
-  ddocs markdown_to_latex --input docs/mkdocs --output docs/latex --standalone
+  ddocs markdown-to-latex --input docs/mkdocs --output docs/latex --standalone
 
   # Get LaTeX templates
   ddocs get-tex-template --output-dir ./templates
@@ -34,10 +34,10 @@ Examples:
         description='Select the operation to perform',
         dest='command',
         required=True,
-        help='Available operations: markdown_to_latex, get-tex-template'
+        help='Available operations: markdown-to-latex, get-tex-template, clean'
     )
 
-    # sub-command: markdown_to_latex
+    # sub-command: markdown-to-latex
     markdown_to_latex = subparsers.add_parser(
         "markdown-to-latex",
         help='Convert Markdown to LaTeX',
