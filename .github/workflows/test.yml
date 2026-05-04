@@ -25,33 +25,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup Python with uv
+        uses: Deltares-research/github-actions/actions/python-setup/uv@main
         with:
           python-version: ${{ matrix.python-version }}
+          install-groups: dev
 
       - name: Install Pandoc
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc
           pandoc --version
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
-          cache-dependency-glob: uv.lock
-
-      - name: Verify lock file is up to date
-        run: |
-          uv lock --check
-
-      - name: Install Dependencies
-        run: uv sync --frozen --group dev
-
-      - name: list env contents
-        run: |
-          uv pip list
 
       - name: tests
         run: |
