@@ -50,8 +50,8 @@ docs = [
 
 
 [project.urls]
-"Homepage" = "https://github.com/Deltares/toets-svkw"
-"Bug Tracker" = "https://github.com/Deltares/toets-svkw/issues"
+"Homepage" = "https://github.com/Deltares-research/doc_utils"
+"Bug Tracker" = "https://github.com/Deltares-research/doc_utils/issues"
 
 [project.scripts]
 ddocs = "ddocs.cli:main"
