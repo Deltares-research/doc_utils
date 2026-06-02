@@ -4,8 +4,9 @@ import sys
 import argparse
 from pathlib import Path
 from ddocs import __version__
-from ddocs.markdown import mark_down_to_latex_cli
+from ddocs.markdown import mark_down_to_latex_cli, clean_latex_cli
 from ddocs.repo_cloner import clone_repo_cli
+from ddocs.pandoc_utils import check_pandoc_cli
 
 
 def create_parser():
@@ -23,6 +24,12 @@ Examples:
 
   # Get LaTeX templates
   ddocs get-tex-template --output-dir ./templates
+
+  # Clean LaTeX build files
+  ddocs clean --directory ./docs/latex
+
+  # Check that Pandoc is installed (download it if missing)
+  ddocs check-pandoc
         """
     )
     parser.add_argument(
@@ -34,7 +41,7 @@ Examples:
         description='Select the operation to perform',
         dest='command',
         required=True,
-        help='Available operations: markdown-to-latex, get-tex-template, clean'
+        help='Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc'
     )
 
     # sub-command: markdown-to-latex
@@ -87,6 +94,31 @@ Examples:
         help='Output directory for the template files'
     )
 
+    # sub-command: clean
+    clean = subparsers.add_parser(
+        'clean',
+        help='Clean LaTeX build files (aux, log, bbl, etc.)',
+    )
+    clean.add_argument(
+        '--directory',
+        "-d",
+        type=Path,
+        required=True,
+        help='Directory to clean LaTeX build files from'
+    )
+    clean.add_argument(
+        '--recursive',
+        "-r",
+        action='store_true',
+        help='Clean recursively in subdirectories'
+    )
+
+    # sub-command: check-pandoc
+    subparsers.add_parser(
+        'check-pandoc',
+        help='Check that Pandoc is installed; download it if missing',
+    )
+
     return parser
 
 
@@ -95,14 +127,20 @@ def main():
     parser = create_parser()
     args = parser.parse_args()
 
-    # Handle get-tex-template command
+    # Dispatch to the selected command and propagate its exit code
     if args.command == 'get-tex-template':
-        clone_repo_cli(args.output_dir)
+        exit_code = clone_repo_cli(args.output_dir)
     elif args.command == 'markdown-to-latex':
-        # Handle markdown_to_latex command
-        mark_down_to_latex_cli(args)
+        exit_code = mark_down_to_latex_cli(args)
+    elif args.command == 'clean':
+        exit_code = clean_latex_cli(args)
+    elif args.command == 'check-pandoc':
+        exit_code = check_pandoc_cli(args)
     else:
         parser.print_help()
+        exit_code = 1
+
+    return exit_code
 
 
 if __name__ == '__main__':

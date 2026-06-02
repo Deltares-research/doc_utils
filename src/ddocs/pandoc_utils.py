@@ -88,3 +88,15 @@ def check_pandoc_installed() -> bool:
             print("Warning: Pandoc downloaded but not accessible from the command line.")
 
     return installed
+
+
+def check_pandoc_cli(args=None) -> int:
+    """CLI handler for the ``check-pandoc`` command.
+
+    Ensures pandoc is available (downloading it if necessary) and maps the
+    result to a process exit code.
+
+    Returns:
+        0 if pandoc is accessible, 1 otherwise.
+    """
+    return 0 if check_pandoc_installed() else 1
