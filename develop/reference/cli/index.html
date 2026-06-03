@@ -661,7 +661,7 @@
   <span class="md-ellipsis">
     
   
-    ddocs.repo_cloner
+    ddocs.templates.repo_cloner
   
 
     
@@ -1285,7 +1285,7 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <p>Builds the parser via :func:<code>create_parser</code>, parses <code>sys.argv</code>, and calls the
 matching handler. For <code>get-tex-template</code> the authentication options
 (<code>--token</code> / <code>--username</code> / <code>--password</code> / <code>--no-ssh</code>) are forwarded to
-:func:<code>ddocs.repo_cloner.clone_repo_cli</code>. The handler's exit code is returned so a
+:func:<code>ddocs.templates.repo_cloner.clone_repo_cli</code>. The handler's exit code is returned so a
 caller can pass it to :func:<code>sys.exit</code>.</p>
 
 
@@ -1333,7 +1333,7 @@ caller can pass it to :func:<code>sys.exit</code>.</p>
 <details class="see-also" open>
   <summary>See Also</summary>
   <p>create_parser: Builds the parser this function uses.
-ddocs.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code>.</p>
+ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code>.</p>
 </details>
 
             <details class="mkdocstrings-source">
@@ -1403,7 +1403,7 @@ ddocs.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code>.</p>
 <span class="sd">    Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the</span>
 <span class="sd">    matching handler. For ``get-tex-template`` the authentication options</span>
 <span class="sd">    (``--token`` / ``--username`` / ``--password`` / ``--no-ssh``) are forwarded to</span>
-<span class="sd">    :func:`ddocs.repo_cloner.clone_repo_cli`. The handler&#39;s exit code is returned so a</span>
+<span class="sd">    :func:`ddocs.templates.repo_cloner.clone_repo_cli`. The handler&#39;s exit code is returned so a</span>
 <span class="sd">    caller can pass it to :func:`sys.exit`.</span>
 
 <span class="sd">    Returns:</span>
@@ -1430,7 +1430,7 @@ ddocs.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code>.</p>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        create_parser: Builds the parser this function uses.</span>
-<span class="sd">        ddocs.repo_cloner.clone_repo_cli: Handles ``get-tex-template``.</span>
+<span class="sd">        ddocs.templates.repo_cloner.clone_repo_cli: Handles ``get-tex-template``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">create_parser</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>

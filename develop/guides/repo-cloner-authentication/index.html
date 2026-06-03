@@ -810,7 +810,7 @@
   <span class="md-ellipsis">
     
   
-    ddocs.repo_cloner
+    ddocs.templates.repo_cloner
   
 
     
@@ -1093,10 +1093,10 @@
 
 
 <h1 id="repocloner-authentication">RepoCloner &amp; Authentication<a class="headerlink" href="#repocloner-authentication" title="Permanent link">&para;</a></h1>
-<p>This guide explains the <code>ddocs.repo_cloner</code> module: what it does, how it authenticates against the
+<p>This guide explains the <code>ddocs.templates.repo_cloner</code> module: what it does, how it authenticates against the
 <strong>private</strong> Deltares LaTeX template repository, and exactly which token to create (and with which
 permissions) so the <code>ddocs get-tex-template</code> command works both in CI and on a developer laptop.</p>
-<p>For the auto-generated API reference, see <a href="../../reference/repo_cloner/"><code>ddocs.repo_cloner</code></a>.</p>
+<p>For the auto-generated API reference, see <a href="../../reference/repo_cloner/"><code>ddocs.templates.repo_cloner</code></a>.</p>
 <h2 id="what-the-module-does">What the module does<a class="headerlink" href="#what-the-module-does" title="Permanent link">&para;</a></h2>
 <p><code>repo_cloner.py</code> clones a git repository into a temporary directory and copies files out of it. It
 backs the <code>ddocs get-tex-template</code> command, which fetches the Deltares LaTeX templates from the
@@ -1155,7 +1155,7 @@ private repository <code>https://github.com/Deltares/LatexInstallation</code>:</
 </tbody>
 </table>
 <p>It supports the context-manager protocol, so the temp clone is always removed:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
 
 <span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cloner</span><span class="p">:</span>
     <span class="n">cloner</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
