@@ -25,6 +25,7 @@ import re
 import subprocess
 import tempfile
 import urllib.request
+from pathlib import Path
 
 # tlmgr collections/packages mirroring the texlive-* apt packages ddocs builds need:
 #   texlive-latex-extra      -> collection-latexextra
@@ -330,6 +331,74 @@ def check_pdflatex_installed(install_packages: bool = True) -> bool:
         if not installed:
             print("Warning: TinyTeX was installed but pdflatex is not accessible from the command line.")
     return installed
+
+
+def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = True) -> Path:
+    """Compile a ``.tex`` file to PDF with ``pdflatex``, installing missing packages.
+
+    Ensures ``pdflatex`` is available (installing TinyTeX if needed), then runs it from
+    the source file's directory so a document class and relative assets resolve. After a
+    failed run it parses the log for missing packages and ``tlmgr install``s them before
+    retrying (the MiKTeX-style behaviour); on success it runs a second pass to resolve
+    cross-references and the table of contents.
+
+    Args:
+        tex_file: Path to the ``.tex`` file to compile.
+        max_runs: Maximum number of ``pdflatex`` attempts before giving up.
+        install_missing: When True, ``tlmgr install`` packages reported missing in the
+            log between attempts.
+
+    Returns:
+        The :class:`pathlib.Path` of the produced PDF (``<stem>.pdf`` next to the source).
+
+    Raises:
+        RuntimeError: If pdflatex cannot be made available, or no PDF is produced.
+
+    Examples:
+        - Build a PDF from a LaTeX file (requires a TeX engine):
+            ```python
+            >>> from ddocs.pdflatex_utils import build_pdf
+            >>> pdf = build_pdf("report.tex")  # doctest: +SKIP
+            >>> pdf.name  # doctest: +SKIP
+            'report.pdf'
+
+            ```
+
+    See Also:
+        check_pdflatex_installed: Ensures the engine is present.
+        install_missing_packages: Installs packages reported missing in the log.
+    """
+    tex_path = Path(tex_file)
+    work_dir = tex_path.parent
+    pdf_path = work_dir / f"{tex_path.stem}.pdf"
+
+    if not check_pdflatex_installed():
+        raise RuntimeError("pdflatex is not available and TinyTeX could not be installed")
+
+    succeeded = False
+    for _ in range(max_runs):
+        result = subprocess.run(
+            ["pdflatex", "-interaction=nonstopmode", tex_path.name],
+            cwd=str(work_dir),
+            capture_output=True,
+            text=True,
+        )
+        log = f"{result.stdout}\n{result.stderr}"
+        if result.returncode == 0:
+            succeeded = True
+            subprocess.run(
+                ["pdflatex", "-interaction=nonstopmode", tex_path.name],
+                cwd=str(work_dir),
+                capture_output=True,
+                text=True,
+            )
+            break
+        if not (install_missing and install_missing_packages(log)):
+            break
+
+    if not (succeeded and pdf_path.exists()):
+        raise RuntimeError(f"pdflatex did not produce {pdf_path.name}")
+    return pdf_path
 
 
 def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:

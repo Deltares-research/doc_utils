@@ -260,6 +260,82 @@ class TestInternals:
         assert mock_run.call_args.args[0] == ["cmd", "/c", "C:/tmp/install.bat"], "windows should run via cmd /c"
 
 
+class TestBuildPdf:
+    """Tests for build_pdf (compile loop), fully mocked."""
+
+    @pytest.mark.unit
+    def test_returns_pdf_path_on_success(self, tmp_path):
+        """Test a successful compile returns the PDF path and runs a second pass.
+
+        Test scenario:
+            pdflatex returns 0 and the PDF exists -> path returned, two runs total.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("\\documentclass{article}\\begin{document}x\\end{document}", encoding="utf-8")
+        pdf = tmp_path / "doc.pdf"
+
+        def fake_run(cmd, **kwargs):
+            pdf.write_bytes(b"%PDF-1.5\n")
+            return MagicMock(returncode=0, stdout="", stderr="")
+
+        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.pdflatex_utils.subprocess.run", side_effect=fake_run) as mock_run:
+            result = pdflatex_utils.build_pdf(tex)
+        assert result == pdf, f"should return the pdf path, got {result}"
+        assert mock_run.call_count == 2, "should run pdflatex twice (build + refs pass)"
+
+    @pytest.mark.unit
+    def test_installs_missing_packages_then_succeeds(self, tmp_path):
+        """Test a first-pass failure triggers package install and a retry.
+
+        Test scenario:
+            Run 1 fails with a missing-package log -> install_missing_packages -> run 2
+            succeeds and produces the PDF.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        pdf = tmp_path / "doc.pdf"
+        runs = {"n": 0}
+
+        def fake_run(cmd, **kwargs):
+            runs["n"] += 1
+            if runs["n"] == 1:
+                return MagicMock(returncode=1, stdout="! LaTeX Error: File `tikz.sty' not found.", stderr="")
+            pdf.write_bytes(b"%PDF-1.5\n")
+            return MagicMock(returncode=0, stdout="", stderr="")
+
+        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs, \
+             patch("ddocs.pdflatex_utils.subprocess.run", side_effect=fake_run):
+            result = pdflatex_utils.build_pdf(tex)
+        assert result == pdf, "should return the pdf path after retrying"
+        mock_pkgs.assert_called_once_with(["tikz"])
+
+    @pytest.mark.unit
+    def test_raises_when_pdflatex_unavailable(self, tmp_path):
+        """Test a RuntimeError is raised when pdflatex cannot be made available."""
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=False):
+            with pytest.raises(RuntimeError, match="pdflatex is not available"):
+                pdflatex_utils.build_pdf(tex)
+
+    @pytest.mark.unit
+    def test_raises_when_no_pdf_and_nothing_to_install(self, tmp_path):
+        """Test a RuntimeError when compilation fails with no installable packages.
+
+        Test scenario:
+            pdflatex fails and the log has no missing-file errors -> give up, raise.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout="! Undefined control sequence", stderr="")):
+            with pytest.raises(RuntimeError, match="did not produce"):
+                pdflatex_utils.build_pdf(tex)
+
+
 class TestCheckPdflatexCli:
     """Tests for check_pdflatex_cli."""
 

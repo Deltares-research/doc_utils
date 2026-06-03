@@ -33,12 +33,26 @@ jobs:
           sudo apt-get install -y pandoc
           pandoc --version
 
+      - name: Install LaTeX (TeX Live)
+        # Provides a system pdflatex/biber so the PDF e2e test uses it instead of
+        # downloading TinyTeX on the runner. Mirrors the tlmgr collections that
+        # pdflatex_utils would otherwise install.
+        run: |
+          sudo apt-get install -y \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-bibtex-extra \
+            texlive-science biber
+          pdflatex --version
+
       - name: tests
-        # A token with read access to the private Deltares/LatexInstallation repo
-        # enables the live clone tests. When the secret is absent the var is empty
-        # and those tests skip (conftest bridges LATEX_REPO_TOKEN -> GITHUB_TOKEN).
-        # Scoped to this step only so it is not exposed to checkout/setup/upload steps.
-        # GITHUB_* names are reserved by Actions, so a distinct secret name is required.
+        # A token with read access to the private Deltares/LatexInstallation repo is
+        # required by the live clone / PDF e2e tests (conftest bridges
+        # LATEX_REPO_TOKEN -> GITHUB_TOKEN). Scoped to this step only so it is not
+        # exposed to checkout/setup/upload steps. GITHUB_* names are reserved by
+        # Actions, so a distinct secret name is required.
         env:
           LATEX_REPO_TOKEN: ${{ secrets.LATEX_REPO_TOKEN }}
         run: |
