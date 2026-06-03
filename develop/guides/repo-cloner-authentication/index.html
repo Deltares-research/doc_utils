@@ -434,6 +434,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#passing-credentials-to-the-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing credentials to the CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#which-method-should-i-use" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -879,6 +890,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#passing-credentials-to-the-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing credentials to the CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#which-method-should-i-use" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1155,6 +1177,60 @@ private repository <code>https://github.com/Deltares/LatexInstallation</code>:</
 <p><strong>Why this order works everywhere:</strong> a laptop usually has <strong>no</strong> token in its environment, so it
 falls through to <strong>SSH</strong> and reuses the developer's existing key. CI sets a <strong>token</strong> secret, so it
 takes the token branch. The same code authenticates correctly in both places with no flags.</p>
+</blockquote>
+<h2 id="passing-credentials-to-the-cli">Passing credentials to the CLI<a class="headerlink" href="#passing-credentials-to-the-cli" title="Permanent link">&para;</a></h2>
+<p>The <code>ddocs get-tex-template</code> command exposes the same authentication directly as flags:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Method</th>
+<th>Falls back to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--token &lt;token&gt;</code></td>
+<td>Token (HTTPS)</td>
+<td><code>GITHUB_TOKEN</code> / <code>GH_TOKEN</code> env when omitted</td>
+</tr>
+<tr>
+<td><code>--username &lt;user&gt;</code></td>
+<td>Basic auth username</td>
+<td><code>GIT_USERNAME</code> env when omitted</td>
+</tr>
+<tr>
+<td><code>--password &lt;token&gt;</code></td>
+<td>Basic auth password/token</td>
+<td><code>GIT_PASSWORD</code> env when omitted</td>
+</tr>
+<tr>
+<td><code>--no-ssh</code></td>
+<td>Disables the SSH fallback (clone anonymously when no credentials are given)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>A flag overrides the corresponding environment variable. When neither a flag nor an env var supplies
+credentials, the command falls back to your <strong>SSH key</strong> (unless <code>--no-ssh</code> is passed). The resolution
+order is the same as above: token → username/password → SSH → anonymous.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Token</span>
+ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>--output-dir<span class="w"> </span>./templates<span class="w"> </span>--token<span class="w"> </span>&lt;token&gt;
+
+<span class="c1"># Username + password (the password must be a token)</span>
+ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>-o<span class="w"> </span>./templates<span class="w"> </span>--username<span class="w"> </span>&lt;user&gt;<span class="w"> </span>--password<span class="w"> </span>&lt;token&gt;
+
+<span class="c1"># Nothing provided -&gt; uses your SSH key</span>
+ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>-o<span class="w"> </span>./templates
+
+<span class="c1"># Force an anonymous clone (no SSH fallback; only works for public repos)</span>
+ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>-o<span class="w"> </span>./templates<span class="w"> </span>--no-ssh
+</code></pre></div>
+<blockquote>
+<p>⚠️ <strong>Avoid passing secrets on the command line in real use.</strong> Values given via <code>--token</code> / <code>--password</code>
+can leak into your shell history and the process list. Prefer the environment variables
+(<code>GITHUB_TOKEN</code>, <code>GIT_PASSWORD</code>) or a <code>.env</code> file, or use your SSH key. The flags are convenient for
+one-off local runs.</p>
 </blockquote>
 <h2 id="which-method-should-i-use">Which method should I use?<a class="headerlink" href="#which-method-should-i-use" title="Permanent link">&para;</a></h2>
 <table>
