@@ -10,13 +10,16 @@ SSH = "git@github.com:Deltares/LatexInstallation.git"
 
 
 @pytest.fixture(autouse=True)
-def _clear_auth_env(monkeypatch):
-    """Clear all auth env vars so tests are isolated from the real environment.
+def _clear_auth_env(request, monkeypatch):
+    """Clear all auth env vars so unit tests are isolated from the real environment.
 
     Test scenario:
         Every credential env var is removed before each test; individual tests
-        opt back in via monkeypatch.setenv where they need it.
+        opt back in via monkeypatch.setenv where they need it. The live
+        ``integration`` test is exempt -- it needs the real token to clone.
     """
+    if request.node.get_closest_marker("integration"):
+        return
     for var in ("GITHUB_TOKEN", "GH_TOKEN", "GIT_USERNAME", "GIT_PASSWORD",
                 "SVN_USERNAME", "SVN_PASSWORD"):
         monkeypatch.delenv(var, raising=False)
