@@ -7,6 +7,7 @@ makes the downloaded binary discoverable by prepending its directory to ``PATH``
 for the current process (and any subprocess it spawns).
 """
 
+import argparse
 import os
 import sys
 import shutil
@@ -176,7 +177,7 @@ def check_pandoc_installed() -> bool:
     return installed
 
 
-def check_pandoc_cli(args=None) -> int:
+def check_pandoc_cli(args: argparse.Namespace | None = None) -> int:
     """CLI handler for the ``check-pandoc`` command.
 
     Ensures pandoc is available (downloading it if necessary) and maps the
