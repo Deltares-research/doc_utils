@@ -1,3 +1,17 @@
+"""Clone the Deltares LaTeX template repository and copy files out of it.
+
+Authentication precedence (first available wins):
+
+1. Token  -- ``token`` arg or ``GITHUB_TOKEN`` / ``GH_TOKEN`` env (HTTPS).
+2. Basic  -- ``username``/``password`` args or ``GIT_USERNAME``/``GIT_PASSWORD``
+   (falling back to the legacy ``SVN_USERNAME``/``SVN_PASSWORD``) env vars.
+3. SSH    -- when ``prefer_ssh`` is set and no credentials are given, clone via an
+   SSH URL using the machine's key (typical on developer laptops).
+4. Anonymous HTTPS -- public repos only.
+
+CI should set ``GITHUB_TOKEN``; laptops typically use their existing SSH key.
+"""
+
 import os
 import re
 import tempfile
