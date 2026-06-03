@@ -78,6 +78,40 @@ A URL that is already in SSH form (`git@…` or `ssh://…`) is always used as-i
 > falls through to **SSH** and reuses the developer's existing key. CI sets a **token** secret, so it
 > takes the token branch. The same code authenticates correctly in both places with no flags.
 
+## Passing credentials to the CLI
+
+The `ddocs get-tex-template` command exposes the same authentication directly as flags:
+
+| Flag | Method | Falls back to |
+| --- | --- | --- |
+| `--token <token>` | Token (HTTPS) | `GITHUB_TOKEN` / `GH_TOKEN` env when omitted |
+| `--username <user>` | Basic auth username | `GIT_USERNAME` env when omitted |
+| `--password <token>` | Basic auth password/token | `GIT_PASSWORD` env when omitted |
+| `--no-ssh` | Disables the SSH fallback (clone anonymously when no credentials are given) | — |
+
+A flag overrides the corresponding environment variable. When neither a flag nor an env var supplies
+credentials, the command falls back to your **SSH key** (unless `--no-ssh` is passed). The resolution
+order is the same as above: token → username/password → SSH → anonymous.
+
+```bash
+# Token
+ddocs get-tex-template --output-dir ./templates --token <token>
+
+# Username + password (the password must be a token)
+ddocs get-tex-template -o ./templates --username <user> --password <token>
+
+# Nothing provided -> uses your SSH key
+ddocs get-tex-template -o ./templates
+
+# Force an anonymous clone (no SSH fallback; only works for public repos)
+ddocs get-tex-template -o ./templates --no-ssh
+```
+
+> ⚠️ **Avoid passing secrets on the command line in real use.** Values given via `--token` / `--password`
+> can leak into your shell history and the process list. Prefer the environment variables
+> (`GITHUB_TOKEN`, `GIT_PASSWORD`) or a `.env` file, or use your SSH key. The flags are convenient for
+> one-off local runs.
+
 ## Which method should I use?
 
 | Environment | Recommended method | Why |
