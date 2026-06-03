@@ -469,15 +469,14 @@ class TestContextManager:
 
 @pytest.mark.integration
 @pytest.mark.skipif(
-    os.getenv("RUN_NETWORK_TESTS") != "1",
-    reason="hits the private LatexInstallation repo; set RUN_NETWORK_TESTS=1 to run",
+    not (os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")),
+    reason="no token available (set GITHUB_TOKEN/GH_TOKEN, e.g. via .env LATEX_REPO_TOKEN)",
 )
-def test_clone_repo_live():
+def test_clone_repo_live(tmp_path):
     """Smoke-test a real clone of the Deltares LatexInstallation templates.
 
     Test scenario:
-        Opt-in only (RUN_NETWORK_TESTS=1). Performs a live authenticated clone and
-        copies the template files, expecting a zero exit code.
+        Runs when a token is available. Performs a live authenticated clone and
+        copies the template files into a temp dir, expecting a zero exit code.
     """
-    dest_dir = Path("tests/data/tex_data")
-    assert clone_repo_cli(dest_dir) == 0, "live clone_repo_cli should return 0"
+    assert clone_repo_cli(tmp_path / "templates") == 0, "live clone_repo_cli should return 0"

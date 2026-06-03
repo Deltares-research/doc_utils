@@ -15,6 +15,11 @@ import pytest
 REPO_ROOT = Path(__file__).parent.parent
 TEMPLATE_SUFFIXES = {".sty", ".cls", ".bst"}
 
+# The live clone runs when a token is available (e.g. LATEX_REPO_TOKEN in .env,
+# bridged to GITHUB_TOKEN by conftest). Without one it is skipped.
+HAS_TOKEN = bool(os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN"))
+NO_TOKEN_REASON = "no token available (set GITHUB_TOKEN/GH_TOKEN, e.g. via .env LATEX_REPO_TOKEN)"
+
 
 def run_ddocs_command(*args):
     """Run the ddocs CLI in a subprocess and capture the result.
@@ -61,10 +66,7 @@ class TestGetTexTemplateE2E:
         assert "output-dir" in result.stderr.lower(), f"error should mention output-dir, got: {result.stderr}"
 
     @pytest.mark.e2e
-    @pytest.mark.skipif(
-        os.getenv("RUN_NETWORK_TESTS") != "1",
-        reason="clones the private LatexInstallation repo; set RUN_NETWORK_TESTS=1 (with valid creds) to run",
-    )
+    @pytest.mark.skipif(not HAS_TOKEN, reason=NO_TOKEN_REASON)
     def test_get_tex_template_copies_templates(self, tmp_path):
         """Test the full command clones the repo and copies template files.
 

@@ -1,6 +1,19 @@
+import os
 import pytest
 import tempfile
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Load the project's .env (token, RUN_NETWORK_TESTS, ...) into the environment
+# before tests collect, so credential lookups and skip markers see it. Existing
+# environment variables take precedence (override=False).
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
+# RepoCloner reads GITHUB_TOKEN/GH_TOKEN; allow the CI-style secret name
+# LATEX_REPO_TOKEN (used in .env / CI) to satisfy it without duplicating the value.
+if os.getenv("LATEX_REPO_TOKEN") and not (os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")):
+    os.environ["GITHUB_TOKEN"] = os.environ["LATEX_REPO_TOKEN"]
 
 
 @pytest.fixture
