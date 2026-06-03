@@ -17,7 +17,7 @@ requires-python = ">=3.11"
 dependencies = [
     "tqdm (>=4.67.1,<5.0.0)",
     "pyyaml>=6.0.3",
-    "pypandoc>=1.16.2",
+    "pypandoc-binary>=1.16.2",
     "gitpython>=3.1.45",
     "python-dotenv>=1.2.2",
 ]

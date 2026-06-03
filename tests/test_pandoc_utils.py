@@ -31,14 +31,18 @@ class TestCheckPandocInstalled:
             assert "Found Pandoc:" in captured.out
 
     @pytest.mark.mock
-    def test_pandoc_not_found_downloads_and_adds_to_path(self, capsys):
-        """Test when pandoc is not found and needs to be downloaded."""
+    def test_pandoc_not_on_path_uses_bundled_and_adds_to_path(self, capsys):
+        """Test the bundled pandoc is exposed on PATH when not already callable.
+
+        Test scenario:
+            pandoc is missing first, its (bundled) directory is located and added to
+            PATH, and the re-check then succeeds. No download occurs.
+        """
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils.download_pandoc') as mock_download, \
              patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
              patch('os.path.exists') as mock_exists:
 
-            # First call fails (not found), second call succeeds (after download)
+            # First call fails (not found), second succeeds (after PATH is updated).
             mock_run.side_effect = [
                 FileNotFoundError(),
                 MagicMock(stdout='pandoc 3.1.8', returncode=0)
@@ -49,21 +53,18 @@ class TestCheckPandocInstalled:
             result = check_pandoc_installed()
 
             assert result is True
-            mock_download.assert_called_once()
             captured = capsys.readouterr()
-            assert "Pandoc not found. Downloading..." in captured.out
             assert "Added pandoc to PATH:" in captured.out
             assert "Pandoc is now accessible!" in captured.out
 
     @pytest.mark.mock
-    def test_pandoc_download_fails_verification(self, capsys):
-        """Test when pandoc downloads but still not accessible."""
+    def test_bundled_pandoc_not_accessible(self, capsys):
+        """Test a warning + False when the bundled binary still is not callable."""
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils.download_pandoc') as mock_download, \
              patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
              patch('os.path.exists') as mock_exists:
 
-            # Both calls fail
+            # Both probes fail even after the PATH update.
             mock_run.side_effect = [
                 FileNotFoundError(),
                 FileNotFoundError()
@@ -74,30 +75,24 @@ class TestCheckPandocInstalled:
             result = check_pandoc_installed()
 
             assert result is False
-            mock_download.assert_called_once()
             captured = capsys.readouterr()
-            assert "Warning: Pandoc downloaded but not accessible" in captured.out
+            assert "Warning: bundled Pandoc could not be located" in captured.out
 
     @pytest.mark.mock
     def test_pandoc_dir_not_found(self):
-        """Test when pandoc directory cannot be determined."""
+        """Test False is returned when the pandoc directory cannot be determined."""
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils.download_pandoc') as mock_download, \
              patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir:
 
             mock_run.side_effect = FileNotFoundError()
             mock_get_dir.return_value = None
 
-            result = check_pandoc_installed()
-
-            assert result is False
-            mock_download.assert_called_once()
+            assert check_pandoc_installed() is False
 
     @pytest.mark.mock
     def test_pandoc_dir_does_not_exist(self):
-        """Test when pandoc directory path doesn't exist."""
+        """Test False is returned when the located pandoc directory does not exist."""
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils.download_pandoc') as mock_download, \
              patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
              patch('os.path.exists') as mock_exists:
 
@@ -105,22 +100,18 @@ class TestCheckPandocInstalled:
             mock_get_dir.return_value = '/nonexistent/path'
             mock_exists.return_value = False
 
-            result = check_pandoc_installed()
-
-            assert result is False
-            mock_download.assert_called_once()
+            assert check_pandoc_installed() is False
 
     @pytest.mark.mock
     def test_pandoc_dir_already_on_path_not_readded(self, capsys):
         """Test that PATH is not modified when the dir is already present.
 
         Test scenario:
-            Pandoc is missing, downloaded, and its directory already appears on
-            PATH; expect success without re-adding (no "Added pandoc to PATH").
+            Pandoc is missing and its (bundled) directory already appears on PATH;
+            expect success without re-adding (no "Added pandoc to PATH").
         """
         pandoc_dir = os.path.join("already", "on", "path")
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils.download_pandoc'), \
              patch('ddocs.pandoc_utils._get_pandoc_dir', return_value=pandoc_dir), \
              patch('os.path.exists', return_value=True), \
              patch.dict('os.environ', {'PATH': pandoc_dir}, clear=False):
