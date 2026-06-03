@@ -2503,15 +2503,16 @@ token/password so secrets are never written to logs.</p>
 
 
 <a href="#ddocs.repo_cloner.clone_repo_cli" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">clone_repo_cli</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">clone_repo_cli</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">prefer_ssh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Clone the Deltares LatexInstallation repo and copy template files to <code>output_dir</code>.</p>
 <p>Uses :class:<code>RepoCloner</code> as a context manager so the temporary clone is always
-removed, even if copying fails. Authentication is handled by <code>RepoCloner</code> (token
-in CI, SSH key on a laptop).</p>
+removed, even if copying fails. Credentials are resolved by <code>RepoCloner</code> with the
+precedence token -&gt; username/password -&gt; SSH (when <code>prefer_ssh</code>) -&gt; anonymous, so
+passing nothing falls back to the machine's SSH key.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2539,6 +2540,72 @@ in CI, SSH key on a laptop).</p>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>token</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Personal access / app token for HTTPS auth. Falls back to the
+<code>GITHUB_TOKEN</code> / <code>GH_TOKEN</code> environment variables when omitted.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>username</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Username for HTTPS basic auth. Falls back to <code>GIT_USERNAME</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>password</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Password/token for HTTPS basic auth. Falls back to <code>GIT_PASSWORD</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>prefer_ssh</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>When no token or username/password is available, clone via SSH
+(using the machine's key) instead of anonymously. Defaults to True.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
             </td>
           </tr>
       </tbody>
@@ -2642,15 +2709,47 @@ in CI, SSH key on a laptop).</p>
 <span class="normal">428</span>
 <span class="normal">429</span>
 <span class="normal">430</span>
-<span class="normal">431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone_repo_cli</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone_repo_cli</span><span class="p">(</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prefer_ssh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clone the Deltares LatexInstallation repo and copy template files to `output_dir`.</span>
 
 <span class="sd">    Uses :class:`RepoCloner` as a context manager so the temporary clone is always</span>
-<span class="sd">    removed, even if copying fails. Authentication is handled by `RepoCloner` (token</span>
-<span class="sd">    in CI, SSH key on a laptop).</span>
+<span class="sd">    removed, even if copying fails. Credentials are resolved by `RepoCloner` with the</span>
+<span class="sd">    precedence token -&gt; username/password -&gt; SSH (when `prefer_ssh`) -&gt; anonymous, so</span>
+<span class="sd">    passing nothing falls back to the machine&#39;s SSH key.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        output_dir: Directory the template files are copied into. Created if missing.</span>
+<span class="sd">        token: Personal access / app token for HTTPS auth. Falls back to the</span>
+<span class="sd">            `GITHUB_TOKEN` / `GH_TOKEN` environment variables when omitted.</span>
+<span class="sd">        username: Username for HTTPS basic auth. Falls back to `GIT_USERNAME`.</span>
+<span class="sd">        password: Password/token for HTTPS basic auth. Falls back to `GIT_PASSWORD`.</span>
+<span class="sd">        prefer_ssh: When no token or username/password is available, clone via SSH</span>
+<span class="sd">            (using the machine&#39;s key) instead of anonymously. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        `0` on success.</span>
@@ -2685,7 +2784,13 @@ in CI, SSH key on a laptop).</p>
         <span class="s2">&quot;MiKTeX/bibtex/bst/deltares&quot;</span><span class="p">,</span>
     <span class="p">]</span>
 
-    <span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cloner</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span>
+        <span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">,</span>
+        <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+        <span class="n">prefer_ssh</span><span class="o">=</span><span class="n">prefer_ssh</span><span class="p">,</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">cloner</span><span class="p">:</span>
         <span class="n">cloner</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copying </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
