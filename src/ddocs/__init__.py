@@ -1,4 +1,4 @@
-"""TSVKW."""
+"""DDOCS."""
 
 from importlib.metadata import PackageNotFoundError, version
 
