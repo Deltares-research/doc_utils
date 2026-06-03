@@ -556,32 +556,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ddocs.markdown.replace_utf8_tree_chars" class="md-nav__link">
+  <a href="#ddocs.markdown.convert_all_markdown_files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        replace_utf8_tree_chars
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ddocs.markdown.fix_table_column_widths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        fix_table_column_widths
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ddocs.markdown.wrap_long_words_in_tables" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        wrap_long_words_in_tables
+        convert_all_markdown_files
       
     </span>
   </a>
@@ -600,10 +578,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ddocs.markdown.convert_all_markdown_files" class="md-nav__link">
+  <a href="#ddocs.markdown.fix_table_column_widths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        convert_all_markdown_files
+        fix_table_column_widths
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddocs.markdown.replace_utf8_tree_chars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        replace_utf8_tree_chars
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddocs.markdown.wrap_long_words_in_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wrap_long_words_in_tables
       
     </span>
   </a>
@@ -809,32 +809,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ddocs.markdown.replace_utf8_tree_chars" class="md-nav__link">
+  <a href="#ddocs.markdown.convert_all_markdown_files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        replace_utf8_tree_chars
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ddocs.markdown.fix_table_column_widths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        fix_table_column_widths
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ddocs.markdown.wrap_long_words_in_tables" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        wrap_long_words_in_tables
+        convert_all_markdown_files
       
     </span>
   </a>
@@ -853,10 +831,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ddocs.markdown.convert_all_markdown_files" class="md-nav__link">
+  <a href="#ddocs.markdown.fix_table_column_widths" class="md-nav__link">
     <span class="md-ellipsis">
       
-        convert_all_markdown_files
+        fix_table_column_widths
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddocs.markdown.replace_utf8_tree_chars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        replace_utf8_tree_chars
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ddocs.markdown.wrap_long_words_in_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wrap_long_words_in_tables
       
     </span>
   </a>
@@ -907,9 +907,7 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
 
     <div class="doc doc-contents first">
 
-        <p>Convert Markdown documentation to LaTeX format.</p>
-<p>This script converts Markdown files from the mkdocs user_docs folder to LaTeX files
-that can be included in PDF documentation. It uses Pandoc for the conversion.</p>
+        <p>Convert Markdown documentation to LaTeX (Pandoc + Deltares post-processing).</p>
 
 
 
@@ -934,17 +932,17 @@ that can be included in PDF documentation. It uses Pandoc for the conversion.</p
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ddocs.markdown.replace_utf8_tree_chars" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">replace_utf8_tree_chars</span>
+<h3 id="ddocs.markdown.convert_all_markdown_files" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">convert_all_markdown_files</span>
 
 
-<a href="#ddocs.markdown.replace_utf8_tree_chars" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">replace_utf8_tree_chars</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<a href="#ddocs.markdown.convert_all_markdown_files" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">convert_all_markdown_files</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;*.md&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Replace UTF-8 box-drawing characters and symbols with LaTeX equivalents.</p>
+        <p>Convert all Markdown files in a directory to LaTeX.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -960,18 +958,82 @@ that can be included in PDF documentation. It uses Pandoc for the conversion.</p
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>content</code>
+                <code>input_dir</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Directory containing Markdown files</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>output_dir</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Directory for output LaTeX files</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>template</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optional custom Pandoc template</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>standalone</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, generate complete LaTeX documents</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>pattern</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>LaTeX content string</p>
+                <p>Glob pattern for matching files (default: "*.md")</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>&#39;*.md&#39;</code>
             </td>
           </tr>
       </tbody>
@@ -989,11 +1051,11 @@ that can be included in PDF documentation. It uses Pandoc for the conversion.</p
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="str">str</span></code>
+                  <code><span title="tuple">tuple</span>[<span title="int">int</span>, <span title="int">int</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Content with UTF-8 characters replaced</p>
+                <p>Tuple of (successful_conversions, total_files)</p>
               </div>
             </td>
           </tr>
@@ -1002,532 +1064,90 @@ that can be included in PDF documentation. It uses Pandoc for the conversion.</p
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/ddocs/markdown.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_utf8_tree_chars</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace UTF-8 box-drawing characters and symbols with LaTeX equivalents.</span>
+              <summary>Source code in <code>src/ddocs/markdown/markdown.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_all_markdown_files</span><span class="p">(</span>
+    <span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*.md&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert all Markdown files in a directory to LaTeX.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        content: LaTeX content string</span>
+<span class="sd">        input_dir: Directory containing Markdown files</span>
+<span class="sd">        output_dir: Directory for output LaTeX files</span>
+<span class="sd">        template: Optional custom Pandoc template</span>
+<span class="sd">        standalone: If True, generate complete LaTeX documents</span>
+<span class="sd">        pattern: Glob pattern for matching files (default: &quot;*.md&quot;)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Content with UTF-8 characters replaced</span>
+<span class="sd">        Tuple of (successful_conversions, total_files)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Map UTF-8 box-drawing characters to ASCII equivalents</span>
-    <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;├&#39;</span><span class="p">:</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;│&#39;</span><span class="p">:</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;└&#39;</span><span class="p">:</span> <span class="s1">&#39;`&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;─&#39;</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┌&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┐&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┘&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┴&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┬&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┤&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;├──&#39;</span><span class="p">:</span> <span class="s1">&#39;|--&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;└──&#39;</span><span class="p">:</span> <span class="s1">&#39;`--&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;│   &#39;</span><span class="p">:</span> <span class="s1">&#39;|   &#39;</span><span class="p">,</span>
-        <span class="c1"># Common Unicode symbols to LaTeX commands</span>
-        <span class="s1">&#39;✓&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\checkmark&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;✗&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\texttimes&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;⚠&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\textbf{!}&#39;</span><span class="p">,</span>  <span class="c1"># Warning sign</span>
-        <span class="s1">&#39;⚠️&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\textbf{!}&#39;</span><span class="p">,</span>  <span class="c1"># Warning sign with emoji modifier</span>
-        <span class="s1">&#39;→&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\rightarrow$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;←&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\leftarrow$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;↔&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\leftrightarrow$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;…&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\ldots&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;—&#39;</span><span class="p">:</span> <span class="s1">&#39;---&#39;</span><span class="p">,</span>  <span class="c1"># em-dash</span>
-        <span class="s1">&#39;–&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>   <span class="c1"># en-dash</span>
-        <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span> <span class="s2">&quot;``&quot;</span><span class="p">,</span>   <span class="c1"># left double quote</span>
-        <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">,</span>   <span class="c1"># right double quote</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;: &quot;`&quot;,    # left single quote</span>
-<span class="sd">        &#39;&#39;&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>    <span class="c1"># right single quote</span>
-        <span class="s1">&#39;</span><span class="se">\ufe0f</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>  <span class="c1"># Remove emoji variation selector</span>
-    <span class="p">}</span>
+    <span class="c1"># Create output directory if it doesn&#39;t exist</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">utf8_char</span><span class="p">,</span> <span class="n">ascii_char</span> <span class="ow">in</span> <span class="n">replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">utf8_char</span><span class="p">,</span> <span class="n">ascii_char</span><span class="p">)</span>
+    <span class="c1"># Find all markdown files</span>
+    <span class="n">md_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">content</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">md_files</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No markdown files found in </span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-</div>
-
-<div class="doc doc-object doc-function">
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">md_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> markdown file(s) to convert&quot;</span><span class="p">)</span>
 
 
-<h3 id="ddocs.markdown.fix_table_column_widths" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">fix_table_column_widths</span>
+    <span class="c1"># Convert each file</span>
+    <span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">md_file</span> <span class="ow">in</span> <span class="n">md_files</span><span class="p">:</span>
+        <span class="c1"># Generate output filename</span>
+        <span class="n">tex_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">md_file</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.tex&quot;</span>
 
+        <span class="k">if</span> <span class="n">convert_markdown_to_latex</span><span class="p">(</span><span class="n">md_file</span><span class="p">,</span> <span class="n">tex_file</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">standalone</span><span class="p">):</span>
+            <span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
-<a href="#ddocs.markdown.fix_table_column_widths" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fix_table_column_widths</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Fix LaTeX table column widths for better formatting.</p>
-<p>Looks for tables and analyzes content to adjust column widths
-to prevent overlap.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>content</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>LaTeX content string</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Content with adjusted table column widths</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/ddocs/markdown.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fix_table_column_widths</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix LaTeX table column widths for better formatting.</span>
-
-<span class="sd">    Looks for tables and analyzes content to adjust column widths</span>
-<span class="sd">    to prevent overlap.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        content: LaTeX content string</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Content with adjusted table column widths</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
-    <span class="c1"># Find all longtable environments</span>
-    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})&#39;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">fix_single_table</span><span class="p">(</span><span class="n">table_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fix a single table by analyzing its content.&quot;&quot;&quot;</span>
-
-        <span class="c1"># Find the column specification line</span>
-        <span class="n">col_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&gt;\{</span><span class="se">\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash\}p\{\(</span><span class="se">\\</span><span class="s1">linewidth - (\d+)</span><span class="se">\\</span><span class="s1">tabcolsep\) \* </span><span class="se">\\</span><span class="s1">real\{(0\.\d+)\}\}&#39;</span>
-
-        <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">col_pattern</span><span class="p">,</span> <span class="n">table_text</span><span class="p">))</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">table_text</span>
-
-        <span class="n">tabcolsep</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">num_cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
-
-        <span class="c1"># Check if this table has &quot;Short&quot; and &quot;Long&quot; headers (CLI argument tables)</span>
-        <span class="k">if</span> <span class="s1">&#39;Short&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">&#39;Long&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
-            <span class="c1"># CLI argument table</span>
-            <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-                <span class="c1"># Check for very long options like --calculate-surge</span>
-                <span class="k">if</span> <span class="s1">&#39;--calculate-surge&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
-                    <span class="c1"># Need extra space for long options</span>
-                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.16&#39;</span><span class="p">,</span> <span class="s1">&#39;0.07&#39;</span><span class="p">,</span> <span class="s1">&#39;0.22&#39;</span><span class="p">,</span> <span class="s1">&#39;0.10&#39;</span><span class="p">,</span> <span class="s1">&#39;0.35&#39;</span><span class="p">]</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.19&#39;</span><span class="p">,</span> <span class="s1">&#39;0.08&#39;</span><span class="p">,</span> <span class="s1">&#39;0.18&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12&#39;</span><span class="p">,</span> <span class="s1">&#39;0.33&#39;</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.09&#39;</span><span class="p">,</span> <span class="s1">&#39;0.22&#39;</span><span class="p">,</span> <span class="s1">&#39;0.44&#39;</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">table_text</span>
-
-        <span class="c1"># Check for tables with very long column names</span>
-        <span class="k">elif</span> <span class="s1">&#39;Keringstoestand&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">or</span> <span class="s1">&#39;[open/gesloten]&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
-            <span class="c1"># Input file format table with long Dutch column names</span>
-            <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="c1"># Column, Description, Unit, Required</span>
-                <span class="c1"># Column has long names like &quot;Keringstoestand[open/gesloten]&quot;</span>
-                <span class="c1"># Required has &quot;Only with --calculate-surge&quot;</span>
-                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.28&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">table_text</span>
-
-        <span class="c1"># Check for tables with column headers but not the special cases above</span>
-        <span class="k">elif</span> <span class="s1">&#39;Column&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">&#39;Description&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
-            <span class="c1"># Generic column/description table</span>
-            <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.35&#39;</span><span class="p">,</span> <span class="s1">&#39;0.15&#39;</span><span class="p">,</span> <span class="s1">&#39;0.25&#39;</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">table_text</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Don&#39;t modify tables we don&#39;t recognize</span>
-            <span class="k">return</span> <span class="n">table_text</span>
-
-        <span class="c1"># Replace each column width</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">table_text</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">match</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_widths</span><span class="p">):</span>
-                <span class="n">old_spec</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">new_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&gt;</span><span class="se">{{\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash</span><span class="se">}}</span><span class="s1">p</span><span class="se">{{</span><span class="s1">(</span><span class="se">\\</span><span class="s1">linewidth - </span><span class="si">{</span><span class="n">tabcolsep</span><span class="si">}</span><span class="se">\\</span><span class="s1">tabcolsep) * </span><span class="se">\\</span><span class="s1">real</span><span class="se">{{</span><span class="si">{</span><span class="n">new_widths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_spec</span><span class="p">,</span> <span class="n">new_spec</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="c1"># Process all longtables</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">longtable_pattern</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">fix_single_table</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="ddocs.markdown.wrap_long_words_in_tables" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">wrap_long_words_in_tables</span>
-
-
-<a href="#ddocs.markdown.wrap_long_words_in_tables" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">wrap_long_words_in_tables</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Wrap very long words in table cells with seqsplit for automatic breaking.</p>
-<p>This prevents long words from overflowing table columns by allowing them
-to break at any character position.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>content</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>LaTeX content string</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="str">str</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Content with long words wrapped in seqsplit</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/ddocs/markdown.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wrap_long_words_in_tables</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap very long words in table cells with seqsplit for automatic breaking.</span>
-
-<span class="sd">    This prevents long words from overflowing table columns by allowing them</span>
-<span class="sd">    to break at any character position.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        content: LaTeX content string</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Content with long words wrapped in seqsplit</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
-    <span class="c1"># Find all longtable environments</span>
-    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})&#39;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrap_long_words_in_table</span><span class="p">(</span><span class="n">table_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap long words in a single table.&quot;&quot;&quot;</span>
-
-        <span class="c1"># Pattern to find table cell content (between &amp; and \\ or &amp;)</span>
-        <span class="c1"># This is a simplified approach - wrap text in curly braces that looks problematic</span>
-
-        <span class="c1"># Find long words (&gt;15 characters without spaces) that aren&#39;t already in commands</span>
-        <span class="c1"># Exclude content already in \lstinline, \passthrough, math mode, etc.</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">wrap_word</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
-            <span class="n">word</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="c1"># Don&#39;t wrap if already in a command or if it&#39;s a LaTeX command itself</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span>
-
-        <span class="c1"># Pattern: words with brackets like &quot;Keringstoestand[open/gesloten]&quot;</span>
-        <span class="c1"># or long words without spaces (&gt;20 chars)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">table_text</span>
-
-        <span class="c1"># Wrap long column names with brackets (like &quot;Keringstoestand[open/gesloten]&quot;)</span>
-        <span class="c1"># Match pattern: word followed by [text] where total length &gt; 20</span>
-        <span class="n">bracket_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;([A-Za-z]{10,})\{?\[([^\]]+)\]\}?&#39;</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">wrap_bracket_text</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
-            <span class="c1"># Check if already wrapped or in a command</span>
-            <span class="n">before_match</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="o">-</span><span class="mi">20</span><span class="p">):</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
-            <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit&#39;</span> <span class="ow">in</span> <span class="n">before_match</span> <span class="ow">or</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">passthrough&#39;</span> <span class="ow">in</span> <span class="n">before_match</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-            <span class="n">word</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">bracket_content</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-            <span class="c1"># Return wrapped version</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">bracket_content</span><span class="si">}</span><span class="s1">]</span><span class="se">}}</span><span class="s1">&#39;</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">bracket_pattern</span><span class="p">,</span> <span class="n">wrap_bracket_text</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="c1"># Process all longtables</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">longtable_pattern</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">wrap_long_words_in_table</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">success_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">md_files</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1654,7 +1274,7 @@ to break at any character position.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/ddocs/markdown.py</code></summary>
+              <summary>Source code in <code>src/ddocs/markdown/markdown.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
@@ -1845,17 +1465,19 @@ to break at any character position.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="ddocs.markdown.convert_all_markdown_files" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">convert_all_markdown_files</span>
+<h3 id="ddocs.markdown.fix_table_column_widths" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">fix_table_column_widths</span>
 
 
-<a href="#ddocs.markdown.convert_all_markdown_files" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">convert_all_markdown_files</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;*.md&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<a href="#ddocs.markdown.fix_table_column_widths" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fix_table_column_widths</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Convert all Markdown files in a directory to LaTeX.</p>
+        <p>Fix LaTeX table column widths for better formatting.</p>
+<p>Looks for tables and analyzes content to adjust column widths
+to prevent overlap.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1871,82 +1493,18 @@ to break at any character position.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>input_dir</code>
-            </td>
-            <td>
-                  <code><span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Directory containing Markdown files</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>output_dir</code>
-            </td>
-            <td>
-                  <code><span title="pathlib.Path">Path</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Directory for output LaTeX files</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>template</code>
-            </td>
-            <td>
-                  <code><span title="pathlib.Path">Path</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Optional custom Pandoc template</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>standalone</code>
-            </td>
-            <td>
-                  <code><span title="bool">bool</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If True, generate complete LaTeX documents</p>
-              </div>
-            </td>
-            <td>
-                  <code>False</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>pattern</code>
+                <code>content</code>
             </td>
             <td>
                   <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Glob pattern for matching files (default: "*.md")</p>
+                <p>LaTeX content string</p>
               </div>
             </td>
             <td>
-                  <code>&#39;*.md&#39;</code>
+                <em>required</em>
             </td>
           </tr>
       </tbody>
@@ -1964,11 +1522,11 @@ to break at any character position.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="tuple">tuple</span>[<span title="int">int</span>, <span title="int">int</span>]</code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Tuple of (successful_conversions, total_files)</p>
+                <p>Content with adjusted table column widths</p>
               </div>
             </td>
           </tr>
@@ -1977,90 +1535,530 @@ to break at any character position.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/ddocs/markdown.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
-<span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span>
-<span class="normal">335</span>
-<span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
-<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">convert_all_markdown_files</span><span class="p">(</span>
-    <span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*.md&quot;</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert all Markdown files in a directory to LaTeX.</span>
+              <summary>Source code in <code>src/ddocs/markdown/markdown.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fix_table_column_widths</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix LaTeX table column widths for better formatting.</span>
+
+<span class="sd">    Looks for tables and analyzes content to adjust column widths</span>
+<span class="sd">    to prevent overlap.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        input_dir: Directory containing Markdown files</span>
-<span class="sd">        output_dir: Directory for output LaTeX files</span>
-<span class="sd">        template: Optional custom Pandoc template</span>
-<span class="sd">        standalone: If True, generate complete LaTeX documents</span>
-<span class="sd">        pattern: Glob pattern for matching files (default: &quot;*.md&quot;)</span>
+<span class="sd">        content: LaTeX content string</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple of (successful_conversions, total_files)</span>
+<span class="sd">        Content with adjusted table column widths</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Create output directory if it doesn&#39;t exist</span>
-    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-    <span class="c1"># Find all markdown files</span>
-    <span class="n">md_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
+    <span class="c1"># Find all longtable environments</span>
+    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})&#39;</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">md_files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No markdown files found in </span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fix_single_table</span><span class="p">(</span><span class="n">table_text</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fix a single table by analyzing its content.&quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">md_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> markdown file(s) to convert&quot;</span><span class="p">)</span>
+        <span class="c1"># Find the column specification line</span>
+        <span class="n">col_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&gt;\{</span><span class="se">\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash\}p\{\(</span><span class="se">\\</span><span class="s1">linewidth - (\d+)</span><span class="se">\\</span><span class="s1">tabcolsep\) \* </span><span class="se">\\</span><span class="s1">real\{(0\.\d+)\}\}&#39;</span>
+
+        <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">col_pattern</span><span class="p">,</span> <span class="n">table_text</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">table_text</span>
+
+        <span class="n">tabcolsep</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">num_cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+
+        <span class="c1"># Check if this table has &quot;Short&quot; and &quot;Long&quot; headers (CLI argument tables)</span>
+        <span class="k">if</span> <span class="s1">&#39;Short&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">&#39;Long&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+            <span class="c1"># CLI argument table</span>
+            <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="c1"># Check for very long options like --calculate-surge</span>
+                <span class="k">if</span> <span class="s1">&#39;--calculate-surge&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+                    <span class="c1"># Need extra space for long options</span>
+                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.16&#39;</span><span class="p">,</span> <span class="s1">&#39;0.07&#39;</span><span class="p">,</span> <span class="s1">&#39;0.22&#39;</span><span class="p">,</span> <span class="s1">&#39;0.10&#39;</span><span class="p">,</span> <span class="s1">&#39;0.35&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.19&#39;</span><span class="p">,</span> <span class="s1">&#39;0.08&#39;</span><span class="p">,</span> <span class="s1">&#39;0.18&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12&#39;</span><span class="p">,</span> <span class="s1">&#39;0.33&#39;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.09&#39;</span><span class="p">,</span> <span class="s1">&#39;0.22&#39;</span><span class="p">,</span> <span class="s1">&#39;0.44&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">table_text</span>
+
+        <span class="c1"># Check for tables with very long column names</span>
+        <span class="k">elif</span> <span class="s1">&#39;Keringstoestand&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">or</span> <span class="s1">&#39;[open/gesloten]&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+            <span class="c1"># Input file format table with long Dutch column names</span>
+            <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="c1"># Column, Description, Unit, Required</span>
+                <span class="c1"># Column has long names like &quot;Keringstoestand[open/gesloten]&quot;</span>
+                <span class="c1"># Required has &quot;Only with --calculate-surge&quot;</span>
+                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.28&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">table_text</span>
+
+        <span class="c1"># Check for tables with column headers but not the special cases above</span>
+        <span class="k">elif</span> <span class="s1">&#39;Column&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">&#39;Description&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+            <span class="c1"># Generic column/description table</span>
+            <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.35&#39;</span><span class="p">,</span> <span class="s1">&#39;0.15&#39;</span><span class="p">,</span> <span class="s1">&#39;0.25&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">table_text</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Don&#39;t modify tables we don&#39;t recognize</span>
+            <span class="k">return</span> <span class="n">table_text</span>
+
+        <span class="c1"># Replace each column width</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">table_text</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">match</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_widths</span><span class="p">):</span>
+                <span class="n">old_spec</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">new_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&gt;</span><span class="se">{{\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash</span><span class="se">}}</span><span class="s1">p</span><span class="se">{{</span><span class="s1">(</span><span class="se">\\</span><span class="s1">linewidth - </span><span class="si">{</span><span class="n">tabcolsep</span><span class="si">}</span><span class="se">\\</span><span class="s1">tabcolsep) * </span><span class="se">\\</span><span class="s1">real</span><span class="se">{{</span><span class="si">{</span><span class="n">new_widths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_spec</span><span class="p">,</span> <span class="n">new_spec</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1"># Process all longtables</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">longtable_pattern</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">fix_single_table</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
 
 
-    <span class="c1"># Convert each file</span>
-    <span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">md_file</span> <span class="ow">in</span> <span class="n">md_files</span><span class="p">:</span>
-        <span class="c1"># Generate output filename</span>
-        <span class="n">tex_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">md_file</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.tex&quot;</span>
+<h3 id="ddocs.markdown.replace_utf8_tree_chars" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">replace_utf8_tree_chars</span>
 
-        <span class="k">if</span> <span class="n">convert_markdown_to_latex</span><span class="p">(</span><span class="n">md_file</span><span class="p">,</span> <span class="n">tex_file</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">standalone</span><span class="p">):</span>
-            <span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">return</span> <span class="n">success_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">md_files</span><span class="p">)</span>
+<a href="#ddocs.markdown.replace_utf8_tree_chars" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">replace_utf8_tree_chars</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Replace UTF-8 box-drawing characters and symbols with LaTeX equivalents.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>content</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>LaTeX content string</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Content with UTF-8 characters replaced</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/ddocs/markdown/markdown.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_utf8_tree_chars</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace UTF-8 box-drawing characters and symbols with LaTeX equivalents.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        content: LaTeX content string</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Content with UTF-8 characters replaced</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Map UTF-8 box-drawing characters to ASCII equivalents</span>
+    <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;├&#39;</span><span class="p">:</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;│&#39;</span><span class="p">:</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;└&#39;</span><span class="p">:</span> <span class="s1">&#39;`&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;─&#39;</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;┌&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;┐&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;┘&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;┴&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;┬&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;┤&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;├──&#39;</span><span class="p">:</span> <span class="s1">&#39;|--&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;└──&#39;</span><span class="p">:</span> <span class="s1">&#39;`--&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;│   &#39;</span><span class="p">:</span> <span class="s1">&#39;|   &#39;</span><span class="p">,</span>
+        <span class="c1"># Common Unicode symbols to LaTeX commands</span>
+        <span class="s1">&#39;✓&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\checkmark&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;✗&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\texttimes&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;⚠&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\textbf{!}&#39;</span><span class="p">,</span>  <span class="c1"># Warning sign</span>
+        <span class="s1">&#39;⚠️&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\textbf{!}&#39;</span><span class="p">,</span>  <span class="c1"># Warning sign with emoji modifier</span>
+        <span class="s1">&#39;→&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\rightarrow$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;←&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\leftarrow$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;↔&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\leftrightarrow$&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;…&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\ldots&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;—&#39;</span><span class="p">:</span> <span class="s1">&#39;---&#39;</span><span class="p">,</span>  <span class="c1"># em-dash</span>
+        <span class="s1">&#39;–&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>   <span class="c1"># en-dash</span>
+        <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span> <span class="s2">&quot;``&quot;</span><span class="p">,</span>   <span class="c1"># left double quote</span>
+        <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">,</span>   <span class="c1"># right double quote</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;: &quot;`&quot;,    # left single quote</span>
+<span class="sd">        &#39;&#39;&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>    <span class="c1"># right single quote</span>
+        <span class="s1">&#39;</span><span class="se">\ufe0f</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>  <span class="c1"># Remove emoji variation selector</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">utf8_char</span><span class="p">,</span> <span class="n">ascii_char</span> <span class="ow">in</span> <span class="n">replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">utf8_char</span><span class="p">,</span> <span class="n">ascii_char</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">content</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ddocs.markdown.wrap_long_words_in_tables" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">wrap_long_words_in_tables</span>
+
+
+<a href="#ddocs.markdown.wrap_long_words_in_tables" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">wrap_long_words_in_tables</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Wrap very long words in table cells with seqsplit for automatic breaking.</p>
+<p>This prevents long words from overflowing table columns by allowing them
+to break at any character position.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>content</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>LaTeX content string</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Content with long words wrapped in seqsplit</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src/ddocs/markdown/markdown.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wrap_long_words_in_tables</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap very long words in table cells with seqsplit for automatic breaking.</span>
+
+<span class="sd">    This prevents long words from overflowing table columns by allowing them</span>
+<span class="sd">    to break at any character position.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        content: LaTeX content string</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Content with long words wrapped in seqsplit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+    <span class="c1"># Find all longtable environments</span>
+    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrap_long_words_in_table</span><span class="p">(</span><span class="n">table_text</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap long words in a single table.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Pattern to find table cell content (between &amp; and \\ or &amp;)</span>
+        <span class="c1"># This is a simplified approach - wrap text in curly braces that looks problematic</span>
+
+        <span class="c1"># Find long words (&gt;15 characters without spaces) that aren&#39;t already in commands</span>
+        <span class="c1"># Exclude content already in \lstinline, \passthrough, math mode, etc.</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrap_word</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+            <span class="n">word</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># Don&#39;t wrap if already in a command or if it&#39;s a LaTeX command itself</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span>
+
+        <span class="c1"># Pattern: words with brackets like &quot;Keringstoestand[open/gesloten]&quot;</span>
+        <span class="c1"># or long words without spaces (&gt;20 chars)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">table_text</span>
+
+        <span class="c1"># Wrap long column names with brackets (like &quot;Keringstoestand[open/gesloten]&quot;)</span>
+        <span class="c1"># Match pattern: word followed by [text] where total length &gt; 20</span>
+        <span class="n">bracket_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;([A-Za-z]{10,})\{?\[([^\]]+)\]\}?&#39;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrap_bracket_text</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+            <span class="c1"># Check if already wrapped or in a command</span>
+            <span class="n">before_match</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="o">-</span><span class="mi">20</span><span class="p">):</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit&#39;</span> <span class="ow">in</span> <span class="n">before_match</span> <span class="ow">or</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">passthrough&#39;</span> <span class="ow">in</span> <span class="n">before_match</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">word</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">bracket_content</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># Return wrapped version</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">bracket_content</span><span class="si">}</span><span class="s1">]</span><span class="se">}}</span><span class="s1">&#39;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">bracket_pattern</span><span class="p">,</span> <span class="n">wrap_bracket_text</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1"># Process all longtables</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">longtable_pattern</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">wrap_long_words_in_table</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
