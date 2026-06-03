@@ -14,6 +14,28 @@ class RepoCloner:
     precedence: token, then username+password, then SSH (when ``prefer_ssh`` is set), then an
     anonymous HTTPS clone. This lets the same code authenticate via a token in CI and via the
     developer's SSH key on a laptop.
+
+    Examples:
+        - Construct with a token and read back the stored credentials:
+            ```python
+            >>> from ddocs.repo_cloner import RepoCloner
+            >>> cloner = RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")
+            >>> cloner.token
+            'ghp_demo'
+            >>> cloner.repo_url
+            'https://github.com/Deltares/LatexInstallation'
+
+            ```
+        - A token turns the public URL into an authenticated HTTPS clone URL:
+            ```python
+            >>> from ddocs.repo_cloner import RepoCloner
+            >>> RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._resolve_clone_url()
+            'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'
+
+            ```
+
+    See Also:
+        clone_repo_cli: Uses this class to fetch the Deltares LaTeX templates.
     """
 
     def __init__(
@@ -36,6 +58,26 @@ class RepoCloner:
                 or the legacy ``SVN_PASSWORD`` environment variable.
             prefer_ssh: When no token or username/password is available, clone via an
                 SSH URL (using the machine's SSH key) instead of anonymously.
+
+        Examples:
+            - An explicit token is stored verbatim (it wins over any environment value):
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> cloner.token
+                'ghp_demo'
+                >>> cloner.prefer_ssh
+                True
+
+                ```
+            - Basic-auth credentials are stored for later HTTPS injection:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", username="alice", password="pw")
+                >>> (cloner.username, cloner.password)
+                ('alice', 'pw')
+
+                ```
         """
         self.repo_url = repo_url
         self.token = token or os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
@@ -51,6 +93,28 @@ class RepoCloner:
         """Convert an HTTPS git URL to its ``git@host:owner/repo.git`` SSH form.
 
         URLs that are already SSH (``git@`` or ``ssh://``) are returned unchanged.
+
+        Args:
+            url: An HTTPS/HTTP or SSH git URL.
+
+        Returns:
+            The SSH-form URL, or ``url`` unchanged if it was already SSH.
+
+        Examples:
+            - An HTTPS URL is rewritten and given a ``.git`` suffix:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> RepoCloner._to_ssh_url("https://github.com/Deltares/LatexInstallation")
+                'git@github.com:Deltares/LatexInstallation.git'
+
+                ```
+            - An already-SSH URL is returned untouched:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> RepoCloner._to_ssh_url("git@github.com:Deltares/LatexInstallation.git")
+                'git@github.com:Deltares/LatexInstallation.git'
+
+                ```
         """
         if url.startswith("git@") or url.startswith("ssh://"):
             ssh_url = url
@@ -67,6 +131,25 @@ class RepoCloner:
 
         Precedence: token, then username+password, then SSH (when ``prefer_ssh``),
         then an anonymous HTTPS clone. An input that is already an SSH URL is used as-is.
+
+        Returns:
+            The clone URL git should use, with any token/credentials embedded.
+
+        Examples:
+            - A token is embedded as an ``x-access-token`` HTTPS credential:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> RepoCloner("https://github.com/owner/repo", token="ghp_demo")._resolve_clone_url()
+                'https://x-access-token:ghp_demo@github.com/owner/repo'
+
+                ```
+            - An SSH input URL is used as-is, even when a token is set:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> RepoCloner("git@github.com:owner/repo.git", token="ghp_demo")._resolve_clone_url()
+                'git@github.com:owner/repo.git'
+
+                ```
         """
         url = self.repo_url.rstrip("/")
         if url.startswith("git@") or url.startswith("ssh://"):
@@ -82,7 +165,32 @@ class RepoCloner:
         return clone_url
 
     def _scrub_secrets(self, text: str) -> str:
-        """Replace any known secret (token/password) in ``text`` with ``***``."""
+        """Replace any known secret (token/password) in ``text`` with ``***``.
+
+        Args:
+            text: Arbitrary text (e.g. a git error message) that may contain secrets.
+
+        Returns:
+            The text with every configured token/password occurrence masked.
+
+        Examples:
+            - A token embedded in an error message is masked:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> cloner._scrub_secrets("fatal: auth failed for ghp_demo")
+                'fatal: auth failed for ***'
+
+                ```
+            - Text without any secret is returned unchanged:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> cloner._scrub_secrets("fatal: repository not found")
+                'fatal: repository not found'
+
+                ```
+        """
         scrubbed = text
         for secret in (self.token, self.password):
             if secret:
