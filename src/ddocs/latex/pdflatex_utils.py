@@ -1,19 +1,19 @@
 """Locate, verify, and install pdfLaTeX (via TinyTeX) for the ddocs pipeline.
 
 Building PDFs from the generated LaTeX needs a TeX engine (``pdflatex``) plus a set
-of packages and ``biber``. Unlike pandoc there is no single downloadable binary, so
+of packages and `biber`. Unlike pandoc there is no single downloadable binary, so
 this module uses **TinyTeX** -- a lightweight, root-free, cross-platform distribution
 built on TeX Live -- as the install backend:
 
-1. ``sanity_check`` -- is ``pdflatex`` (or ``biber``) already callable?
-2. ``check_pdflatex_installed`` -- if not, download and run the official TinyTeX
-   installer (no admin rights), add its ``bin`` directory to ``PATH`` for the current
-   process, and ``tlmgr install`` the package collections that mirror the
-   ``texlive-*`` apt packages.
-3. ``install_missing_packages`` -- a MiKTeX-style helper that scans a LaTeX build log
-   for missing files and ``tlmgr install``s them (TeX Live does not do this natively).
+1. `sanity_check` -- is `pdflatex` (or `biber`) already callable?
+2. `check_pdflatex_installed` -- if not, download and run the official TinyTeX
+   installer (no admin rights), add its `bin` directory to `PATH` for the current
+   process, and `tlmgr install` the package collections that mirror the
+   `texlive-*` apt packages.
+3. `install_missing_packages` -- a MiKTeX-style helper that scans a LaTeX build log
+   for missing files and `tlmgr install`s them (TeX Live does not do this natively).
 
-The ``PATH`` change affects only the current process and the subprocesses it spawns,
+The `PATH` change affects only the current process and the subprocesses it spawns,
 not the parent shell.
 """
 
@@ -54,19 +54,19 @@ _MISSING_FILE_RE = re.compile(r"File `([^']+\.(?:sty|cls|tex|fd|cfg))' not found
 def sanity_check(command: str = "pdflatex") -> bool:
     """Check whether a TeX command is callable from the command line.
 
-    Runs ``<command> --version`` as a subprocess. This only inspects what is already
-    reachable on ``PATH`` -- it never downloads or installs anything.
+    Runs `<command> --version` as a subprocess. This only inspects what is already
+    reachable on `PATH` -- it never downloads or installs anything.
 
     Args:
-        command: The executable to probe, e.g. ``"pdflatex"`` or ``"biber"``.
+        command: The executable to probe, e.g. `"pdflatex"` or `"biber"`.
 
     Returns:
-        True if ``<command> --version`` runs successfully, False otherwise.
+        True if `<command> --version` runs successfully, False otherwise.
 
     Examples:
         - Branch on whether pdflatex is available:
             ```python
-            >>> from ddocs.pdflatex_utils import sanity_check
+            >>> from ddocs.latex.pdflatex_utils import sanity_check
             >>> if sanity_check():  # doctest: +SKIP
             ...     print("ready to build PDFs")
             ready to build PDFs
@@ -74,7 +74,7 @@ def sanity_check(command: str = "pdflatex") -> bool:
             ```
         - Probe a different tool such as biber:
             ```python
-            >>> from ddocs.pdflatex_utils import sanity_check
+            >>> from ddocs.latex.pdflatex_utils import sanity_check
             >>> sanity_check("biber")  # doctest: +SKIP
             True
 
@@ -112,20 +112,20 @@ def _tinytex_root_candidates() -> list[str]:
 
 
 def find_tex_bin_dir() -> str | None:
-    """Locate the TinyTeX ``bin`` directory that contains ``pdflatex``.
+    """Locate the TinyTeX `bin` directory that contains `pdflatex`.
 
-    TinyTeX installs the binaries under ``<root>/bin/<platform>`` (e.g.
-    ``bin/x86_64-linux`` or ``bin/windows``); the exact platform folder is resolved by
+    TinyTeX installs the binaries under `<root>/bin/<platform>` (e.g.
+    `bin/x86_64-linux` or `bin/windows`); the exact platform folder is resolved by
     globbing so it works across architectures.
 
     Returns:
-        The absolute path of the directory containing the ``pdflatex`` executable, or
+        The absolute path of the directory containing the `pdflatex` executable, or
         None if no TinyTeX installation is found.
 
     Examples:
         - Get the bin directory if TinyTeX is installed:
             ```python
-            >>> from ddocs.pdflatex_utils import find_tex_bin_dir
+            >>> from ddocs.latex.pdflatex_utils import find_tex_bin_dir
             >>> bin_dir = find_tex_bin_dir()  # doctest: +SKIP
             >>> bin_dir.endswith("bin") or "bin" in bin_dir  # doctest: +SKIP
             True
@@ -145,7 +145,7 @@ def find_tex_bin_dir() -> str | None:
 
 
 def _prepend_to_path(directory: str) -> None:
-    """Prepend ``directory`` to this process's ``PATH`` if not already present."""
+    """Prepend `directory` to this process's `PATH` if not already present."""
     if directory and directory not in os.environ.get("PATH", "").split(os.pathsep):
         os.environ["PATH"] = directory + os.pathsep + os.environ.get("PATH", "")
         print(f"Added TeX to PATH: {directory}")
@@ -176,26 +176,26 @@ def _install_tinytex() -> None:
 
 
 def install_tlmgr_packages(packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES) -> bool:
-    """Install TeX packages with ``tlmgr``.
+    """Install TeX packages with `tlmgr`.
 
     Args:
         packages: The tlmgr package/collection names to install. Defaults to
-            :data:`REQUIRED_TLMGR_PACKAGES`, which mirror the ``texlive-*`` apt set.
+            :data:`REQUIRED_TLMGR_PACKAGES`, which mirror the `texlive-*` apt set.
 
     Returns:
-        True if ``tlmgr install`` succeeded, False otherwise.
+        True if `tlmgr install` succeeded, False otherwise.
 
     Examples:
-        - Install the default package set after TinyTeX is on ``PATH``:
+        - Install the default package set after TinyTeX is on `PATH`:
             ```python
-            >>> from ddocs.pdflatex_utils import install_tlmgr_packages
+            >>> from ddocs.latex.pdflatex_utils import install_tlmgr_packages
             >>> install_tlmgr_packages()  # doctest: +SKIP
             True
 
             ```
         - Install a specific package:
             ```python
-            >>> from ddocs.pdflatex_utils import install_tlmgr_packages
+            >>> from ddocs.latex.pdflatex_utils import install_tlmgr_packages
             >>> install_tlmgr_packages(["tikz"])  # doctest: +SKIP
             True
 
@@ -215,11 +215,11 @@ def install_tlmgr_packages(packages: tuple[str, ...] | list[str] = REQUIRED_TLMG
 def find_missing_packages(log_text: str) -> list[str]:
     """Extract package names for files reported missing in a LaTeX build log.
 
-    Scans for ``File `name.sty' not found`` style errors and returns the file stems
+    Scans for `File `name.sty' not found` style errors and returns the file stems
     (the usual tlmgr package name). Duplicates are removed while preserving order.
 
     Args:
-        log_text: The contents of a ``.log`` file (or pdflatex stdout/stderr).
+        log_text: The contents of a `.log` file (or pdflatex stdout/stderr).
 
     Returns:
         A list of candidate tlmgr package names, in first-seen order.
@@ -227,14 +227,14 @@ def find_missing_packages(log_text: str) -> list[str]:
     Examples:
         - Pull one missing package from a log fragment:
             ```python
-            >>> from ddocs.pdflatex_utils import find_missing_packages
+            >>> from ddocs.latex.pdflatex_utils import find_missing_packages
             >>> find_missing_packages("! LaTeX Error: File `tikz.sty' not found.")
             ['tikz']
 
             ```
         - De-duplicate and keep order across several errors:
             ```python
-            >>> from ddocs.pdflatex_utils import find_missing_packages
+            >>> from ddocs.latex.pdflatex_utils import find_missing_packages
             >>> log = "File `a.sty' not found\\nFile `b.cls' not found\\nFile `a.sty' not found"
             >>> find_missing_packages(log)
             ['a', 'b']
@@ -253,10 +253,10 @@ def install_missing_packages(log_text: str) -> list[str]:
     """Install packages for any files a LaTeX log reports as missing.
 
     This is the TeX Live equivalent of MiKTeX's install-on-build behaviour: parse the
-    log, ``tlmgr install`` whatever was missing, and let the caller recompile.
+    log, `tlmgr install` whatever was missing, and let the caller recompile.
 
     Args:
-        log_text: The contents of a LaTeX ``.log`` file (or build output).
+        log_text: The contents of a LaTeX `.log` file (or build output).
 
     Returns:
         The list of package names install was attempted for (empty if none missing).
@@ -264,7 +264,7 @@ def install_missing_packages(log_text: str) -> list[str]:
     Examples:
         - No missing files means nothing is installed:
             ```python
-            >>> from ddocs.pdflatex_utils import install_missing_packages
+            >>> from ddocs.latex.pdflatex_utils import install_missing_packages
             >>> install_missing_packages("This is pdfTeX ... output written")
             []
 
@@ -272,7 +272,7 @@ def install_missing_packages(log_text: str) -> list[str]:
 
     See Also:
         find_missing_packages: The log parser this builds on.
-        install_tlmgr_packages: Runs the actual ``tlmgr install``.
+        install_tlmgr_packages: Runs the actual `tlmgr install`.
     """
     packages = find_missing_packages(log_text)
     if packages:
@@ -281,15 +281,15 @@ def install_missing_packages(log_text: str) -> list[str]:
 
 
 def check_pdflatex_installed(install_packages: bool = True) -> bool:
-    """Ensure ``pdflatex`` is callable, installing TinyTeX when it is missing.
+    """Ensure `pdflatex` is callable, installing TinyTeX when it is missing.
 
-    If pdflatex is already on ``PATH`` this returns immediately. Otherwise an existing
+    If pdflatex is already on `PATH` this returns immediately. Otherwise an existing
     TinyTeX install is located (or the official installer is downloaded and run), its
-    ``bin`` directory is prepended to ``PATH`` for this process, and the required
-    package collections are installed with ``tlmgr``.
+    `bin` directory is prepended to `PATH` for this process, and the required
+    package collections are installed with `tlmgr`.
 
     Args:
-        install_packages: When True (default), run ``tlmgr install`` for
+        install_packages: When True (default), run `tlmgr install` for
             :data:`REQUIRED_TLMGR_PACKAGES` after a fresh TinyTeX install.
 
     Returns:
@@ -302,7 +302,7 @@ def check_pdflatex_installed(install_packages: bool = True) -> bool:
     Examples:
         - Guard a PDF build on pdflatex being available:
             ```python
-            >>> from ddocs.pdflatex_utils import check_pdflatex_installed
+            >>> from ddocs.latex.pdflatex_utils import check_pdflatex_installed
             >>> if check_pdflatex_installed():  # doctest: +SKIP
             ...     print("building pdf")
             building pdf
@@ -334,22 +334,22 @@ def check_pdflatex_installed(install_packages: bool = True) -> bool:
 
 
 def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = True) -> Path:
-    """Compile a ``.tex`` file to PDF with ``pdflatex``, installing missing packages.
+    """Compile a `.tex` file to PDF with `pdflatex`, installing missing packages.
 
-    Ensures ``pdflatex`` is available (installing TinyTeX if needed), then runs it from
+    Ensures `pdflatex` is available (installing TinyTeX if needed), then runs it from
     the source file's directory so a document class and relative assets resolve. After a
-    failed run it parses the log for missing packages and ``tlmgr install``s them before
+    failed run it parses the log for missing packages and `tlmgr install`s them before
     retrying (the MiKTeX-style behaviour); on success it runs a second pass to resolve
     cross-references and the table of contents.
 
     Args:
-        tex_file: Path to the ``.tex`` file to compile.
-        max_runs: Maximum number of ``pdflatex`` attempts before giving up.
-        install_missing: When True, ``tlmgr install`` packages reported missing in the
+        tex_file: Path to the `.tex` file to compile.
+        max_runs: Maximum number of `pdflatex` attempts before giving up.
+        install_missing: When True, `tlmgr install` packages reported missing in the
             log between attempts.
 
     Returns:
-        The :class:`pathlib.Path` of the produced PDF (``<stem>.pdf`` next to the source).
+        The :class:`pathlib.Path` of the produced PDF (`<stem>.pdf` next to the source).
 
     Raises:
         RuntimeError: If pdflatex cannot be made available, or no PDF is produced.
@@ -357,7 +357,7 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
     Examples:
         - Build a PDF from a LaTeX file (requires a TeX engine):
             ```python
-            >>> from ddocs.pdflatex_utils import build_pdf
+            >>> from ddocs.latex.pdflatex_utils import build_pdf
             >>> pdf = build_pdf("report.tex")  # doctest: +SKIP
             >>> pdf.name  # doctest: +SKIP
             'report.pdf'
@@ -402,14 +402,14 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
 
 
 def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
-    """CLI handler for the ``check-pdflatex`` command.
+    """CLI handler for the `check-pdflatex` command.
 
     Ensures pdflatex is available (installing TinyTeX if necessary) and maps the result
     to a process exit code suitable for :func:`sys.exit`.
 
     Args:
         args: Parsed CLI arguments from argparse. Unused -- accepted only so the handler
-            matches the calling convention of the other ``ddocs`` subcommand handlers.
+            matches the calling convention of the other `ddocs` subcommand handlers.
             Defaults to None.
 
     Returns:
@@ -418,7 +418,7 @@ def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
     Examples:
         - Run the check and use the result as a process exit code:
             ```python
-            >>> from ddocs.pdflatex_utils import check_pdflatex_cli
+            >>> from ddocs.latex.pdflatex_utils import check_pdflatex_cli
             >>> exit_code = check_pdflatex_cli()  # doctest: +SKIP
             >>> exit_code  # doctest: +SKIP
             0

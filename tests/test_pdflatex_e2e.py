@@ -6,12 +6,12 @@ This test exercises the full pipeline:
    ``GITHUB_TOKEN`` / ``GH_TOKEN`` -- e.g. ``LATEX_REPO_TOKEN`` in ``.env`` bridged by
    conftest -- or an SSH key with access).
 2. A ``test.tex`` is written that uses the ``deltares_report`` document class.
-3. ``ddocs.pdflatex_utils.build_pdf`` compiles it (installing TinyTeX + missing TeX
+3. ``ddocs.latex.pdflatex_utils.build_pdf`` compiles it (installing TinyTeX + missing TeX
    packages if pdflatex is not already available).
 """
 import pytest
 
-from ddocs.pdflatex_utils import build_pdf
+from ddocs.latex.pdflatex_utils import build_pdf
 from ddocs.templates.repo_cloner import clone_repo_cli
 
 TEST_DOCUMENT = (

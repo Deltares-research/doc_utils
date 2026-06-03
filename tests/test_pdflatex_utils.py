@@ -1,11 +1,11 @@
-"""Unit tests for ddocs.pdflatex_utils (TinyTeX backend), fully mocked."""
+"""Unit tests for ddocs.latex.pdflatex_utils (TinyTeX backend), fully mocked."""
 import subprocess
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from ddocs import pdflatex_utils
-from ddocs.pdflatex_utils import (
+from ddocs.latex import pdflatex_utils
+from ddocs.latex.pdflatex_utils import (
     check_pdflatex_cli,
     check_pdflatex_installed,
     find_missing_packages,
@@ -75,16 +75,16 @@ class TestFindTexBinDir:
         Test scenario:
             glob lists one candidate that contains the pdflatex executable.
         """
-        with patch("ddocs.pdflatex_utils.platform.system", return_value="Linux"), \
-             patch("ddocs.pdflatex_utils.glob.glob", return_value=["/root/.TinyTeX/bin/x86_64-linux"]), \
+        with patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"), \
+             patch("ddocs.latex.pdflatex_utils.glob.glob", return_value=["/root/.TinyTeX/bin/x86_64-linux"]), \
              patch("os.path.exists", return_value=True):
             assert find_tex_bin_dir() == "/root/.TinyTeX/bin/x86_64-linux", "should return the bin dir"
 
     @pytest.mark.unit
     def test_returns_none_when_not_installed(self):
         """Test None is returned when no TinyTeX bin dir exists."""
-        with patch("ddocs.pdflatex_utils.platform.system", return_value="Linux"), \
-             patch("ddocs.pdflatex_utils.glob.glob", return_value=[]):
+        with patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"), \
+             patch("ddocs.latex.pdflatex_utils.glob.glob", return_value=[]):
             assert find_tex_bin_dir() is None, "should be None when nothing matches"
 
 
@@ -115,7 +115,7 @@ class TestInstallMissingPackages:
     @pytest.mark.unit
     def test_installs_parsed_packages(self):
         """Test parsed missing packages are forwarded to install_tlmgr_packages."""
-        with patch("ddocs.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_install:
+        with patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_install:
             result = install_missing_packages("File `tikz.sty' not found")
         assert result == ["tikz"], "should return the parsed package names"
         mock_install.assert_called_once_with(["tikz"])
@@ -123,7 +123,7 @@ class TestInstallMissingPackages:
     @pytest.mark.unit
     def test_noop_when_nothing_missing(self):
         """Test nothing is installed when the log reports no missing files."""
-        with patch("ddocs.pdflatex_utils.install_tlmgr_packages") as mock_install:
+        with patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages") as mock_install:
             assert install_missing_packages("all good") == [], "should return empty list"
         mock_install.assert_not_called()
 
@@ -138,9 +138,9 @@ class TestCheckPdflatexInstalled:
         Test scenario:
             sanity_check True -> no TinyTeX install attempted.
         """
-        with patch("ddocs.pdflatex_utils.sanity_check", return_value=True), \
-             patch("ddocs.pdflatex_utils._install_tinytex") as mock_install, \
-             patch("ddocs.pdflatex_utils.find_tex_bin_dir") as mock_find:
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_install, \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir") as mock_find:
             assert check_pdflatex_installed() is True, "should report available"
         mock_install.assert_not_called()
         mock_find.assert_not_called()
@@ -152,11 +152,11 @@ class TestCheckPdflatexInstalled:
         Test scenario:
             pdflatex missing, find_tex_bin_dir returns a dir -> no installer download.
         """
-        with patch("ddocs.pdflatex_utils.sanity_check", side_effect=[False, True]), \
-             patch("ddocs.pdflatex_utils.find_tex_bin_dir", return_value="/root/.TinyTeX/bin/x86_64-linux"), \
-             patch("ddocs.pdflatex_utils._install_tinytex") as mock_install, \
-             patch("ddocs.pdflatex_utils._prepend_to_path") as mock_path, \
-             patch("ddocs.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs:
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", return_value="/root/.TinyTeX/bin/x86_64-linux"), \
+             patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_install, \
+             patch("ddocs.latex.pdflatex_utils._prepend_to_path") as mock_path, \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs:
             assert check_pdflatex_installed() is True, "should become available"
         mock_install.assert_not_called()
         mock_path.assert_called_once_with("/root/.TinyTeX/bin/x86_64-linux")
@@ -169,31 +169,31 @@ class TestCheckPdflatexInstalled:
         Test scenario:
             find_tex_bin_dir returns None first, then a dir after _install_tinytex.
         """
-        with patch("ddocs.pdflatex_utils.sanity_check", side_effect=[False, True]), \
-             patch("ddocs.pdflatex_utils.find_tex_bin_dir", side_effect=[None, "/bin/dir"]), \
-             patch("ddocs.pdflatex_utils._install_tinytex") as mock_install, \
-             patch("ddocs.pdflatex_utils._prepend_to_path"), \
-             patch("ddocs.pdflatex_utils.install_tlmgr_packages", return_value=True):
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", side_effect=[None, "/bin/dir"]), \
+             patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_install, \
+             patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True):
             assert check_pdflatex_installed() is True, "should install then succeed"
         mock_install.assert_called_once()
 
     @pytest.mark.unit
     def test_returns_false_when_still_unavailable(self, capsys):
         """Test a warning + False when pdflatex is unreachable after install."""
-        with patch("ddocs.pdflatex_utils.sanity_check", side_effect=[False, False]), \
-             patch("ddocs.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
-             patch("ddocs.pdflatex_utils._prepend_to_path"), \
-             patch("ddocs.pdflatex_utils.install_tlmgr_packages", return_value=True):
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, False]), \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
+             patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True):
             assert check_pdflatex_installed() is False, "should report failure"
         assert "not accessible" in capsys.readouterr().out, "should warn about inaccessibility"
 
     @pytest.mark.unit
     def test_skips_package_install_when_disabled(self):
         """Test install_packages=False skips tlmgr after locating TinyTeX."""
-        with patch("ddocs.pdflatex_utils.sanity_check", side_effect=[False, True]), \
-             patch("ddocs.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
-             patch("ddocs.pdflatex_utils._prepend_to_path"), \
-             patch("ddocs.pdflatex_utils.install_tlmgr_packages") as mock_pkgs:
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
+             patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages") as mock_pkgs:
             assert check_pdflatex_installed(install_packages=False) is True
         mock_pkgs.assert_not_called()
 
@@ -225,7 +225,7 @@ class TestInternals:
             needle: A substring expected in the first candidate path.
         """
         monkeypatch.setenv("APPDATA", "/appdata")
-        with patch("ddocs.pdflatex_utils.platform.system", return_value=system):
+        with patch("ddocs.latex.pdflatex_utils.platform.system", return_value=system):
             candidates = pdflatex_utils._tinytex_root_candidates()
         assert any(needle in c for c in candidates), f"{system} roots should contain {needle}: {candidates}"
 
@@ -234,10 +234,10 @@ class TestInternals:
         """Test the unix installer is downloaded and executed with sh, then cleaned up."""
         tmp = MagicMock()
         tmp.__enter__.return_value.name = "/tmp/install.sh"
-        with patch("ddocs.pdflatex_utils.platform.system", return_value="Linux"), \
-             patch("ddocs.pdflatex_utils.tempfile.NamedTemporaryFile", return_value=tmp), \
-             patch("ddocs.pdflatex_utils.urllib.request.urlretrieve") as mock_dl, \
-             patch("ddocs.pdflatex_utils.subprocess.run") as mock_run, \
+        with patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"), \
+             patch("ddocs.latex.pdflatex_utils.tempfile.NamedTemporaryFile", return_value=tmp), \
+             patch("ddocs.latex.pdflatex_utils.urllib.request.urlretrieve") as mock_dl, \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run, \
              patch("os.path.exists", return_value=True), \
              patch("os.unlink") as mock_unlink:
             pdflatex_utils._install_tinytex()
@@ -250,10 +250,10 @@ class TestInternals:
         """Test the Windows installer is executed via cmd /c."""
         tmp = MagicMock()
         tmp.__enter__.return_value.name = "C:/tmp/install.bat"
-        with patch("ddocs.pdflatex_utils.platform.system", return_value="Windows"), \
-             patch("ddocs.pdflatex_utils.tempfile.NamedTemporaryFile", return_value=tmp), \
-             patch("ddocs.pdflatex_utils.urllib.request.urlretrieve"), \
-             patch("ddocs.pdflatex_utils.subprocess.run") as mock_run, \
+        with patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Windows"), \
+             patch("ddocs.latex.pdflatex_utils.tempfile.NamedTemporaryFile", return_value=tmp), \
+             patch("ddocs.latex.pdflatex_utils.urllib.request.urlretrieve"), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run, \
              patch("os.path.exists", return_value=False), \
              patch("os.unlink"):
             pdflatex_utils._install_tinytex()
@@ -278,8 +278,8 @@ class TestBuildPdf:
             pdf.write_bytes(b"%PDF-1.5\n")
             return MagicMock(returncode=0, stdout="", stderr="")
 
-        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=True), \
-             patch("ddocs.pdflatex_utils.subprocess.run", side_effect=fake_run) as mock_run:
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run", side_effect=fake_run) as mock_run:
             result = pdflatex_utils.build_pdf(tex)
         assert result == pdf, f"should return the pdf path, got {result}"
         assert mock_run.call_count == 2, "should run pdflatex twice (build + refs pass)"
@@ -304,9 +304,9 @@ class TestBuildPdf:
             pdf.write_bytes(b"%PDF-1.5\n")
             return MagicMock(returncode=0, stdout="", stderr="")
 
-        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=True), \
-             patch("ddocs.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs, \
-             patch("ddocs.pdflatex_utils.subprocess.run", side_effect=fake_run):
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs, \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run", side_effect=fake_run):
             result = pdflatex_utils.build_pdf(tex)
         assert result == pdf, "should return the pdf path after retrying"
         mock_pkgs.assert_called_once_with(["tikz"])
@@ -316,7 +316,7 @@ class TestBuildPdf:
         """Test a RuntimeError is raised when pdflatex cannot be made available."""
         tex = tmp_path / "doc.tex"
         tex.write_text("x", encoding="utf-8")
-        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=False):
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=False):
             with pytest.raises(RuntimeError, match="pdflatex is not available"):
                 pdflatex_utils.build_pdf(tex)
 
@@ -329,8 +329,8 @@ class TestBuildPdf:
         """
         tex = tmp_path / "doc.tex"
         tex.write_text("x", encoding="utf-8")
-        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=True), \
-             patch("ddocs.pdflatex_utils.subprocess.run",
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
                    return_value=MagicMock(returncode=1, stdout="! Undefined control sequence", stderr="")):
             with pytest.raises(RuntimeError, match="did not produce"):
                 pdflatex_utils.build_pdf(tex)
@@ -348,5 +348,5 @@ class TestCheckPdflatexCli:
             available: What check_pdflatex_installed reports.
             code: The expected process exit code.
         """
-        with patch("ddocs.pdflatex_utils.check_pdflatex_installed", return_value=available):
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=available):
             assert check_pdflatex_cli() == code, f"expected exit {code}"
