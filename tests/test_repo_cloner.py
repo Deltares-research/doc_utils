@@ -391,3 +391,72 @@ class TestCloneRepoCli:
         assert created["cleaned"] is True, "context manager __exit__ (cleanup) should run"
         assert len(created["copied"]) == 3, f"should copy 3 template paths, got {created.get('copied')}"
         assert created["url"] == "https://github.com/Deltares/LatexInstallation", "wrong repo URL"
+
+
+class TestContextManager:
+    """Tests for RepoCloner.cleanup and the context-manager protocol."""
+
+    @pytest.mark.unit
+    def test_cleanup_removes_temp_dir_and_resets_state(self, tmp_path):
+        """Test cleanup() deletes the temp dir and clears tracked paths.
+
+        Test scenario:
+            With a populated temp dir, cleanup removes it and resets
+            temp_dir/repo_path to None.
+        """
+        cloner = RepoCloner(HTTPS)
+        work = tmp_path / "work"
+        work.mkdir()
+        (work / "file.txt").write_text("data", encoding="utf-8")
+        cloner.temp_dir = work
+        cloner.repo_path = work / "repo"
+        cloner.cleanup()
+        assert not work.exists(), "temp dir should be removed"
+        assert cloner.temp_dir is None, "temp_dir should reset to None"
+        assert cloner.repo_path is None, "repo_path should reset to None"
+
+    @pytest.mark.unit
+    def test_cleanup_is_noop_when_no_temp_dir(self):
+        """Test cleanup() does nothing when no temp dir was created.
+
+        Test scenario:
+            A fresh cloner with temp_dir None can call cleanup without error.
+        """
+        cloner = RepoCloner(HTTPS)
+        cloner.cleanup()
+        assert cloner.temp_dir is None, "temp_dir should remain None"
+
+    @pytest.mark.unit
+    def test_enter_returns_self(self):
+        """Test __enter__ returns the cloner instance for use in a with-block."""
+        cloner = RepoCloner(HTTPS)
+        with cloner as ctx:
+            assert ctx is cloner, "context manager should yield the same instance"
+
+    @pytest.mark.unit
+    def test_exit_cleans_up_temp_dir(self, tmp_path):
+        """Test leaving the with-block removes the temp dir.
+
+        Test scenario:
+            A temp dir set before the block is gone after it.
+        """
+        cloner = RepoCloner(HTTPS)
+        work = tmp_path / "work"
+        work.mkdir()
+        cloner.temp_dir = work
+        with cloner:
+            pass
+        assert not work.exists(), "exit should clean up the temp dir"
+        assert cloner.temp_dir is None, "temp_dir should reset to None after exit"
+
+    @pytest.mark.unit
+    def test_exit_does_not_suppress_exceptions(self, tmp_path):
+        """Test __exit__ returns False so exceptions propagate out of the block."""
+        cloner = RepoCloner(HTTPS)
+        work = tmp_path / "work"
+        work.mkdir()
+        cloner.temp_dir = work
+        with pytest.raises(ValueError, match="boom"):
+            with cloner:
+                raise ValueError("boom")
+        assert not work.exists(), "cleanup should still run when the block raises"
