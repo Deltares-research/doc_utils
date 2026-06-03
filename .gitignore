@@ -1,0 +1,16 @@
+# Environment and application related files
+__pycache__
+.vscode
+.venv
+
+# Latex generated files
+docs/**/*.aux
+docs/**/*.mtc
+docs/**/*.mtc0
+docs/**/*.log
+docs/**/*.maf
+docs/**/*.nlo
+docs/**/*.toc
+
+/site/*
+/.coverage
