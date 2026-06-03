@@ -3,13 +3,6 @@ name: ci
 permissions:
     contents: read
 
-# A token with read access to the private Deltares/LatexInstallation repo enables
-# the live clone tests. When the secret is absent the var is empty and those tests
-# skip (conftest bridges LATEX_REPO_TOKEN -> GITHUB_TOKEN). GITHUB_* names are
-# reserved by Actions, so a distinct secret name is required.
-env:
-  LATEX_REPO_TOKEN: ${{ secrets.LATEX_REPO_TOKEN }}
-
 on:
   push:
   workflow_dispatch:
@@ -41,6 +34,13 @@ jobs:
           pandoc --version
 
       - name: tests
+        # A token with read access to the private Deltares/LatexInstallation repo
+        # enables the live clone tests. When the secret is absent the var is empty
+        # and those tests skip (conftest bridges LATEX_REPO_TOKEN -> GITHUB_TOKEN).
+        # Scoped to this step only so it is not exposed to checkout/setup/upload steps.
+        # GITHUB_* names are reserved by Actions, so a distinct secret name is required.
+        env:
+          LATEX_REPO_TOKEN: ${{ secrets.LATEX_REPO_TOKEN }}
         run: |
           uv run pytest -svvv --cov=src/ddocs --cov-report=xml
 
