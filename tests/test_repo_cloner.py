@@ -1,9 +1,11 @@
+import os
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 from git import GitCommandError
 
-from ddocs.repo_cloner import RepoCloner
+from ddocs.repo_cloner import RepoCloner, clone_repo_cli
 
 HTTPS = "https://github.com/Deltares/LatexInstallation"
 SSH = "git@github.com:Deltares/LatexInstallation.git"
@@ -460,3 +462,19 @@ class TestContextManager:
             with cloner:
                 raise ValueError("boom")
         assert not work.exists(), "cleanup should still run when the block raises"
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(
+    os.getenv("RUN_NETWORK_TESTS") != "1",
+    reason="hits the private LatexInstallation repo; set RUN_NETWORK_TESTS=1 to run",
+)
+def test_clone_repo_live():
+    """Smoke-test a real clone of the Deltares LatexInstallation templates.
+
+    Test scenario:
+        Opt-in only (RUN_NETWORK_TESTS=1). Performs a live authenticated clone and
+        copies the template files, expecting a zero exit code.
+    """
+    dest_dir = Path("tests/data/tex_data")
+    assert clone_repo_cli(dest_dir) == 0, "live clone_repo_cli should return 0"
