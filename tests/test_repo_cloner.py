@@ -1,4 +1,8 @@
+from unittest.mock import patch
+
 import pytest
+from git import GitCommandError
+
 from ddocs.repo_cloner import RepoCloner
 
 HTTPS = "https://github.com/Deltares/LatexInstallation"
@@ -240,3 +244,40 @@ class TestScrubSecrets:
         cloner = RepoCloner(HTTPS)
         message = "fatal: repository not found"
         assert cloner._scrub_secrets(message) == message, "text without secrets is unchanged"
+
+
+class TestCloneErrorScrubbing:
+    """clone() must not leak credentials when the underlying git command fails."""
+
+    @pytest.mark.unit
+    def test_clone_failure_scrubs_token_from_error(self, tmp_path):
+        """Test a failed clone raises a scrubbed RuntimeError, not the raw token.
+
+        Test scenario:
+            Repo.clone_from raises a GitCommandError whose text contains the token;
+            clone() must re-raise a RuntimeError with the token masked.
+        """
+        cloner = RepoCloner(HTTPS, token="ghp_secret")
+        cloner.temp_dir = tmp_path
+        boom = GitCommandError("git clone https://x-access-token:ghp_secret@github.com/x", 128)
+        with patch("ddocs.repo_cloner.Repo.clone_from", side_effect=boom):
+            with pytest.raises(RuntimeError) as excinfo:
+                cloner.clone()
+        assert "ghp_secret" not in str(excinfo.value), "token must not appear in the error"
+        assert "***" in str(excinfo.value), "masked marker should appear in the error"
+
+    @pytest.mark.unit
+    def test_clone_uses_resolved_url(self, tmp_path):
+        """Test clone() passes the credential-resolved URL to Repo.clone_from.
+
+        Test scenario:
+            With a token set, the URL handed to Repo.clone_from carries the token.
+        """
+        cloner = RepoCloner(HTTPS, token="ghp_secret")
+        cloner.temp_dir = tmp_path
+        with patch("ddocs.repo_cloner.Repo.clone_from") as mock_clone:
+            cloner.clone()
+        called_url = mock_clone.call_args.args[0]
+        assert called_url == (
+            "https://x-access-token:ghp_secret@github.com/Deltares/LatexInstallation"
+        ), f"clone should use the resolved URL, got {called_url}"

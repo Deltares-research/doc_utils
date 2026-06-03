@@ -198,14 +198,17 @@ class RepoCloner:
         return scrubbed
 
     def clone(self) -> Path:
-        """
-        Clone the repository into a temporary directory.
+        """Clone the repository into a temporary directory.
+
+        The clone URL is built by :meth:`_resolve_clone_url`, so authentication
+        (token, basic auth, or SSH) is applied automatically.
 
         Returns:
-            Path to the cloned repository
+            Path to the cloned repository.
 
         Raises:
-            git.GitCommandError: If git clone fails
+            RuntimeError: If the clone fails. The message is scrubbed of any
+                token/password so secrets are never written to logs.
         """
         if self.temp_dir is None:
             self.temp_dir = Path(tempfile.mkdtemp())
@@ -213,14 +216,11 @@ class RepoCloner:
         repo_name = self.repo_url.rstrip('/').split('/')[-1].replace('.git', '')
         self.repo_path = self.temp_dir / repo_name
 
-        # Build authenticated URL if credentials are provided
-        clone_url = self.repo_url.rstrip('/')  # Remove trailing slash
-        if self.username and self.password:
-            # Insert credentials into HTTPS URL
-            if clone_url.startswith('https://'):
-                clone_url = clone_url.replace('https://', f'https://{self.username}:{self.password}@', 1)
-
-        self.repo = Repo.clone_from(clone_url, str(self.repo_path))
+        clone_url = self._resolve_clone_url()
+        try:
+            self.repo = Repo.clone_from(clone_url, str(self.repo_path))
+        except GitCommandError as exc:
+            raise RuntimeError(f"Failed to clone repository: {self._scrub_secrets(str(exc))}") from None
 
         return self.repo_path
 
