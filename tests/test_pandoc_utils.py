@@ -3,7 +3,7 @@ import argparse
 import subprocess
 from unittest.mock import patch, MagicMock
 import pytest
-from ddocs.pandoc_utils import (
+from ddocs.markdown.pandoc_utils import (
     check_pandoc_installed,
     check_pandoc_cli,
     sanity_check,
@@ -39,7 +39,7 @@ class TestCheckPandocInstalled:
             PATH, and the re-check then succeeds. No download occurs.
         """
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
+             patch('ddocs.markdown.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
              patch('os.path.exists') as mock_exists:
 
             # First call fails (not found), second succeeds (after PATH is updated).
@@ -61,7 +61,7 @@ class TestCheckPandocInstalled:
     def test_bundled_pandoc_not_accessible(self, capsys):
         """Test a warning + False when the bundled binary still is not callable."""
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
+             patch('ddocs.markdown.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
              patch('os.path.exists') as mock_exists:
 
             # Both probes fail even after the PATH update.
@@ -82,7 +82,7 @@ class TestCheckPandocInstalled:
     def test_pandoc_dir_not_found(self):
         """Test False is returned when the pandoc directory cannot be determined."""
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir:
+             patch('ddocs.markdown.pandoc_utils._get_pandoc_dir') as mock_get_dir:
 
             mock_run.side_effect = FileNotFoundError()
             mock_get_dir.return_value = None
@@ -93,7 +93,7 @@ class TestCheckPandocInstalled:
     def test_pandoc_dir_does_not_exist(self):
         """Test False is returned when the located pandoc directory does not exist."""
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
+             patch('ddocs.markdown.pandoc_utils._get_pandoc_dir') as mock_get_dir, \
              patch('os.path.exists') as mock_exists:
 
             mock_run.side_effect = FileNotFoundError()
@@ -112,7 +112,7 @@ class TestCheckPandocInstalled:
         """
         pandoc_dir = os.path.join("already", "on", "path")
         with patch('subprocess.run') as mock_run, \
-             patch('ddocs.pandoc_utils._get_pandoc_dir', return_value=pandoc_dir), \
+             patch('ddocs.markdown.pandoc_utils._get_pandoc_dir', return_value=pandoc_dir), \
              patch('os.path.exists', return_value=True), \
              patch.dict('os.environ', {'PATH': pandoc_dir}, clear=False):
 
@@ -191,7 +191,7 @@ class TestCheckPandocCli:
         Test scenario:
             check_pandoc_installed reports True; expect exit code 0.
         """
-        with patch('ddocs.pandoc_utils.check_pandoc_installed', return_value=True):
+        with patch('ddocs.markdown.pandoc_utils.check_pandoc_installed', return_value=True):
             result = check_pandoc_cli()
 
         assert result == 0, f"Expected exit code 0 when available, got {result}"
@@ -203,7 +203,7 @@ class TestCheckPandocCli:
         Test scenario:
             check_pandoc_installed reports False; expect exit code 1.
         """
-        with patch('ddocs.pandoc_utils.check_pandoc_installed', return_value=False):
+        with patch('ddocs.markdown.pandoc_utils.check_pandoc_installed', return_value=False):
             result = check_pandoc_cli()
 
         assert result == 1, f"Expected exit code 1 when unavailable, got {result}"
@@ -216,7 +216,7 @@ class TestCheckPandocCli:
             Passing a populated Namespace must not change the 0/1 mapping.
         """
         namespace = argparse.Namespace(command="check-pandoc")
-        with patch('ddocs.pandoc_utils.check_pandoc_installed', return_value=True):
+        with patch('ddocs.markdown.pandoc_utils.check_pandoc_installed', return_value=True):
             result = check_pandoc_cli(namespace)
 
         assert result == 0, f"Expected exit code 0 with args namespace, got {result}"

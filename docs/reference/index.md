@@ -11,7 +11,7 @@ Its public command-line entry point is `ddocs` (see [`cli`](cli.md)).
 | [`ddocs.cli`](cli.md) | Argparse-based command-line interface and subcommand dispatch. |
 | [`ddocs.markdown`](markdown.md) | Markdown-to-LaTeX conversion and Deltares post-processing. |
 | [`ddocs.latex.clean`](clean.md) | Remove LaTeX build artifacts (the `clean` command). |
-| [`ddocs.pandoc_utils`](pandoc_utils.md) | Locate, verify, and auto-install the Pandoc executable. |
+| [`ddocs.markdown.pandoc_utils`](pandoc_utils.md) | Locate and verify the bundled Pandoc executable. |
 | [`ddocs.latex.pdflatex_utils`](pdflatex_utils.md) | Locate, verify, and install pdfLaTeX via TinyTeX. |
 | [`ddocs.templates.repo_cloner`](repo_cloner.md) | Clone the Deltares LaTeX template repository and copy files out of it. |
 

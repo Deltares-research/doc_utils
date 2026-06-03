@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 import argparse
 from ddocs import __path__
-from ddocs.pandoc_utils import check_pandoc_installed
+from ddocs.markdown.pandoc_utils import check_pandoc_installed
 
 data_dir = Path(__path__[0]) / 'data'
 

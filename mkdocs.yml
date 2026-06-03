@@ -56,7 +56,7 @@ nav:
       - ddocs.cli: reference/cli.md
       - ddocs.markdown: reference/markdown.md
       - ddocs.latex.clean: reference/clean.md
-      - ddocs.pandoc_utils: reference/pandoc_utils.md
+      - ddocs.markdown.pandoc_utils: reference/pandoc_utils.md
       - ddocs.latex.pdflatex_utils: reference/pdflatex_utils.md
       - ddocs.templates.repo_cloner: reference/repo_cloner.md
   - Changelog: changelog.md

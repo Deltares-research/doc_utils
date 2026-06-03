@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 import pytest
 
-from ddocs.pandoc_utils import check_pandoc_installed, _get_pandoc_dir
+from ddocs.markdown.pandoc_utils import check_pandoc_installed, _get_pandoc_dir
 
 
 @pytest.fixture

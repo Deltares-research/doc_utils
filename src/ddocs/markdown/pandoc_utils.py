@@ -31,7 +31,7 @@ def sanity_check() -> bool:
     Examples:
         - Branch on whether pandoc is available:
             ```python
-            >>> from ddocs.pandoc_utils import sanity_check
+            >>> from ddocs.markdown.pandoc_utils import sanity_check
             >>> if sanity_check():  # doctest: +SKIP
             ...     print("ready to convert")
             ... else:
@@ -41,7 +41,7 @@ def sanity_check() -> bool:
             ```
         - Use the boolean result to pick a fallback message:
             ```python
-            >>> from ddocs.pandoc_utils import sanity_check
+            >>> from ddocs.markdown.pandoc_utils import sanity_check
             >>> available = sanity_check()  # doctest: +SKIP
             >>> "ok" if available else "install pandoc first"  # doctest: +SKIP
             'ok'
@@ -83,7 +83,7 @@ def _get_pandoc_dir():
         - Get the directory and use it to build the executable path:
             ```python
             >>> import os
-            >>> from ddocs.pandoc_utils import _get_pandoc_dir
+            >>> from ddocs.markdown.pandoc_utils import _get_pandoc_dir
             >>> pandoc_dir = _get_pandoc_dir()  # doctest: +SKIP
             >>> os.path.isdir(pandoc_dir) or pandoc_dir.endswith("bin")  # doctest: +SKIP
             True
@@ -130,7 +130,7 @@ def check_pandoc_installed() -> bool:
     Examples:
         - Guard a conversion step on pandoc being available:
             ```python
-            >>> from ddocs.pandoc_utils import check_pandoc_installed
+            >>> from ddocs.markdown.pandoc_utils import check_pandoc_installed
             >>> if check_pandoc_installed():  # doctest: +SKIP
             ...     print("converting")
             converting
@@ -138,7 +138,7 @@ def check_pandoc_installed() -> bool:
             ```
         - Abort early when pandoc cannot be made available:
             ```python
-            >>> from ddocs.pandoc_utils import check_pandoc_installed
+            >>> from ddocs.markdown.pandoc_utils import check_pandoc_installed
             >>> ready = check_pandoc_installed()  # doctest: +SKIP
             >>> ready or "could not install pandoc"  # doctest: +SKIP
             True
@@ -185,7 +185,7 @@ def check_pandoc_cli(args: argparse.Namespace | None = None) -> int:
         - Run the check and use the result as a process exit code:
             ```python
             >>> import sys
-            >>> from ddocs.pandoc_utils import check_pandoc_cli
+            >>> from ddocs.markdown.pandoc_utils import check_pandoc_cli
             >>> exit_code = check_pandoc_cli()  # doctest: +SKIP
             >>> exit_code  # doctest: +SKIP
             0
@@ -194,7 +194,7 @@ def check_pandoc_cli(args: argparse.Namespace | None = None) -> int:
         - The argparse namespace is accepted but ignored:
             ```python
             >>> import argparse
-            >>> from ddocs.pandoc_utils import check_pandoc_cli
+            >>> from ddocs.markdown.pandoc_utils import check_pandoc_cli
             >>> ns = argparse.Namespace(command="check-pandoc")
             >>> check_pandoc_cli(ns)  # doctest: +SKIP
             0
