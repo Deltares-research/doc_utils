@@ -13,6 +13,8 @@ CI should set `GITHUB_TOKEN`; laptops typically use their existing SSH key.
 
 import os
 import re
+import stat
+import sys
 import tempfile
 import shutil
 from pathlib import Path
@@ -346,10 +348,23 @@ class RepoCloner:
 
         return list(search_path.glob(pattern))
 
+    @staticmethod
+    def _on_rmtree_error(func, path, _exc):
+        """Clear the read-only bit and retry a failed rmtree operation.
+
+        Git marks files under ``.git/objects`` read-only; on Windows
+        ``shutil.rmtree`` cannot delete them until that attribute is removed.
+        """
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+
     def cleanup(self):
         """Remove the temporary directory and all its contents."""
         if self.temp_dir and self.temp_dir.exists():
-            shutil.rmtree(self.temp_dir)
+            if sys.version_info >= (3, 12):
+                shutil.rmtree(self.temp_dir, onexc=self._on_rmtree_error)
+            else:
+                shutil.rmtree(self.temp_dir, onerror=self._on_rmtree_error)
             self.temp_dir = None
             self.repo_path = None
 
