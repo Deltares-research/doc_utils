@@ -2,14 +2,14 @@
 
 Authentication precedence (first available wins):
 
-1. Token  -- ``token`` arg or ``GITHUB_TOKEN`` / ``GH_TOKEN`` env (HTTPS).
-2. Basic  -- ``username``/``password`` args or ``GIT_USERNAME``/``GIT_PASSWORD``
-   (falling back to the legacy ``SVN_USERNAME``/``SVN_PASSWORD``) env vars.
-3. SSH    -- when ``prefer_ssh`` is set and no credentials are given, clone via an
+1. Token  -- `token` arg or `GITHUB_TOKEN` / `GH_TOKEN` env (HTTPS).
+2. Basic  -- `username`/`password` args or `GIT_USERNAME`/`GIT_PASSWORD`
+   (falling back to the legacy `SVN_USERNAME`/`SVN_PASSWORD`) env vars.
+3. SSH    -- when `prefer_ssh` is set and no credentials are given, clone via an
    SSH URL using the machine's key (typical on developer laptops).
 4. Anonymous HTTPS -- public repos only.
 
-CI should set ``GITHUB_TOKEN``; laptops typically use their existing SSH key.
+CI should set `GITHUB_TOKEN`; laptops typically use their existing SSH key.
 """
 
 import os
@@ -25,13 +25,13 @@ class RepoCloner:
     """Clone a git repository into a temporary directory and manage file operations.
 
     Authentication is resolved from the supplied arguments or the environment with a fixed
-    precedence: token, then username+password, then SSH (when ``prefer_ssh`` is set), then an
+    precedence: token, then username+password, then SSH (when `prefer_ssh` is set), then an
     anonymous HTTPS clone. This lets the same code authenticate via a token in CI and via the
     developer's SSH key on a laptop.
 
     Examples:
         - Construct with a token and read back the stored credentials:
-            ```python
+            ``python
             >>> from ddocs.repo_cloner import RepoCloner
             >>> cloner = RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")
             >>> cloner.token
@@ -39,14 +39,14 @@ class RepoCloner:
             >>> cloner.repo_url
             'https://github.com/Deltares/LatexInstallation'
 
-            ```
+            ``
         - A token turns the public URL into an authenticated HTTPS clone URL:
-            ```python
+            ``python
             >>> from ddocs.repo_cloner import RepoCloner
             >>> RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._resolve_clone_url()
             'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'
 
-            ```
+            ``
 
     See Also:
         clone_repo_cli: Uses this class to fetch the Deltares LaTeX templates.
@@ -65,11 +65,11 @@ class RepoCloner:
         Args:
             repo_url: The URL of the git repository to clone (HTTPS or SSH form).
             token: Personal access / app token for HTTPS auth. Defaults to the
-                ``GITHUB_TOKEN`` or ``GH_TOKEN`` environment variable.
-            username: Username for HTTPS basic auth. Defaults to ``GIT_USERNAME``
-                or the legacy ``SVN_USERNAME`` environment variable.
-            password: Password/token for HTTPS basic auth. Defaults to ``GIT_PASSWORD``
-                or the legacy ``SVN_PASSWORD`` environment variable.
+                `GITHUB_TOKEN` or `GH_TOKEN` environment variable.
+            username: Username for HTTPS basic auth. Defaults to `GIT_USERNAME`
+                or the legacy `SVN_USERNAME` environment variable.
+            password: Password/token for HTTPS basic auth. Defaults to `GIT_PASSWORD`
+                or the legacy `SVN_PASSWORD` environment variable.
             prefer_ssh: When no token or username/password is available, clone via an
                 SSH URL (using the machine's SSH key) instead of anonymously.
 
@@ -104,18 +104,18 @@ class RepoCloner:
 
     @staticmethod
     def _to_ssh_url(url: str) -> str:
-        """Convert an HTTPS git URL to its ``git@host:owner/repo.git`` SSH form.
+        """Convert an HTTPS git URL to its `git@host:owner/repo.git` SSH form.
 
-        URLs that are already SSH (``git@`` or ``ssh://``) are returned unchanged.
+        URLs that are already SSH (`git@` or `ssh://`) are returned unchanged.
 
         Args:
             url: An HTTPS/HTTP or SSH git URL.
 
         Returns:
-            The SSH-form URL, or ``url`` unchanged if it was already SSH.
+            The SSH-form URL, or `url` unchanged if it was already SSH.
 
         Examples:
-            - An HTTPS URL is rewritten and given a ``.git`` suffix:
+            - An HTTPS URL is rewritten and given a `.git` suffix:
                 ```python
                 >>> from ddocs.repo_cloner import RepoCloner
                 >>> RepoCloner._to_ssh_url("https://github.com/Deltares/LatexInstallation")
@@ -143,14 +143,14 @@ class RepoCloner:
     def _resolve_clone_url(self) -> str:
         """Build the effective clone URL from the available credentials.
 
-        Precedence: token, then username+password, then SSH (when ``prefer_ssh``),
+        Precedence: token, then username+password, then SSH (when `prefer_ssh`),
         then an anonymous HTTPS clone. An input that is already an SSH URL is used as-is.
 
         Returns:
             The clone URL git should use, with any token/credentials embedded.
 
         Examples:
-            - A token is embedded as an ``x-access-token`` HTTPS credential:
+            - A token is embedded as an `x-access-token` HTTPS credential:
                 ```python
                 >>> from ddocs.repo_cloner import RepoCloner
                 >>> RepoCloner("https://github.com/owner/repo", token="ghp_demo")._resolve_clone_url()
@@ -179,7 +179,7 @@ class RepoCloner:
         return clone_url
 
     def _scrub_secrets(self, text: str) -> str:
-        """Replace any known secret (token/password) in ``text`` with ``***``.
+        """Replace any known secret (token/password) in `text` with `***`.
 
         Args:
             text: Arbitrary text (e.g. a git error message) that may contain secrets.
@@ -365,17 +365,17 @@ class RepoCloner:
 
 
 def clone_repo_cli(output_dir: Path) -> int:
-    """Clone the Deltares LatexInstallation repo and copy template files to ``output_dir``.
+    """Clone the Deltares LatexInstallation repo and copy template files to `output_dir`.
 
     Uses :class:`RepoCloner` as a context manager so the temporary clone is always
-    removed, even if copying fails. Authentication is handled by ``RepoCloner`` (token
+    removed, even if copying fails. Authentication is handled by `RepoCloner` (token
     in CI, SSH key on a laptop).
 
     Args:
         output_dir: Directory the template files are copied into. Created if missing.
 
     Returns:
-        ``0`` on success.
+        `0` on success.
 
     Examples:
         - Fetch the templates into a local folder (network access required):
