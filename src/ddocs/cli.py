@@ -4,7 +4,8 @@ import sys
 import argparse
 from pathlib import Path
 from ddocs import __version__
-from ddocs.markdown import mark_down_to_latex_cli, clean_latex_cli
+from ddocs.markdown import mark_down_to_latex_cli
+from ddocs.latex.clean import clean_latex_cli
 from ddocs.templates.repo_cloner import clone_repo_cli
 from ddocs.pandoc_utils import check_pandoc_cli
 from ddocs.latex.pdflatex_utils import check_pdflatex_cli
