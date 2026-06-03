@@ -3,8 +3,12 @@ name: ci
 permissions:
     contents: read
 
+# A token with read access to the private Deltares/LatexInstallation repo enables
+# the live clone tests. When the secret is absent the var is empty and those tests
+# skip (conftest bridges LATEX_REPO_TOKEN -> GITHUB_TOKEN). GITHUB_* names are
+# reserved by Actions, so a distinct secret name is required.
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  LATEX_REPO_TOKEN: ${{ secrets.LATEX_REPO_TOKEN }}
 
 on:
   push:
