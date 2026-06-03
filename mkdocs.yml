@@ -42,11 +42,15 @@ markdown_extensions:
   - admonition
   - pymdownx.highlight
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - toc:
       permalink: true
 
 nav:
   - Home: index.md
+  - Guides:
+      - RepoCloner & authentication: guides/repo-cloner-authentication.md
   - API Reference:
       - Overview: reference/index.md
       - ddocs.cli: reference/cli.md
