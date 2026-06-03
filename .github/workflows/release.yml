@@ -43,7 +43,7 @@ jobs:
           fetch-depth: 0
 
       - name: Create GitHub Release
-        uses: Deltares-research/github-actions/actions/release/github@main
+        uses: Deltares-research/github-actions/actions/release/github@73618deb1feaffe481d69063ce7bf229fab6598b # github-release/v1.1.4
         with:
           increment: ${{ inputs.increment }}
           prerelease-type: ${{ inputs.prerelease-type }}
