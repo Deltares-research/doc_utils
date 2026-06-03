@@ -1,5 +1,3 @@
-import os
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -468,10 +466,6 @@ class TestContextManager:
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(
-    not (os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")),
-    reason="no token available (set GITHUB_TOKEN/GH_TOKEN, e.g. via .env LATEX_REPO_TOKEN)",
-)
 def test_clone_repo_live(tmp_path):
     """Smoke-test a real clone of the Deltares LatexInstallation templates.
 

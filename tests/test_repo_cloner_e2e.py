@@ -1,9 +1,9 @@
 """End-to-end tests for the get-tex-template CLI command (repo_cloner).
 
-These tests invoke the actual `ddocs` CLI. The help test runs anywhere; the full
-clone test hits the private Deltares/LatexInstallation repo and is opt-in: it only
-runs when ``RUN_NETWORK_TESTS=1`` and valid credentials are available (a token in
-``GITHUB_TOKEN``/``GH_TOKEN``, or an SSH key with access to the repo).
+These tests invoke the actual `ddocs` CLI. The help/argument tests run anywhere;
+the full clone test hits the private Deltares/LatexInstallation repo, so it needs
+valid credentials (a token in ``GITHUB_TOKEN``/``GH_TOKEN`` -- e.g. ``LATEX_REPO_TOKEN``
+in ``.env`` bridged by conftest -- or an SSH key with access) and will FAIL without them.
 """
 import os
 import subprocess
@@ -14,11 +14,6 @@ import pytest
 
 REPO_ROOT = Path(__file__).parent.parent
 TEMPLATE_SUFFIXES = {".sty", ".cls", ".bst"}
-
-# The live clone runs when a token is available (e.g. LATEX_REPO_TOKEN in .env,
-# bridged to GITHUB_TOKEN by conftest). Without one it is skipped.
-HAS_TOKEN = bool(os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN"))
-NO_TOKEN_REASON = "no token available (set GITHUB_TOKEN/GH_TOKEN, e.g. via .env LATEX_REPO_TOKEN)"
 
 
 def run_ddocs_command(*args):
@@ -66,7 +61,6 @@ class TestGetTexTemplateE2E:
         assert "output-dir" in result.stderr.lower(), f"error should mention output-dir, got: {result.stderr}"
 
     @pytest.mark.e2e
-    @pytest.mark.skipif(not HAS_TOKEN, reason=NO_TOKEN_REASON)
     def test_get_tex_template_copies_templates(self, tmp_path):
         """Test the full command clones the repo and copies template files.
 
