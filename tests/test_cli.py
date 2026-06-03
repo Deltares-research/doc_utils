@@ -102,3 +102,15 @@ class TestMainDispatch:
         monkeypatch.setattr(sys, "argv", ["ddocs", "get-tex-template", "-o", "out"])
         with patch("ddocs.cli.clone_repo_cli", return_value=1):
             assert main() == 1, "main should propagate a non-zero exit code"
+
+    @pytest.mark.unit
+    def test_check_pdflatex_dispatches_to_handler(self, monkeypatch):
+        """Test the check-pdflatex command dispatches to check_pdflatex_cli.
+
+        Test scenario:
+            `ddocs check-pdflatex` calls check_pdflatex_cli and returns its code.
+        """
+        monkeypatch.setattr(sys, "argv", ["ddocs", "check-pdflatex"])
+        with patch("ddocs.cli.check_pdflatex_cli", return_value=0) as mock_handler:
+            assert main() == 0, "main should return the handler's exit code"
+        mock_handler.assert_called_once()

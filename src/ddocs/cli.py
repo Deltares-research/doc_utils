@@ -7,9 +7,10 @@ from ddocs import __version__
 from ddocs.markdown import mark_down_to_latex_cli, clean_latex_cli
 from ddocs.repo_cloner import clone_repo_cli
 from ddocs.pandoc_utils import check_pandoc_cli
+from ddocs.pdflatex_utils import check_pdflatex_cli
 
 
-def create_parser():
+def create_parser() -> argparse.ArgumentParser:
     """Build the ``ddocs`` argument parser with all subcommands.
 
     Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean`` and
@@ -71,6 +72,9 @@ Examples:
 
   # Check that Pandoc is installed (download it if missing)
   ddocs check-pandoc
+
+  # Check that pdflatex is installed (install TinyTeX if missing)
+  ddocs check-pdflatex
         """
     )
     parser.add_argument(
@@ -82,7 +86,7 @@ Examples:
         description='Select the operation to perform',
         dest='command',
         required=True,
-        help='Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc'
+        help='Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc, check-pdflatex'
     )
 
     # sub-command: markdown-to-latex
@@ -177,10 +181,16 @@ Examples:
         help='Check that Pandoc is installed; download it if missing',
     )
 
+    # sub-command: check-pdflatex
+    subparsers.add_parser(
+        'check-pdflatex',
+        help='Check that pdflatex is installed; install TinyTeX if missing',
+    )
+
     return parser
 
 
-def main():
+def main() -> int:
     """Parse the command line and dispatch to the selected subcommand handler.
 
     Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the
@@ -233,6 +243,8 @@ def main():
         exit_code = clean_latex_cli(args)
     elif args.command == 'check-pandoc':
         exit_code = check_pandoc_cli(args)
+    elif args.command == 'check-pdflatex':
+        exit_code = check_pdflatex_cli(args)
     else:
         parser.print_help()
         exit_code = 1
