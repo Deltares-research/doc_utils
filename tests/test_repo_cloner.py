@@ -22,6 +22,8 @@ def _clear_auth_env(monkeypatch):
     for var in ("GITHUB_TOKEN", "GH_TOKEN", "GIT_USERNAME", "GIT_PASSWORD",
                 "SVN_USERNAME", "SVN_PASSWORD"):
         monkeypatch.delenv(var, raising=False)
+    # SVN_* are cleared above only to keep the environment clean; the code no
+    # longer reads them (the legacy fallback was removed).
 
 
 class TestInit:
@@ -76,19 +78,17 @@ class TestInit:
         assert cloner.password == "gitpw", "password should read GIT_PASSWORD"
 
     @pytest.mark.unit
-    def test_git_env_takes_precedence_over_legacy_svn_env(self, monkeypatch):
-        """Test GIT_* env vars win over the legacy SVN_* ones.
+    def test_legacy_svn_env_is_ignored(self, monkeypatch):
+        """Test the legacy SVN_* env vars are no longer read.
 
         Test scenario:
-            Both GIT_* and SVN_* are set; GIT_* values are used.
+            Only SVN_* are set; username/password stay None (the fallback was removed).
         """
-        monkeypatch.setenv("GIT_USERNAME", "gituser")
-        monkeypatch.setenv("GIT_PASSWORD", "gitpw")
         monkeypatch.setenv("SVN_USERNAME", "svnuser")
         monkeypatch.setenv("SVN_PASSWORD", "svnpw")
         cloner = RepoCloner(HTTPS)
-        assert cloner.username == "gituser", "GIT_USERNAME should take precedence"
-        assert cloner.password == "gitpw", "GIT_PASSWORD should take precedence"
+        assert cloner.username is None, "SVN_USERNAME must not be read"
+        assert cloner.password is None, "SVN_PASSWORD must not be read"
 
     @pytest.mark.unit
     def test_defaults_are_none_and_prefer_ssh_true(self):
@@ -181,14 +181,17 @@ class TestResolveCloneUrl:
         assert "env_token" in cloner._resolve_clone_url(), "env token should appear in URL"
 
     @pytest.mark.unit
-    def test_legacy_svn_env_still_accepted(self, monkeypatch):
-        """Test the legacy SVN_* env vars still drive basic auth as a fallback."""
+    def test_legacy_svn_env_does_not_authenticate(self, monkeypatch):
+        """Test SVN_* env vars no longer affect the resolved URL.
+
+        Test scenario:
+            With only SVN_* set and prefer_ssh False, resolution ignores them and
+            falls through to the anonymous HTTPS URL.
+        """
         monkeypatch.setenv("SVN_USERNAME", "alice")
         monkeypatch.setenv("SVN_PASSWORD", "legacy")
         cloner = RepoCloner(HTTPS, prefer_ssh=False)
-        assert cloner._resolve_clone_url() == (
-            "https://alice:legacy@github.com/Deltares/LatexInstallation"
-        ), "legacy SVN_* creds should still work"
+        assert cloner._resolve_clone_url() == HTTPS, "SVN_* must not inject basic-auth creds"
 
 
 class TestToSshUrl:

@@ -4,8 +4,7 @@ permissions:
     contents: read
 
 env:
-  SVN_USERNAME: x-access-token
-  SVN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   push:

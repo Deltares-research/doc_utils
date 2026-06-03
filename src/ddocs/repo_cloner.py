@@ -3,8 +3,7 @@
 Authentication precedence (first available wins):
 
 1. Token  -- `token` arg or `GITHUB_TOKEN` / `GH_TOKEN` env (HTTPS).
-2. Basic  -- `username`/`password` args or `GIT_USERNAME`/`GIT_PASSWORD`
-   (falling back to the legacy `SVN_USERNAME`/`SVN_PASSWORD`) env vars.
+2. Basic  -- `username`/`password` args or `GIT_USERNAME`/`GIT_PASSWORD` env vars.
 3. SSH    -- when `prefer_ssh` is set and no credentials are given, clone via an
    SSH URL using the machine's key (typical on developer laptops).
 4. Anonymous HTTPS -- public repos only.
@@ -66,10 +65,10 @@ class RepoCloner:
             repo_url: The URL of the git repository to clone (HTTPS or SSH form).
             token: Personal access / app token for HTTPS auth. Defaults to the
                 `GITHUB_TOKEN` or `GH_TOKEN` environment variable.
-            username: Username for HTTPS basic auth. Defaults to `GIT_USERNAME`
-                or the legacy `SVN_USERNAME` environment variable.
-            password: Password/token for HTTPS basic auth. Defaults to `GIT_PASSWORD`
-                or the legacy `SVN_PASSWORD` environment variable.
+            username: Username for HTTPS basic auth. Defaults to the
+                `GIT_USERNAME` environment variable.
+            password: Password/token for HTTPS basic auth. Defaults to the
+                `GIT_PASSWORD` environment variable.
             prefer_ssh: When no token or username/password is available, clone via an
                 SSH URL (using the machine's SSH key) instead of anonymously.
 
@@ -95,8 +94,8 @@ class RepoCloner:
         """
         self.repo_url = repo_url
         self.token = token or os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
-        self.username = username or os.getenv("GIT_USERNAME") or os.getenv("SVN_USERNAME")
-        self.password = password or os.getenv("GIT_PASSWORD") or os.getenv("SVN_PASSWORD")
+        self.username = username or os.getenv("GIT_USERNAME")
+        self.password = password or os.getenv("GIT_PASSWORD")
         self.prefer_ssh = prefer_ssh
         self.temp_dir: Optional[Path] = None
         self.repo_path: Optional[Path] = None
