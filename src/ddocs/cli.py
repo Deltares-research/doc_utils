@@ -10,6 +10,43 @@ from ddocs.pandoc_utils import check_pandoc_cli
 
 
 def create_parser():
+    """Build the ``ddocs`` argument parser with all subcommands.
+
+    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean`` and
+    ``check-pandoc`` subcommands. ``get-tex-template`` accepts ``--output-dir`` plus
+    the authentication options ``--token``, ``--username``, ``--password`` and
+    ``--no-ssh``.
+
+    Returns:
+        The configured ``argparse.ArgumentParser``.
+
+    Examples:
+        - Parse a ``get-tex-template`` invocation and read the auth options:
+            ```python
+            >>> from ddocs.cli import create_parser
+            >>> args = create_parser().parse_args(
+            ...     ["get-tex-template", "-o", "out", "--token", "tok"]
+            ... )
+            >>> args.command
+            'get-tex-template'
+            >>> args.token
+            'tok'
+            >>> (args.username, args.password, args.no_ssh)
+            (None, None, False)
+
+            ```
+        - ``--no-ssh`` flips the SSH-fallback flag:
+            ```python
+            >>> from ddocs.cli import create_parser
+            >>> args = create_parser().parse_args(["get-tex-template", "-o", "out", "--no-ssh"])
+            >>> args.no_ssh
+            True
+
+            ```
+
+    See Also:
+        main: Parses arguments with this parser and dispatches to the handlers.
+    """
     parser = argparse.ArgumentParser(
         prog='ddocs',
         description='Deltares HMS documentation utility tool',
@@ -144,7 +181,40 @@ Examples:
 
 
 def main():
-    """Main entry point for the CLI."""
+    """Parse the command line and dispatch to the selected subcommand handler.
+
+    Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the
+    matching handler. For ``get-tex-template`` the authentication options
+    (``--token`` / ``--username`` / ``--password`` / ``--no-ssh``) are forwarded to
+    :func:`ddocs.repo_cloner.clone_repo_cli`. The handler's exit code is returned so a
+    caller can pass it to :func:`sys.exit`.
+
+    Returns:
+        The subcommand handler's exit code (``0`` on success, non-zero on failure).
+
+    Examples:
+        - Run a command and use the result as a process exit status:
+            ```python
+            >>> import sys
+            >>> from ddocs.cli import main
+            >>> sys.exit(main())  # doctest: +SKIP
+
+            ```
+        - Authenticate ``get-tex-template`` with a token (sets ``sys.argv`` first):
+            ```python
+            >>> import sys
+            >>> from ddocs.cli import main
+            >>> sys.argv = ["ddocs", "get-tex-template", "-o", "out", "--token", "tok"]
+            >>> code = main()  # doctest: +SKIP
+            >>> code  # doctest: +SKIP
+            0
+
+            ```
+
+    See Also:
+        create_parser: Builds the parser this function uses.
+        ddocs.repo_cloner.clone_repo_cli: Handles ``get-tex-template``.
+    """
     parser = create_parser()
     args = parser.parse_args()
 
