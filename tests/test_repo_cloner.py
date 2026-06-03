@@ -373,6 +373,7 @@ class TestCloneRepoCli:
         class FakeCloner:
             def __init__(self, url, **kwargs):
                 created["url"] = url
+                created["kwargs"] = kwargs
 
             def __enter__(self):
                 return self
@@ -397,6 +398,88 @@ class TestCloneRepoCli:
         assert created["cleaned"] is True, "context manager __exit__ (cleanup) should run"
         assert len(created["copied"]) == 3, f"should copy 3 template paths, got {created.get('copied')}"
         assert created["url"] == "https://github.com/Deltares/LatexInstallation", "wrong repo URL"
+
+    @pytest.mark.unit
+    def test_cli_passes_auth_through_to_repocloner(self, tmp_path):
+        """Test clone_repo_cli forwards auth arguments to RepoCloner.
+
+        Test scenario:
+            token/username/password/prefer_ssh given to clone_repo_cli appear in the
+            RepoCloner constructor call.
+        """
+        from ddocs.repo_cloner import clone_repo_cli
+
+        seen = {}
+
+        class FakeCloner:
+            def __init__(self, url, **kwargs):
+                seen.update(kwargs)
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+            def clone(self):
+                return tmp_path
+
+            def copy_file(self, src, dest):
+                return dest
+
+        with patch("ddocs.repo_cloner.RepoCloner", FakeCloner):
+            clone_repo_cli(
+                tmp_path / "out",
+                token="ghp_demo",
+                username="alice",
+                password="pw",
+                prefer_ssh=False,
+            )
+
+        assert seen == {
+            "token": "ghp_demo",
+            "username": "alice",
+            "password": "pw",
+            "prefer_ssh": False,
+        }, f"auth args should be forwarded to RepoCloner, got {seen}"
+
+    @pytest.mark.unit
+    def test_cli_defaults_prefer_ssh_and_no_creds(self, tmp_path):
+        """Test clone_repo_cli defaults to no credentials and prefer_ssh=True.
+
+        Test scenario:
+            Called with only an output dir, RepoCloner receives token/username/password
+            as None and prefer_ssh True (so SSH is the fallback).
+        """
+        from ddocs.repo_cloner import clone_repo_cli
+
+        seen = {}
+
+        class FakeCloner:
+            def __init__(self, url, **kwargs):
+                seen.update(kwargs)
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+            def clone(self):
+                return tmp_path
+
+            def copy_file(self, src, dest):
+                return dest
+
+        with patch("ddocs.repo_cloner.RepoCloner", FakeCloner):
+            clone_repo_cli(tmp_path / "out")
+
+        assert seen == {
+            "token": None,
+            "username": None,
+            "password": None,
+            "prefer_ssh": True,
+        }, f"defaults should be no creds + prefer_ssh, got {seen}"
 
 
 class TestContextManager:

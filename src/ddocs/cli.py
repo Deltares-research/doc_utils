@@ -22,8 +22,12 @@ Examples:
   # Generate standalone LaTeX documents
   ddocs markdown-to-latex --input docs/mkdocs --output docs/latex --standalone
 
-  # Get LaTeX templates
+  # Get LaTeX templates (SSH key used when no credentials are given)
   ddocs get-tex-template --output-dir ./templates
+
+  # ... authenticating with a token, or a username/password
+  ddocs get-tex-template -o ./templates --token <token>
+  ddocs get-tex-template -o ./templates --username <user> --password <token>
 
   # Clean LaTeX build files
   ddocs clean --directory ./docs/latex
@@ -93,6 +97,23 @@ Examples:
         required=True,
         help='Output directory for the template files'
     )
+    get_tex_template.add_argument(
+        '--token',
+        help='Token for HTTPS auth (defaults to the GITHUB_TOKEN / GH_TOKEN env var)'
+    )
+    get_tex_template.add_argument(
+        '--username',
+        help='Username for HTTPS basic auth (defaults to the GIT_USERNAME env var)'
+    )
+    get_tex_template.add_argument(
+        '--password',
+        help='Password/token for HTTPS basic auth (defaults to the GIT_PASSWORD env var)'
+    )
+    get_tex_template.add_argument(
+        '--no-ssh',
+        action='store_true',
+        help='Disable the SSH-key fallback; clone anonymously when no credentials are given'
+    )
 
     # sub-command: clean
     clean = subparsers.add_parser(
@@ -129,7 +150,13 @@ def main():
 
     # Dispatch to the selected command and propagate its exit code
     if args.command == 'get-tex-template':
-        exit_code = clone_repo_cli(args.output_dir)
+        exit_code = clone_repo_cli(
+            args.output_dir,
+            token=args.token,
+            username=args.username,
+            password=args.password,
+            prefer_ssh=not args.no_ssh,
+        )
     elif args.command == 'markdown-to-latex':
         exit_code = mark_down_to_latex_cli(args)
     elif args.command == 'clean':

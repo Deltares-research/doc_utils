@@ -378,15 +378,28 @@ class RepoCloner:
         return False
 
 
-def clone_repo_cli(output_dir: Path) -> int:
+def clone_repo_cli(
+    output_dir: Path,
+    token: Optional[str] = None,
+    username: Optional[str] = None,
+    password: Optional[str] = None,
+    prefer_ssh: bool = True,
+) -> int:
     """Clone the Deltares LatexInstallation repo and copy template files to `output_dir`.
 
     Uses :class:`RepoCloner` as a context manager so the temporary clone is always
-    removed, even if copying fails. Authentication is handled by `RepoCloner` (token
-    in CI, SSH key on a laptop).
+    removed, even if copying fails. Credentials are resolved by `RepoCloner` with the
+    precedence token -> username/password -> SSH (when `prefer_ssh`) -> anonymous, so
+    passing nothing falls back to the machine's SSH key.
 
     Args:
         output_dir: Directory the template files are copied into. Created if missing.
+        token: Personal access / app token for HTTPS auth. Falls back to the
+            `GITHUB_TOKEN` / `GH_TOKEN` environment variables when omitted.
+        username: Username for HTTPS basic auth. Falls back to `GIT_USERNAME`.
+        password: Password/token for HTTPS basic auth. Falls back to `GIT_PASSWORD`.
+        prefer_ssh: When no token or username/password is available, clone via SSH
+            (using the machine's key) instead of anonymously. Defaults to True.
 
     Returns:
         `0` on success.
@@ -421,7 +434,13 @@ def clone_repo_cli(output_dir: Path) -> int:
         "MiKTeX/bibtex/bst/deltares",
     ]
 
-    with RepoCloner("https://github.com/Deltares/LatexInstallation") as cloner:
+    with RepoCloner(
+        "https://github.com/Deltares/LatexInstallation",
+        token=token,
+        username=username,
+        password=password,
+        prefer_ssh=prefer_ssh,
+    ) as cloner:
         cloner.clone()
         for path in paths:
             print(f"Copying {path}...")

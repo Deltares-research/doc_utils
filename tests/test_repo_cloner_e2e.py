@@ -49,6 +49,18 @@ class TestGetTexTemplateE2E:
         assert "Output directory for the template files" in result.stdout, "help should describe --output-dir"
 
     @pytest.mark.e2e
+    def test_help_lists_auth_options(self):
+        """Test the command's --help advertises the auth options.
+
+        Test scenario:
+            ``get-tex-template --help`` documents --token, --username, --password and
+            --no-ssh. Needs no network.
+        """
+        result = run_ddocs_command("get-tex-template", "--help")
+        for flag in ("--token", "--username", "--password", "--no-ssh"):
+            assert flag in result.stdout, f"help should mention {flag}"
+
+    @pytest.mark.e2e
     def test_missing_required_output_dir_errors(self):
         """Test omitting the required --output-dir fails with a non-zero exit code.
 
