@@ -350,23 +350,33 @@ class RepoCloner:
         return False
 
 
-def clone_repo_cli(output_dir: Path):
+def clone_repo_cli(output_dir: Path) -> int:
+    """Clone the Deltares LatexInstallation repo and copy template files to ``output_dir``.
+
+    Uses :class:`RepoCloner` as a context manager so the temporary clone is always
+    removed, even if copying fails. Authentication is handled by ``RepoCloner`` (token
+    in CI, SSH key on a laptop).
+
+    Args:
+        output_dir: Directory the template files are copied into. Created if missing.
+
+    Returns:
+        ``0`` on success.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"Cloning LatexInstallation repository...")
-    cloner = RepoCloner("https://github.com/Deltares/LatexInstallation")
-    cloner.clone()
-
-    # Copy the template paths
+    print("Cloning LatexInstallation repository...")
     paths = [
         "MiKTeX/tex/latex/deltares",
         "MiKTeX/tex/latex/nomentbl/deltares",
-        "MiKTeX/bibtex/bst/deltares"
+        "MiKTeX/bibtex/bst/deltares",
     ]
 
-    for path in paths:
-        print(f"Copying {path}...")
-        cloner.copy_file(path, output_dir)
+    with RepoCloner("https://github.com/Deltares/LatexInstallation") as cloner:
+        cloner.clone()
+        for path in paths:
+            print(f"Copying {path}...")
+            cloner.copy_file(path, output_dir)
 
-    print(f"✓ Template files copied to {output_dir}")
+    print(f"Template files copied to {output_dir}")
     return 0

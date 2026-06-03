@@ -347,3 +347,47 @@ class TestCloneSuccessPath:
         assert cloner.repo == "REPO", f"repo should be the clone_from result, got {cloner.repo}"
         assert result == cloner.repo_path, "clone() should return self.repo_path"
         mock_clone.assert_called_once()
+
+
+class TestCloneRepoCli:
+    """Tests for the clone_repo_cli entry point."""
+
+    @pytest.mark.unit
+    def test_cli_copies_templates_and_cleans_up(self, tmp_path):
+        """Test clone_repo_cli clones, copies three template paths, and cleans up.
+
+        Test scenario:
+            RepoCloner is replaced by a fake recording context-manager use; the CLI
+            must enter/exit the manager (cleanup), clone once, copy 3 paths, return 0.
+        """
+        from ddocs.repo_cloner import clone_repo_cli
+
+        created = {}
+
+        class FakeCloner:
+            def __init__(self, url, **kwargs):
+                created["url"] = url
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                created["cleaned"] = True
+                return False
+
+            def clone(self):
+                created["cloned"] = True
+                return tmp_path
+
+            def copy_file(self, src, dest):
+                created.setdefault("copied", []).append(src)
+                return dest
+
+        with patch("ddocs.repo_cloner.RepoCloner", FakeCloner):
+            rc = clone_repo_cli(tmp_path / "out")
+
+        assert rc == 0, f"clone_repo_cli should return 0, got {rc}"
+        assert created["cloned"] is True, "clone() should have been called"
+        assert created["cleaned"] is True, "context manager __exit__ (cleanup) should run"
+        assert len(created["copied"]) == 3, f"should copy 3 template paths, got {created.get('copied')}"
+        assert created["url"] == "https://github.com/Deltares/LatexInstallation", "wrong repo URL"
