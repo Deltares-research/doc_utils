@@ -281,3 +281,69 @@ class TestCloneErrorScrubbing:
         assert called_url == (
             "https://x-access-token:ghp_secret@github.com/Deltares/LatexInstallation"
         ), f"clone should use the resolved URL, got {called_url}"
+
+
+class TestCloneSuccessPath:
+    """Tests for RepoCloner.clone() success-path behaviour."""
+
+    @pytest.mark.unit
+    def test_clone_auto_creates_temp_dir_when_missing(self, tmp_path, monkeypatch):
+        """Test clone() creates a temp dir via mkdtemp when none is set.
+
+        Test scenario:
+            With temp_dir unset, mkdtemp supplies the directory and repo_path is
+            ``<temp_dir>/<repo-name>``.
+        """
+        cloner = RepoCloner("https://github.com/owner/myrepo", prefer_ssh=False)
+        monkeypatch.setattr("ddocs.repo_cloner.tempfile.mkdtemp", lambda: str(tmp_path))
+        with patch("ddocs.repo_cloner.Repo.clone_from"):
+            result = cloner.clone()
+        assert cloner.temp_dir == tmp_path, f"temp_dir should be set, got {cloner.temp_dir}"
+        assert result == tmp_path / "myrepo", f"repo_path should be <temp>/myrepo, got {result}"
+
+    @pytest.mark.unit
+    def test_clone_reuses_existing_temp_dir(self, tmp_path, monkeypatch):
+        """Test clone() keeps a temp dir that is already set.
+
+        Test scenario:
+            temp_dir is pre-set; mkdtemp must not be called.
+        """
+        cloner = RepoCloner("https://github.com/owner/myrepo", prefer_ssh=False)
+        cloner.temp_dir = tmp_path
+
+        def _boom():
+            raise AssertionError("mkdtemp should not be called when temp_dir is set")
+
+        monkeypatch.setattr("ddocs.repo_cloner.tempfile.mkdtemp", _boom)
+        with patch("ddocs.repo_cloner.Repo.clone_from"):
+            cloner.clone()
+        assert cloner.temp_dir == tmp_path, "existing temp_dir must be reused"
+
+    @pytest.mark.unit
+    def test_clone_strips_git_suffix_from_repo_name(self, tmp_path):
+        """Test clone() derives the repo dir name without the .git suffix.
+
+        Test scenario:
+            A ``*.git`` URL yields a repo_path whose name drops ``.git``.
+        """
+        cloner = RepoCloner("https://github.com/owner/myrepo.git", prefer_ssh=False)
+        cloner.temp_dir = tmp_path
+        with patch("ddocs.repo_cloner.Repo.clone_from"):
+            result = cloner.clone()
+        assert result == tmp_path / "myrepo", f"repo name should drop .git, got {result.name}"
+
+    @pytest.mark.unit
+    def test_clone_returns_repo_path_and_sets_repo(self, tmp_path):
+        """Test clone() stores the Repo object and returns the repo path.
+
+        Test scenario:
+            On success, ``self.repo`` is the clone_from result and the returned
+            path equals ``self.repo_path``.
+        """
+        cloner = RepoCloner("https://github.com/owner/myrepo", prefer_ssh=False)
+        cloner.temp_dir = tmp_path
+        with patch("ddocs.repo_cloner.Repo.clone_from", return_value="REPO") as mock_clone:
+            result = cloner.clone()
+        assert cloner.repo == "REPO", f"repo should be the clone_from result, got {cloner.repo}"
+        assert result == cloner.repo_path, "clone() should return self.repo_path"
+        mock_clone.assert_called_once()
