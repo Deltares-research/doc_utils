@@ -98,13 +98,13 @@ Create the token under an account/identity that has **read access** to
 
 GitHub → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
 
-| Setting | Value |
-| --- | --- |
-| **Resource owner** | `Deltares` (the org that owns the repo) |
-| **Repository access** | *Only select repositories* → `Deltares/LatexInstallation` |
-| **Repository permissions → Contents** | **Read-only** |
-| **Repository permissions → Metadata** | **Read-only** (selected automatically) |
-| **Expiration** | Set a sensible expiry (e.g. 90 days) and rotate |
+| Setting                               | Value                                                     |
+|---------------------------------------|-----------------------------------------------------------|
+| **Resource owner**                    | `Deltares` (the org that owns the repo)                   |
+| **Repository access**                 | *Only select repositories* → `Deltares/LatexInstallation` |
+| **Repository permissions → Contents** | **Read-only**                                             |
+| **Repository permissions → Metadata** | **Read-only** (selected automatically)                    |
+| **Expiration**                        | Set a sensible expiry (e.g. 90 days) and rotate           |
 
 > Fine-grained tokens targeting an organisation repo may require **organisation approval** before they
 > work. An org owner approves the token request under the org's PAT settings.
@@ -116,12 +116,34 @@ Do **not** grant write, admin, workflow, or any other scopes.
 
 GitHub → **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**.
 
-| Setting | Value |
-| --- | --- |
-| **Scope** | `repo` (full control of private repositories) |
+Check exactly **one** top-level scope:
 
-Classic tokens are coarser — the `repo` scope grants read **and write** to all your private repos, so
-prefer the fine-grained token above when possible.
+| Scope | Why |
+| --- | --- |
+| ✅ **`repo`** — *Full control of private repositories* | Required to clone a **private** repo. This single checkbox is all you need. |
+
+Checking `repo` automatically includes its sub-scopes (you do not tick them individually):
+
+- `repo:status`
+- `repo_deployment`
+- `public_repo`
+- `repo:invite`
+- `security_events`
+
+Do **not** select anything else — no `workflow`, `admin:org`, `write:packages`, `gist`, `user`, etc.
+
+**Why you can't go narrower:** classic tokens are coarse and have **no read-only scope** for
+private-repo contents. The only finer option, `public_repo`, covers **public** repos only and will not
+clone a private one — so `repo` is the minimum that works for `LatexInstallation`.
+
+> ⚠️ The `repo` scope grants read **and write** to **all** of your private repositories, not just
+> `LatexInstallation`. For least privilege, prefer the fine-grained token in **Option A**, which can be
+> limited to a single repo with `Contents: Read-only`.
+
+| Token type | Minimum to clone the private repo | Read-only? | Scoped to one repo? |
+| --- | --- | --- | --- |
+| **Classic** | `repo` | ❌ (includes write) | ❌ (all your private repos) |
+| **Fine-grained** | `Contents: Read-only` | ✅ | ✅ |
 
 ### Option C — Deploy key or GitHub App (CI without a personal token)
 
