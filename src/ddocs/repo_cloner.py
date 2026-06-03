@@ -362,6 +362,27 @@ def clone_repo_cli(output_dir: Path) -> int:
 
     Returns:
         ``0`` on success.
+
+    Examples:
+        - Fetch the templates into a local folder (network access required):
+            ```python
+            >>> from pathlib import Path
+            >>> from ddocs.repo_cloner import clone_repo_cli
+            >>> clone_repo_cli(Path("./templates"))  # doctest: +SKIP
+            0
+
+            ```
+        - The returned code can drive a process exit status:
+            ```python
+            >>> import sys
+            >>> from pathlib import Path
+            >>> from ddocs.repo_cloner import clone_repo_cli
+            >>> sys.exit(clone_repo_cli(Path("./templates")))  # doctest: +SKIP
+
+            ```
+
+    See Also:
+        RepoCloner: The context manager used to clone and clean up the temporary repo.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
 
