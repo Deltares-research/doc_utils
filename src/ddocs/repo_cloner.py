@@ -209,6 +209,28 @@ class RepoCloner:
         Raises:
             RuntimeError: If the clone fails. The message is scrubbed of any
                 token/password so secrets are never written to logs.
+
+        Examples:
+            - Clone a repository and use the returned path (network access required):
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> repo_path = cloner.clone()  # doctest: +SKIP
+                >>> sorted(p.name for p in repo_path.iterdir())  # doctest: +SKIP
+                ['.git', 'README.md']
+
+                ```
+            - A failed clone raises a RuntimeError whose message hides the token:
+                ```python
+                >>> from ddocs.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/does-not-exist", token="ghp_demo")
+                >>> try:  # doctest: +SKIP
+                ...     cloner.clone()
+                ... except RuntimeError as err:
+                ...     "ghp_demo" in str(err)
+                False
+
+                ```
         """
         if self.temp_dir is None:
             self.temp_dir = Path(tempfile.mkdtemp())
