@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 from ddocs import __version__
 from ddocs.markdown import mark_down_to_latex_cli, clean_latex_cli
-from ddocs.repo_cloner import clone_repo_cli
+from ddocs.templates.repo_cloner import clone_repo_cli
 from ddocs.pandoc_utils import check_pandoc_cli
 from ddocs.pdflatex_utils import check_pdflatex_cli
 
@@ -196,7 +196,7 @@ def main() -> int:
     Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the
     matching handler. For ``get-tex-template`` the authentication options
     (``--token`` / ``--username`` / ``--password`` / ``--no-ssh``) are forwarded to
-    :func:`ddocs.repo_cloner.clone_repo_cli`. The handler's exit code is returned so a
+    :func:`ddocs.templates.repo_cloner.clone_repo_cli`. The handler's exit code is returned so a
     caller can pass it to :func:`sys.exit`.
 
     Returns:
@@ -223,7 +223,7 @@ def main() -> int:
 
     See Also:
         create_parser: Builds the parser this function uses.
-        ddocs.repo_cloner.clone_repo_cli: Handles ``get-tex-template``.
+        ddocs.templates.repo_cloner.clone_repo_cli: Handles ``get-tex-template``.
     """
     parser = create_parser()
     args = parser.parse_args()

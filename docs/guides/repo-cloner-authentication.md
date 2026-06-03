@@ -1,10 +1,10 @@
 # RepoCloner & Authentication
 
-This guide explains the `ddocs.repo_cloner` module: what it does, how it authenticates against the
+This guide explains the `ddocs.templates.repo_cloner` module: what it does, how it authenticates against the
 **private** Deltares LaTeX template repository, and exactly which token to create (and with which
 permissions) so the `ddocs get-tex-template` command works both in CI and on a developer laptop.
 
-For the auto-generated API reference, see [`ddocs.repo_cloner`](../reference/repo_cloner.md).
+For the auto-generated API reference, see [`ddocs.templates.repo_cloner`](../reference/repo_cloner.md).
 
 ## What the module does
 
@@ -53,7 +53,7 @@ Key methods:
 It supports the context-manager protocol, so the temp clone is always removed:
 
 ```python
-from ddocs.repo_cloner import RepoCloner
+from ddocs.templates.repo_cloner import RepoCloner
 
 with RepoCloner("https://github.com/Deltares/LatexInstallation") as cloner:
     cloner.clone()

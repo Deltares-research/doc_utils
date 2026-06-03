@@ -33,7 +33,7 @@ class RepoCloner:
     Examples:
         - Construct with a token and read back the stored credentials:
             ``python
-            >>> from ddocs.repo_cloner import RepoCloner
+            >>> from ddocs.templates.repo_cloner import RepoCloner
             >>> cloner = RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")
             >>> cloner.token
             'ghp_demo'
@@ -43,7 +43,7 @@ class RepoCloner:
             ``
         - A token turns the public URL into an authenticated HTTPS clone URL:
             ``python
-            >>> from ddocs.repo_cloner import RepoCloner
+            >>> from ddocs.templates.repo_cloner import RepoCloner
             >>> RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._resolve_clone_url()
             'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'
 
@@ -77,7 +77,7 @@ class RepoCloner:
         Examples:
             - An explicit token is stored verbatim (it wins over any environment value):
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
                 >>> cloner.token
                 'ghp_demo'
@@ -87,7 +87,7 @@ class RepoCloner:
                 ```
             - Basic-auth credentials are stored for later HTTPS injection:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> cloner = RepoCloner("https://github.com/owner/repo", username="alice", password="pw")
                 >>> (cloner.username, cloner.password)
                 ('alice', 'pw')
@@ -118,14 +118,14 @@ class RepoCloner:
         Examples:
             - An HTTPS URL is rewritten and given a `.git` suffix:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> RepoCloner._to_ssh_url("https://github.com/Deltares/LatexInstallation")
                 'git@github.com:Deltares/LatexInstallation.git'
 
                 ```
             - An already-SSH URL is returned untouched:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> RepoCloner._to_ssh_url("git@github.com:Deltares/LatexInstallation.git")
                 'git@github.com:Deltares/LatexInstallation.git'
 
@@ -153,14 +153,14 @@ class RepoCloner:
         Examples:
             - A token is embedded as an `x-access-token` HTTPS credential:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> RepoCloner("https://github.com/owner/repo", token="ghp_demo")._resolve_clone_url()
                 'https://x-access-token:ghp_demo@github.com/owner/repo'
 
                 ```
             - An SSH input URL is used as-is, even when a token is set:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> RepoCloner("git@github.com:owner/repo.git", token="ghp_demo")._resolve_clone_url()
                 'git@github.com:owner/repo.git'
 
@@ -191,7 +191,7 @@ class RepoCloner:
         Examples:
             - A token embedded in an error message is masked:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
                 >>> cloner._scrub_secrets("fatal: auth failed for ghp_demo")
                 'fatal: auth failed for ***'
@@ -199,7 +199,7 @@ class RepoCloner:
                 ```
             - Text without any secret is returned unchanged:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
                 >>> cloner._scrub_secrets("fatal: repository not found")
                 'fatal: repository not found'
@@ -228,7 +228,7 @@ class RepoCloner:
         Examples:
             - Clone a repository and use the returned path (network access required):
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
                 >>> repo_path = cloner.clone()  # doctest: +SKIP
                 >>> sorted(p.name for p in repo_path.iterdir())  # doctest: +SKIP
@@ -237,7 +237,7 @@ class RepoCloner:
                 ```
             - A failed clone raises a RuntimeError whose message hides the token:
                 ```python
-                >>> from ddocs.repo_cloner import RepoCloner
+                >>> from ddocs.templates.repo_cloner import RepoCloner
                 >>> cloner = RepoCloner("https://github.com/owner/does-not-exist", token="ghp_demo")
                 >>> try:  # doctest: +SKIP
                 ...     cloner.clone()
@@ -408,7 +408,7 @@ def clone_repo_cli(
         - Fetch the templates into a local folder (network access required):
             ```python
             >>> from pathlib import Path
-            >>> from ddocs.repo_cloner import clone_repo_cli
+            >>> from ddocs.templates.repo_cloner import clone_repo_cli
             >>> clone_repo_cli(Path("./templates"))  # doctest: +SKIP
             0
 
@@ -417,7 +417,7 @@ def clone_repo_cli(
             ```python
             >>> import sys
             >>> from pathlib import Path
-            >>> from ddocs.repo_cloner import clone_repo_cli
+            >>> from ddocs.templates.repo_cloner import clone_repo_cli
             >>> sys.exit(clone_repo_cli(Path("./templates")))  # doctest: +SKIP
 
             ```

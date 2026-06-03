@@ -12,7 +12,7 @@ This test exercises the full pipeline:
 import pytest
 
 from ddocs.pdflatex_utils import build_pdf
-from ddocs.repo_cloner import clone_repo_cli
+from ddocs.templates.repo_cloner import clone_repo_cli
 
 TEST_DOCUMENT = (
     "\\documentclass[a4paper]{deltares_report}\n"

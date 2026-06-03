@@ -57,5 +57,5 @@ nav:
       - ddocs.markdown: reference/markdown.md
       - ddocs.pandoc_utils: reference/pandoc_utils.md
       - ddocs.pdflatex_utils: reference/pdflatex_utils.md
-      - ddocs.repo_cloner: reference/repo_cloner.md
+      - ddocs.templates.repo_cloner: reference/repo_cloner.md
   - Changelog: changelog.md

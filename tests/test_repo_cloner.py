@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 from git import GitCommandError
 
-from ddocs.repo_cloner import RepoCloner, clone_repo_cli
+from ddocs.templates.repo_cloner import RepoCloner, clone_repo_cli
 
 HTTPS = "https://github.com/Deltares/LatexInstallation"
 SSH = "git@github.com:Deltares/LatexInstallation.git"
@@ -266,7 +266,7 @@ class TestCloneErrorScrubbing:
         cloner = RepoCloner(HTTPS, token="ghp_secret")
         cloner.temp_dir = tmp_path
         boom = GitCommandError("git clone https://x-access-token:ghp_secret@github.com/x", 128)
-        with patch("ddocs.repo_cloner.Repo.clone_from", side_effect=boom):
+        with patch("ddocs.templates.repo_cloner.Repo.clone_from", side_effect=boom):
             with pytest.raises(RuntimeError) as excinfo:
                 cloner.clone()
         assert "ghp_secret" not in str(excinfo.value), "token must not appear in the error"
@@ -281,7 +281,7 @@ class TestCloneErrorScrubbing:
         """
         cloner = RepoCloner(HTTPS, token="ghp_secret")
         cloner.temp_dir = tmp_path
-        with patch("ddocs.repo_cloner.Repo.clone_from") as mock_clone:
+        with patch("ddocs.templates.repo_cloner.Repo.clone_from") as mock_clone:
             cloner.clone()
         called_url = mock_clone.call_args.args[0]
         assert called_url == (
@@ -301,8 +301,8 @@ class TestCloneSuccessPath:
             ``<temp_dir>/<repo-name>``.
         """
         cloner = RepoCloner("https://github.com/owner/myrepo", prefer_ssh=False)
-        monkeypatch.setattr("ddocs.repo_cloner.tempfile.mkdtemp", lambda: str(tmp_path))
-        with patch("ddocs.repo_cloner.Repo.clone_from"):
+        monkeypatch.setattr("ddocs.templates.repo_cloner.tempfile.mkdtemp", lambda: str(tmp_path))
+        with patch("ddocs.templates.repo_cloner.Repo.clone_from"):
             result = cloner.clone()
         assert cloner.temp_dir == tmp_path, f"temp_dir should be set, got {cloner.temp_dir}"
         assert result == tmp_path / "myrepo", f"repo_path should be <temp>/myrepo, got {result}"
@@ -320,8 +320,8 @@ class TestCloneSuccessPath:
         def _boom():
             raise AssertionError("mkdtemp should not be called when temp_dir is set")
 
-        monkeypatch.setattr("ddocs.repo_cloner.tempfile.mkdtemp", _boom)
-        with patch("ddocs.repo_cloner.Repo.clone_from"):
+        monkeypatch.setattr("ddocs.templates.repo_cloner.tempfile.mkdtemp", _boom)
+        with patch("ddocs.templates.repo_cloner.Repo.clone_from"):
             cloner.clone()
         assert cloner.temp_dir == tmp_path, "existing temp_dir must be reused"
 
@@ -334,7 +334,7 @@ class TestCloneSuccessPath:
         """
         cloner = RepoCloner("https://github.com/owner/myrepo.git", prefer_ssh=False)
         cloner.temp_dir = tmp_path
-        with patch("ddocs.repo_cloner.Repo.clone_from"):
+        with patch("ddocs.templates.repo_cloner.Repo.clone_from"):
             result = cloner.clone()
         assert result == tmp_path / "myrepo", f"repo name should drop .git, got {result.name}"
 
@@ -348,7 +348,7 @@ class TestCloneSuccessPath:
         """
         cloner = RepoCloner("https://github.com/owner/myrepo", prefer_ssh=False)
         cloner.temp_dir = tmp_path
-        with patch("ddocs.repo_cloner.Repo.clone_from", return_value="REPO") as mock_clone:
+        with patch("ddocs.templates.repo_cloner.Repo.clone_from", return_value="REPO") as mock_clone:
             result = cloner.clone()
         assert cloner.repo == "REPO", f"repo should be the clone_from result, got {cloner.repo}"
         assert result == cloner.repo_path, "clone() should return self.repo_path"
@@ -366,7 +366,7 @@ class TestCloneRepoCli:
             RepoCloner is replaced by a fake recording context-manager use; the CLI
             must enter/exit the manager (cleanup), clone once, copy 3 paths, return 0.
         """
-        from ddocs.repo_cloner import clone_repo_cli
+        from ddocs.templates.repo_cloner import clone_repo_cli
 
         created = {}
 
@@ -390,7 +390,7 @@ class TestCloneRepoCli:
                 created.setdefault("copied", []).append(src)
                 return dest
 
-        with patch("ddocs.repo_cloner.RepoCloner", FakeCloner):
+        with patch("ddocs.templates.repo_cloner.RepoCloner", FakeCloner):
             rc = clone_repo_cli(tmp_path / "out")
 
         assert rc == 0, f"clone_repo_cli should return 0, got {rc}"
@@ -407,7 +407,7 @@ class TestCloneRepoCli:
             token/username/password/prefer_ssh given to clone_repo_cli appear in the
             RepoCloner constructor call.
         """
-        from ddocs.repo_cloner import clone_repo_cli
+        from ddocs.templates.repo_cloner import clone_repo_cli
 
         seen = {}
 
@@ -427,7 +427,7 @@ class TestCloneRepoCli:
             def copy_file(self, src, dest):
                 return dest
 
-        with patch("ddocs.repo_cloner.RepoCloner", FakeCloner):
+        with patch("ddocs.templates.repo_cloner.RepoCloner", FakeCloner):
             clone_repo_cli(
                 tmp_path / "out",
                 token="ghp_demo",
@@ -451,7 +451,7 @@ class TestCloneRepoCli:
             Called with only an output dir, RepoCloner receives token/username/password
             as None and prefer_ssh True (so SSH is the fallback).
         """
-        from ddocs.repo_cloner import clone_repo_cli
+        from ddocs.templates.repo_cloner import clone_repo_cli
 
         seen = {}
 
@@ -471,7 +471,7 @@ class TestCloneRepoCli:
             def copy_file(self, src, dest):
                 return dest
 
-        with patch("ddocs.repo_cloner.RepoCloner", FakeCloner):
+        with patch("ddocs.templates.repo_cloner.RepoCloner", FakeCloner):
             clone_repo_cli(tmp_path / "out")
 
         assert seen == {
