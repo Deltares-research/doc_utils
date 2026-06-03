@@ -1,29 +1,93 @@
 import os
+import re
 import tempfile
 import shutil
 from pathlib import Path
 from typing import Optional
-from git import Repo
+from git import Repo, GitCommandError
 
 
 class RepoCloner:
-    """Class to clone a git repository into a temporary directory and manage file operations."""
+    """Clone a git repository into a temporary directory and manage file operations.
 
-    def __init__(self, repo_url: str, username: Optional[str] = None, password: Optional[str] = None):
-        """
-        Initialize the RepoCloner with a repository URL.
+    Authentication is resolved from the supplied arguments or the environment with a fixed
+    precedence: token, then username+password, then SSH (when ``prefer_ssh`` is set), then an
+    anonymous HTTPS clone. This lets the same code authenticate via a token in CI and via the
+    developer's SSH key on a laptop.
+    """
+
+    def __init__(
+        self,
+        repo_url: str,
+        token: Optional[str] = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        prefer_ssh: bool = True,
+    ):
+        """Initialize the RepoCloner.
 
         Args:
-            repo_url: The URL of the git repository to clone
-            username: Optional username for authentication (defaults to SVN_USERNAME env var)
-            password: Optional password/token for authentication (defaults to SVN_PASSWORD env var)
+            repo_url: The URL of the git repository to clone (HTTPS or SSH form).
+            token: Personal access / app token for HTTPS auth. Defaults to the
+                ``GITHUB_TOKEN`` or ``GH_TOKEN`` environment variable.
+            username: Username for HTTPS basic auth. Defaults to ``GIT_USERNAME``
+                or the legacy ``SVN_USERNAME`` environment variable.
+            password: Password/token for HTTPS basic auth. Defaults to ``GIT_PASSWORD``
+                or the legacy ``SVN_PASSWORD`` environment variable.
+            prefer_ssh: When no token or username/password is available, clone via an
+                SSH URL (using the machine's SSH key) instead of anonymously.
         """
         self.repo_url = repo_url
-        self.username = username or os.getenv('SVN_USERNAME')
-        self.password = password or os.getenv('SVN_PASSWORD')
+        self.token = token or os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
+        self.username = username or os.getenv("GIT_USERNAME") or os.getenv("SVN_USERNAME")
+        self.password = password or os.getenv("GIT_PASSWORD") or os.getenv("SVN_PASSWORD")
+        self.prefer_ssh = prefer_ssh
         self.temp_dir: Optional[Path] = None
         self.repo_path: Optional[Path] = None
         self.repo: Optional[Repo] = None
+
+    @staticmethod
+    def _to_ssh_url(url: str) -> str:
+        """Convert an HTTPS git URL to its ``git@host:owner/repo.git`` SSH form.
+
+        URLs that are already SSH (``git@`` or ``ssh://``) are returned unchanged.
+        """
+        if url.startswith("git@") or url.startswith("ssh://"):
+            ssh_url = url
+        else:
+            without_scheme = re.sub(r"^https?://", "", url.rstrip("/"))
+            host, _, path = without_scheme.partition("/")
+            if not path.endswith(".git"):
+                path = f"{path}.git"
+            ssh_url = f"git@{host}:{path}"
+        return ssh_url
+
+    def _resolve_clone_url(self) -> str:
+        """Build the effective clone URL from the available credentials.
+
+        Precedence: token, then username+password, then SSH (when ``prefer_ssh``),
+        then an anonymous HTTPS clone. An input that is already an SSH URL is used as-is.
+        """
+        url = self.repo_url.rstrip("/")
+        if url.startswith("git@") or url.startswith("ssh://"):
+            clone_url = url
+        elif self.token:
+            clone_url = re.sub(r"^https://", f"https://x-access-token:{self.token}@", url, count=1)
+        elif self.username and self.password:
+            clone_url = re.sub(r"^https://", f"https://{self.username}:{self.password}@", url, count=1)
+        elif self.prefer_ssh:
+            clone_url = self._to_ssh_url(url)
+        else:
+            clone_url = url
+        return clone_url
+
+    def _scrub_secrets(self, text: str) -> str:
+        """Replace any known secret (token/password) in ``text`` with ``***``."""
+        scrubbed = text
+        for secret in (self.token, self.password):
+            if secret:
+                scrubbed = scrubbed.replace(secret, "***")
+        return scrubbed
 
     def clone(self) -> Path:
         """
