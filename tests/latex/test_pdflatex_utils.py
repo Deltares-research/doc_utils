@@ -455,7 +455,7 @@ class TestCheckPdflatexCli:
         Test scenario:
             check_pdflatex_cli() -> check_pdflatex_installed(install_packages=True,
             packages=REQUIRED_TLMGR_PACKAGES). This is the contract bare-pdflatex
-            consumers (e.g. ddocs check-pdflatex) rely on.
+            consumers (e.g. ddocs pdflatex download) rely on.
         """
         with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
             check_pdflatex_cli()

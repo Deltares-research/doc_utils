@@ -10,7 +10,7 @@ built on TeX Live -- as the install backend:
    uses `apt-get install texlive-*` (fast); elsewhere it falls back to TinyTeX (root-free,
    cross-platform) and `tlmgr install`s the requested packages. Either way the packages a
    bare `pdflatex` needs for Deltares documents are provided. Tune via
-   `ddocs check-pdflatex --backend apt|tinytex|auto`, `--packages ...`, or `--no-packages`.
+   `ddocs pdflatex download --backend apt|tinytex|auto`, `--packages ...`, or `--no-packages`.
 3. `install_missing_packages` -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and `tlmgr install`s them on demand (TeX Live does not do this
    natively). `build_pdf` uses it to fetch any package a document still needs.
@@ -33,7 +33,7 @@ from pathlib import Path
 # Default tlmgr collections installed by ``check_pdflatex_installed`` so consumers that
 # compile with a bare ``pdflatex`` (not ``build_pdf``) have the packages Deltares docs
 # need. These mirror the ``texlive-*`` apt packages. Pass a smaller list to
-# ``check_pdflatex_installed`` / ``ddocs check-pdflatex --packages ...`` for a faster,
+# ``check_pdflatex_installed`` / ``ddocs pdflatex download --packages ...`` for a faster,
 # leaner install when you know exactly what a document needs; ``build_pdf`` additionally
 # installs anything still missing on demand.
 REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = (
