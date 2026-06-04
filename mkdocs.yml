@@ -51,6 +51,7 @@ nav:
   - Home: index.md
   - Guides:
       - RepoCloner & authentication: guides/repo-cloner-authentication.md
+      - Installing pdfLaTeX: guides/installing-pdflatex.md
   - API Reference:
       - Overview: reference/index.md
       - ddocs.cli: reference/cli.md
