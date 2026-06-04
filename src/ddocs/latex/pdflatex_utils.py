@@ -7,11 +7,14 @@ built on TeX Live -- as the install backend:
 
 1. `sanity_check` -- is `pdflatex` (or `biber`) already callable?
 2. `check_pdflatex_installed` -- if not, download and run the official TinyTeX
-   installer (no admin rights), add its `bin` directory to `PATH` for the current
-   process, and `tlmgr install` the package collections that mirror the
-   `texlive-*` apt packages.
+   installer (no admin rights) and add its `bin` directory to `PATH` for the current
+   process. The default bundle already ships `pdflatex` and ~200 common packages; no
+   large `collection-*` sets are pre-installed (set ``TINYTEX_INSTALLER`` to override
+   the bundle).
 3. `install_missing_packages` -- a MiKTeX-style helper that scans a LaTeX build log
-   for missing files and `tlmgr install`s them (TeX Live does not do this natively).
+   for missing files and `tlmgr install`s them on demand (TeX Live does not do this
+   natively). `build_pdf` uses it so only the packages a specific document needs are
+   fetched, keeping the download small.
 
 The `PATH` change affects only the current process and the subprocesses it spawns,
 not the parent shell.
@@ -27,22 +30,12 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
-# tlmgr collections/packages mirroring the texlive-* apt packages ddocs builds need:
-#   texlive-latex-extra      -> collection-latexextra
-#   texlive-fonts-recommended-> collection-fontsrecommended
-#   texlive-fonts-extra      -> collection-fontsextra
-#   texlive-bibtex-extra     -> collection-bibtexextra
-#   texlive-science          -> collection-mathscience
-#   biber                    -> biber (+ biblatex)
-REQUIRED_TLMGR_PACKAGES = (
-    "collection-latexextra",
-    "collection-fontsrecommended",
-    "collection-fontsextra",
-    "collection-bibtexextra",
-    "collection-mathscience",
-    "biber",
-    "biblatex",
-)
+# Packages to install eagerly when provisioning TinyTeX. Kept empty on purpose: the
+# default TinyTeX bundle already ships pdflatex plus ~200 common packages, and
+# ``build_pdf`` installs anything else a specific document references on demand (a few
+# small packages) instead of pulling whole multi-hundred-MB ``collection-*`` sets. Set
+# the ``TINYTEX_INSTALLER`` env var (e.g. ``TinyTeX-2``) for a larger base if you prefer.
+REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = ()
 
 _UNIX_INSTALLER_URL = "https://yihui.org/tinytex/install-bin-unix.sh"
 # Use the PowerShell installer directly: the .bat wrapper runs `curl -O 'URL'`, whose
@@ -188,16 +181,17 @@ def install_tlmgr_packages(packages: tuple[str, ...] | list[str] = REQUIRED_TLMG
 
     Args:
         packages: The tlmgr package/collection names to install. Defaults to
-            :data:`REQUIRED_TLMGR_PACKAGES`, which mirror the `texlive-*` apt set.
+            :data:`REQUIRED_TLMGR_PACKAGES` (empty -- nothing is pre-installed).
 
     Returns:
-        True if `tlmgr install` succeeded, False otherwise.
+        True if `tlmgr install` succeeded (or there was nothing to install), False
+        otherwise.
 
     Examples:
-        - Install the default package set after TinyTeX is on `PATH`:
+        - Calling with no packages is a no-op that succeeds:
             ```python
             >>> from ddocs.latex.pdflatex_utils import install_tlmgr_packages
-            >>> install_tlmgr_packages()  # doctest: +SKIP
+            >>> install_tlmgr_packages([])
             True
 
             ```
@@ -210,8 +204,9 @@ def install_tlmgr_packages(packages: tuple[str, ...] | list[str] = REQUIRED_TLMG
             ```
     """
     package_list = list(packages)
-    if package_list:
-        print(f"Installing TeX packages via tlmgr: {' '.join(package_list)}")
+    if not package_list:
+        return True
+    print(f"Installing TeX packages via tlmgr: {' '.join(package_list)}")
     try:
         subprocess.run(["tlmgr", "install", *package_list], check=True)
         ok = True
@@ -292,13 +287,15 @@ def check_pdflatex_installed(install_packages: bool = True) -> bool:
     """Ensure `pdflatex` is callable, installing TinyTeX when it is missing.
 
     If pdflatex is already on `PATH` this returns immediately. Otherwise an existing
-    TinyTeX install is located (or the official installer is downloaded and run), its
-    `bin` directory is prepended to `PATH` for this process, and the required
-    package collections are installed with `tlmgr`.
+    TinyTeX install is located (or the official installer is downloaded and run) and its
+    `bin` directory is prepended to `PATH` for this process. The default TinyTeX bundle
+    already provides `pdflatex`; document-specific packages are added on demand by
+    `build_pdf`, so no large collections are downloaded here.
 
     Args:
         install_packages: When True (default), run `tlmgr install` for
-            :data:`REQUIRED_TLMGR_PACKAGES` after a fresh TinyTeX install.
+            :data:`REQUIRED_TLMGR_PACKAGES` after a fresh TinyTeX install. That set is
+            empty by default, so this is a no-op unless it has been customised.
 
     Returns:
         True if pdflatex is accessible after the call, False otherwise.
