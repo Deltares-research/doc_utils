@@ -104,13 +104,38 @@ class TestMainDispatch:
             assert main() == 1, "main should propagate a non-zero exit code"
 
     @pytest.mark.unit
-    def test_check_pdflatex_dispatches_to_handler(self, monkeypatch):
-        """Test the check-pdflatex command dispatches to check_pdflatex_cli.
-
-        Test scenario:
-            `ddocs check-pdflatex` calls check_pdflatex_cli and returns its code.
-        """
-        monkeypatch.setattr(sys, "argv", ["ddocs", "check-pdflatex"])
-        with patch("ddocs.cli.check_pdflatex_cli", return_value=0) as mock_handler:
+    def test_pdflatex_check_dispatches_to_check_handler(self, monkeypatch):
+        """Test `ddocs pdflatex check` dispatches to pdflatex_check_cli (probe only)."""
+        monkeypatch.setattr(sys, "argv", ["ddocs", "pdflatex", "check"])
+        with patch("ddocs.cli.pdflatex_check_cli", return_value=0) as mock_check, \
+             patch("ddocs.cli.pdflatex_download_cli") as mock_download:
             assert main() == 0, "main should return the handler's exit code"
-        mock_handler.assert_called_once()
+        mock_check.assert_called_once()
+        mock_download.assert_not_called()
+
+    @pytest.mark.unit
+    def test_pdflatex_download_dispatches_to_download_handler(self, monkeypatch):
+        """Test `ddocs pdflatex download` dispatches to pdflatex_download_cli."""
+        monkeypatch.setattr(sys, "argv", ["ddocs", "pdflatex", "download", "--backend", "apt"])
+        with patch("ddocs.cli.pdflatex_download_cli", return_value=0) as mock_download, \
+             patch("ddocs.cli.pdflatex_check_cli") as mock_check:
+            assert main() == 0
+        mock_download.assert_called_once()
+        assert mock_download.call_args.args[0].backend == "apt", "should pass parsed backend"
+        mock_check.assert_not_called()
+
+    @pytest.mark.unit
+    def test_deprecated_check_pdflatex_alias_dispatches_to_download(self, monkeypatch):
+        """Test the legacy `ddocs check-pdflatex` still maps to the download handler."""
+        monkeypatch.setattr(sys, "argv", ["ddocs", "check-pdflatex"])
+        with patch("ddocs.cli.pdflatex_download_cli", return_value=0) as mock_download:
+            assert main() == 0, "main should return the handler's exit code"
+        mock_download.assert_called_once()
+
+    @pytest.mark.unit
+    def test_pdflatex_requires_a_subcommand(self, monkeypatch):
+        """Test `ddocs pdflatex` with no sub-operation is a usage error (exit 2)."""
+        monkeypatch.setattr(sys, "argv", ["ddocs", "pdflatex"])
+        with pytest.raises(SystemExit) as exc_info:
+            main()
+        assert exc_info.value.code == 2, f"argparse should exit 2, got {exc_info.value.code}"

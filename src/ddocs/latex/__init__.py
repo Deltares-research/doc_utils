@@ -12,6 +12,8 @@ from ddocs.latex.pdflatex_utils import (
     install_missing_packages,
     install_texlive_apt,
     install_tlmgr_packages,
+    pdflatex_check_cli,
+    pdflatex_download_cli,
     sanity_check,
 )
 
@@ -28,5 +30,7 @@ __all__ = [
     "install_missing_packages",
     "install_texlive_apt",
     "install_tlmgr_packages",
+    "pdflatex_check_cli",
+    "pdflatex_download_cli",
     "sanity_check",
 ]

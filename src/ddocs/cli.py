@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 from ddocs import __version__
 from ddocs.markdown import mark_down_to_latex_cli, check_pandoc_cli
-from ddocs.latex import clean_latex_cli, check_pdflatex_cli
+from ddocs.latex import clean_latex_cli, pdflatex_check_cli, pdflatex_download_cli
 from ddocs.templates import clone_repo_cli
 
 
@@ -72,8 +72,11 @@ Examples:
   # Check that Pandoc is installed (download it if missing)
   ddocs check-pandoc
 
-  # Check that pdflatex is installed (install TinyTeX if missing)
-  ddocs check-pdflatex
+  # Check whether pdflatex is installed (probe only)
+  ddocs pdflatex check
+
+  # Download/install pdflatex (apt on Debian/Ubuntu, else TinyTeX)
+  ddocs pdflatex download
         """
     )
     parser.add_argument(
@@ -85,7 +88,7 @@ Examples:
         description='Select the operation to perform',
         dest='command',
         required=True,
-        help='Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc, check-pdflatex'
+        help='Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc, pdflatex'
     )
 
     # sub-command: markdown-to-latex
@@ -180,28 +183,54 @@ Examples:
         help='Check that Pandoc is installed; download it if missing',
     )
 
-    # sub-command: check-pdflatex
+    # sub-command group: pdflatex (check / download)
+    pdflatex = subparsers.add_parser(
+        'pdflatex',
+        help='pdfLaTeX operations: check whether it is installed, or download it',
+    )
+    pdflatex_sub = pdflatex.add_subparsers(
+        title='pdflatex operation',
+        dest='pdflatex_command',
+        required=True,
+        help='check (probe only) or download (install pdflatex + packages)',
+    )
+    pdflatex_sub.add_parser(
+        'check',
+        help='Check whether pdflatex is already callable (does not install anything)',
+    )
+    pdflatex_download = pdflatex_sub.add_parser(
+        'download',
+        help='Install pdflatex (apt or TinyTeX) and the required TeX packages',
+    )
+    _add_pdflatex_install_options(pdflatex_download)
+
+    # deprecated alias: `check-pdflatex` == `pdflatex download`
     check_pdflatex = subparsers.add_parser(
         'check-pdflatex',
-        help='Check that pdflatex is installed; install TinyTeX if missing',
+        help='(deprecated) alias for "pdflatex download"',
     )
-    check_pdflatex.add_argument(
+    _add_pdflatex_install_options(check_pdflatex)
+
+    return parser
+
+
+def _add_pdflatex_install_options(parser: argparse.ArgumentParser) -> None:
+    """Add the shared install options to a pdflatex download/check-pdflatex subparser."""
+    parser.add_argument(
         '--packages',
         help='Comma/space-separated tlmgr packages to install (overrides the default collections)'
     )
-    check_pdflatex.add_argument(
+    parser.add_argument(
         '--no-packages',
         action='store_true',
         help='Only ensure pdflatex; do not install any extra TeX packages'
     )
-    check_pdflatex.add_argument(
+    parser.add_argument(
         '--backend',
         choices=['auto', 'apt', 'tinytex'],
         default='auto',
         help='Install backend: apt (fast, Debian/Ubuntu+sudo), tinytex (cross-platform), or auto'
     )
-
-    return parser
 
 
 def main() -> int:
@@ -257,8 +286,13 @@ def main() -> int:
         exit_code = clean_latex_cli(args)
     elif args.command == 'check-pandoc':
         exit_code = check_pandoc_cli(args)
+    elif args.command == 'pdflatex':
+        if args.pdflatex_command == 'check':
+            exit_code = pdflatex_check_cli(args)
+        else:
+            exit_code = pdflatex_download_cli(args)
     elif args.command == 'check-pdflatex':
-        exit_code = check_pdflatex_cli(args)
+        exit_code = pdflatex_download_cli(args)
     else:
         parser.print_help()
         exit_code = 1

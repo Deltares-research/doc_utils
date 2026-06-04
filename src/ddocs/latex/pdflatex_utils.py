@@ -498,28 +498,55 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
     return pdf_path
 
 
-def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
-    """CLI handler for the `check-pdflatex` command.
+def pdflatex_check_cli(args: argparse.Namespace | None = None) -> int:
+    """CLI handler for `ddocs pdflatex check`: report whether pdflatex is callable.
 
-    Ensures pdflatex is available (installing TinyTeX if necessary) and maps the result
-    to a process exit code suitable for :func:`sys.exit`.
+    This only probes `PATH` (via :func:`sanity_check`); it never downloads or installs
+    anything. Use `ddocs pdflatex download` to install it.
 
-    Honours two optional argparse fields: ``no_packages`` (only ensure pdflatex, install
-    no extra TeX packages) and ``packages`` (a comma/space-separated string overriding
-    the default :data:`REQUIRED_TLMGR_PACKAGES`).
+    Args:
+        args: Parsed CLI arguments from argparse. Unused; accepted for a uniform handler
+            signature. Defaults to None.
+
+    Returns:
+        0 if `pdflatex` is already callable, 1 otherwise.
+
+    Examples:
+        - Probe for pdflatex and use the result as an exit code:
+            ```python
+            >>> from ddocs.latex.pdflatex_utils import pdflatex_check_cli
+            >>> pdflatex_check_cli()  # doctest: +SKIP
+            0
+
+            ```
+
+    See Also:
+        pdflatex_download_cli: Installs pdflatex when it is missing.
+    """
+    return 0 if sanity_check("pdflatex") else 1
+
+
+def pdflatex_download_cli(args: argparse.Namespace | None = None) -> int:
+    """CLI handler for `ddocs pdflatex download`: install pdflatex and TeX packages.
+
+    Ensures pdflatex is available (installing it via apt or TinyTeX if necessary) and
+    maps the result to a process exit code suitable for :func:`sys.exit`.
+
+    Honours optional argparse fields: ``no_packages`` (only ensure pdflatex, install no
+    extra TeX packages), ``packages`` (a comma/space-separated string overriding the
+    default :data:`REQUIRED_TLMGR_PACKAGES`), and ``backend`` (auto/apt/tinytex).
 
     Args:
         args: Parsed CLI arguments from argparse, or None to use the defaults.
 
     Returns:
-        0 if pdflatex is accessible, 1 otherwise.
+        0 if pdflatex is accessible after the call, 1 otherwise.
 
     Examples:
-        - Run the check and use the result as a process exit code:
+        - Install pdflatex and use the result as a process exit code:
             ```python
-            >>> from ddocs.latex.pdflatex_utils import check_pdflatex_cli
-            >>> exit_code = check_pdflatex_cli()  # doctest: +SKIP
-            >>> exit_code  # doctest: +SKIP
+            >>> from ddocs.latex.pdflatex_utils import pdflatex_download_cli
+            >>> pdflatex_download_cli()  # doctest: +SKIP
             0
 
             ```
@@ -530,13 +557,27 @@ def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
     install_packages = True
     packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES
     backend = "auto"
+
     if args is not None:
         if getattr(args, "no_packages", False):
             install_packages = False
         elif getattr(args, "packages", None):
             packages = [p for p in args.packages.replace(",", " ").split() if p]
         backend = getattr(args, "backend", None) or "auto"
+
     accessible = check_pdflatex_installed(
         install_packages=install_packages, packages=packages, backend=backend,
     )
     return 0 if accessible else 1
+
+
+def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
+    """Deprecated alias for :func:`pdflatex_download_cli` (the old ``check-pdflatex``).
+
+    Args:
+        args: Parsed CLI arguments from argparse, or None to use the defaults.
+
+    Returns:
+        0 if pdflatex is accessible after the call, 1 otherwise.
+    """
+    return pdflatex_download_cli(args)
