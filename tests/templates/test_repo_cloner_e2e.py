@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT = Path(__file__).parents[2]
 TEMPLATE_SUFFIXES = {".sty", ".cls", ".bst"}
 
 
