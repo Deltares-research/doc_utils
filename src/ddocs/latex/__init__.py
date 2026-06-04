@@ -2,6 +2,7 @@
 
 from ddocs.latex.clean import clean_latex_build_files, clean_latex_cli
 from ddocs.latex.pdflatex_utils import (
+    APT_TEXLIVE_PACKAGES,
     REQUIRED_TLMGR_PACKAGES,
     build_pdf,
     check_pdflatex_cli,
@@ -9,11 +10,13 @@ from ddocs.latex.pdflatex_utils import (
     find_missing_packages,
     find_tex_bin_dir,
     install_missing_packages,
+    install_texlive_apt,
     install_tlmgr_packages,
     sanity_check,
 )
 
 __all__ = [
+    "APT_TEXLIVE_PACKAGES",
     "REQUIRED_TLMGR_PACKAGES",
     "build_pdf",
     "check_pdflatex_cli",
@@ -23,6 +26,7 @@ __all__ = [
     "find_missing_packages",
     "find_tex_bin_dir",
     "install_missing_packages",
+    "install_texlive_apt",
     "install_tlmgr_packages",
     "sanity_check",
 ]

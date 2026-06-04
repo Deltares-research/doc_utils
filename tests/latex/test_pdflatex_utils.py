@@ -157,7 +157,7 @@ class TestCheckPdflatexInstalled:
              patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_install, \
              patch("ddocs.latex.pdflatex_utils._prepend_to_path") as mock_path, \
              patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs:
-            assert check_pdflatex_installed() is True, "should become available"
+            assert check_pdflatex_installed(backend="tinytex") is True, "should become available"
         mock_install.assert_not_called()
         mock_path.assert_called_once_with("/root/.TinyTeX/bin/x86_64-linux")
         mock_pkgs.assert_called_once()
@@ -174,7 +174,7 @@ class TestCheckPdflatexInstalled:
              patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_install, \
              patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
              patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True):
-            assert check_pdflatex_installed() is True, "should install then succeed"
+            assert check_pdflatex_installed(backend="tinytex") is True, "should install then succeed"
         mock_install.assert_called_once()
 
     @pytest.mark.unit
@@ -184,8 +184,8 @@ class TestCheckPdflatexInstalled:
              patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
              patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
              patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True):
-            assert check_pdflatex_installed() is False, "should report failure"
-        assert "not accessible" in capsys.readouterr().out, "should warn about inaccessibility"
+            assert check_pdflatex_installed(backend="tinytex") is False, "should report failure"
+        assert "could not be made available" in capsys.readouterr().out, "should warn about failure"
 
     @pytest.mark.unit
     def test_skips_package_install_when_disabled(self):
@@ -194,8 +194,86 @@ class TestCheckPdflatexInstalled:
              patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
              patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
              patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages") as mock_pkgs:
-            assert check_pdflatex_installed(install_packages=False) is True
+            assert check_pdflatex_installed(install_packages=False, backend="tinytex") is True
         mock_pkgs.assert_not_called()
+
+    @pytest.mark.unit
+    def test_auto_backend_uses_apt_on_debian(self):
+        """Test the auto backend installs via apt when apt-get is available on Linux.
+
+        Test scenario:
+            pdflatex missing, Linux + apt present -> install_texlive_apt is used and
+            TinyTeX is not downloaded.
+        """
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
+             patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"), \
+             patch("ddocs.latex.pdflatex_utils.shutil.which", return_value="/usr/bin/apt-get"), \
+             patch("ddocs.latex.pdflatex_utils.install_texlive_apt", return_value=True) as mock_apt, \
+             patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_tt:
+            assert check_pdflatex_installed(backend="auto") is True
+        mock_apt.assert_called_once()
+        mock_tt.assert_not_called()
+
+    @pytest.mark.unit
+    def test_apt_backend_does_not_fall_back_to_tinytex(self):
+        """Test backend='apt' that fails returns False without trying TinyTeX."""
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, False]), \
+             patch("ddocs.latex.pdflatex_utils.install_texlive_apt", return_value=False), \
+             patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_tt:
+            assert check_pdflatex_installed(backend="apt") is False
+        mock_tt.assert_not_called()
+
+    @pytest.mark.unit
+    def test_tinytex_backend_skips_apt(self):
+        """Test backend='tinytex' never calls the apt backend."""
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
+             patch("ddocs.latex.pdflatex_utils.install_texlive_apt") as mock_apt, \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", return_value="/bin/dir"), \
+             patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True):
+            assert check_pdflatex_installed(backend="tinytex") is True
+        mock_apt.assert_not_called()
+
+
+class TestInstallTexliveApt:
+    """Tests for install_texlive_apt (apt backend), fully mocked."""
+
+    @pytest.mark.unit
+    def test_returns_false_when_apt_missing(self):
+        """Test install_texlive_apt is a no-op returning False when apt-get is absent."""
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value=None), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run:
+            assert pdflatex_utils.install_texlive_apt(["texlive-latex-base"]) is False
+        mock_run.assert_not_called()
+
+    @pytest.mark.unit
+    def test_runs_without_sudo_as_root(self):
+        """Test no sudo prefix is used when running as root."""
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value="/usr/bin/apt-get"), \
+             patch("ddocs.latex.pdflatex_utils.os.geteuid", return_value=0, create=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run:
+            assert pdflatex_utils.install_texlive_apt(["texlive-latex-base"]) is True
+        cmds = [c.args[0] for c in mock_run.call_args_list]
+        assert cmds[0] == ["apt-get", "update"], f"unexpected update cmd: {cmds[0]}"
+        assert cmds[1] == ["apt-get", "install", "-y", "texlive-latex-base"], f"unexpected install cmd: {cmds[1]}"
+
+    @pytest.mark.unit
+    def test_uses_sudo_when_not_root(self):
+        """Test the sudo prefix is used when not root and sudo is available."""
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value="/usr/bin/x"), \
+             patch("ddocs.latex.pdflatex_utils.os.geteuid", return_value=1000, create=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run:
+            assert pdflatex_utils.install_texlive_apt(["biber"]) is True
+        assert mock_run.call_args_list[0].args[0] == ["sudo", "apt-get", "update"], "should prefix sudo"
+
+    @pytest.mark.unit
+    def test_returns_false_on_apt_failure(self):
+        """Test a non-zero apt-get exit yields False rather than raising."""
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value="/usr/bin/x"), \
+             patch("ddocs.latex.pdflatex_utils.os.geteuid", return_value=0, create=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   side_effect=subprocess.CalledProcessError(1, "apt-get")):
+            assert pdflatex_utils.install_texlive_apt(["biber"]) is False
 
 
 class TestInternals:

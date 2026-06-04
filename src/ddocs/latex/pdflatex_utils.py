@@ -6,11 +6,11 @@ this module uses **TinyTeX** -- a lightweight, root-free, cross-platform distrib
 built on TeX Live -- as the install backend:
 
 1. `sanity_check` -- is `pdflatex` (or `biber`) already callable?
-2. `check_pdflatex_installed` -- if not, download and run the official TinyTeX
-   installer (no admin rights), add its `bin` directory to `PATH`, and `tlmgr install`
-   the requested packages (default :data:`REQUIRED_TLMGR_PACKAGES`) so a bare `pdflatex`
-   can build Deltares documents. Pass a smaller `packages` list (or
-   `ddocs check-pdflatex --packages ...` / `--no-packages`) for a faster, leaner install.
+2. `check_pdflatex_installed` -- if not, install a TeX distribution. On Debian/Ubuntu it
+   uses `apt-get install texlive-*` (fast); elsewhere it falls back to TinyTeX (root-free,
+   cross-platform) and `tlmgr install`s the requested packages. Either way the packages a
+   bare `pdflatex` needs for Deltares documents are provided. Tune via
+   `ddocs check-pdflatex --backend apt|tinytex|auto`, `--packages ...`, or `--no-packages`.
 3. `install_missing_packages` -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and `tlmgr install`s them on demand (TeX Live does not do this
    natively). `build_pdf` uses it to fetch any package a document still needs.
@@ -24,6 +24,7 @@ import glob
 import os
 import platform
 import re
+import shutil
 import subprocess
 import tempfile
 import urllib.request
@@ -43,6 +44,19 @@ REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = (
     "collection-mathscience",
     "biber",
     "biblatex",
+)
+
+# Debian/Ubuntu ``apt`` packages providing the same TeX coverage. apt pulls prebuilt
+# .debs from a fast mirror in parallel, so on a Linux runner with sudo this is far
+# quicker than TinyTeX + per-package ``tlmgr`` downloads.
+APT_TEXLIVE_PACKAGES: tuple[str, ...] = (
+    "texlive-latex-base",
+    "texlive-latex-extra",
+    "texlive-fonts-recommended",
+    "texlive-fonts-extra",
+    "texlive-bibtex-extra",
+    "texlive-science",
+    "biber",
 )
 
 _UNIX_INSTALLER_URL = "https://yihui.org/tinytex/install-bin-unix.sh"
@@ -291,31 +305,82 @@ def install_missing_packages(log_text: str) -> list[str]:
     return packages
 
 
+def install_texlive_apt(packages: tuple[str, ...] | list[str] = APT_TEXLIVE_PACKAGES) -> bool:
+    """Install a TeX Live subset on Debian/Ubuntu via `apt-get`.
+
+    Runs `apt-get update` then `apt-get install -y <packages>` (prefixed with `sudo`
+    when not already root). This is much faster than the TinyTeX / `tlmgr` backend on CI
+    runners, but it requires `apt-get` and root privileges.
+
+    Args:
+        packages: The apt package names to install. Defaults to
+            :data:`APT_TEXLIVE_PACKAGES`.
+
+    Returns:
+        True if the packages were installed, False if `apt-get` is unavailable or the
+        install failed (e.g. no usable `sudo`).
+
+    Examples:
+        - Install the default TeX Live packages on Ubuntu:
+            ```python
+            >>> from ddocs.latex.pdflatex_utils import install_texlive_apt
+            >>> install_texlive_apt()  # doctest: +SKIP
+            True
+
+            ```
+
+    See Also:
+        check_pdflatex_installed: Selects this backend automatically on Debian/Ubuntu.
+    """
+    if shutil.which("apt-get") is None:
+        return False
+    is_root = getattr(os, "geteuid", lambda: 1)() == 0
+    sudo = [] if is_root else (["sudo"] if shutil.which("sudo") else [])
+    package_list = list(packages)
+    print(f"Installing TeX Live via apt-get: {' '.join(package_list)}")
+    try:
+        subprocess.run([*sudo, "apt-get", "update"], check=True)
+        subprocess.run([*sudo, "apt-get", "install", "-y", *package_list], check=True)
+        ok = True
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        ok = False
+    return ok
+
+
 def check_pdflatex_installed(
     install_packages: bool = True,
     packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES,
+    backend: str = "auto",
 ) -> bool:
-    """Ensure `pdflatex` is callable, installing TinyTeX when it is missing.
+    """Ensure `pdflatex` is callable, installing a TeX distribution when it is missing.
 
-    If pdflatex is already on `PATH` this returns immediately. Otherwise an existing
-    TinyTeX install is located (or the official installer is downloaded and run), its
-    `bin` directory is prepended to `PATH` for this process, and (unless disabled) the
-    requested `tlmgr` packages are installed so a bare `pdflatex` can compile Deltares
-    documents. `build_pdf` additionally installs anything still missing on demand.
+    If pdflatex is already on `PATH` this returns immediately. Otherwise a backend is
+    used to install it:
+
+    - **apt** -- on Debian/Ubuntu (with `sudo`) install the `texlive-*` packages via
+      `apt-get`. Much faster on CI than `tlmgr`.
+    - **tinytex** -- download and run the official TinyTeX installer (root-free,
+      cross-platform), prepend its `bin` to `PATH`, and `tlmgr install` `packages`.
+
+    With ``backend="auto"`` (default) apt is used when available, else TinyTeX. Either
+    way the requested packages are installed so a bare `pdflatex` can compile Deltares
+    documents; `build_pdf` additionally installs anything still missing on demand.
 
     Args:
-        install_packages: When True (default), run `tlmgr install` for `packages`
-            after locating/installing TinyTeX.
-        packages: The tlmgr packages/collections to install. Defaults to
-            :data:`REQUIRED_TLMGR_PACKAGES`. Pass a smaller list for a faster, leaner
-            install when you know exactly what a document needs.
+        install_packages: When True (default), install the package set (apt: the
+            `texlive-*` list; tinytex: `tlmgr install packages`). When False, only the
+            engine is provisioned.
+        packages: tlmgr packages/collections for the **tinytex** backend. Defaults to
+            :data:`REQUIRED_TLMGR_PACKAGES`. Ignored by the apt backend, which uses
+            :data:`APT_TEXLIVE_PACKAGES`.
+        backend: ``"auto"`` (default), ``"apt"``, or ``"tinytex"``.
 
     Returns:
         True if pdflatex is accessible after the call, False otherwise.
 
     Raises:
         urllib.error.URLError: If the TinyTeX installer cannot be downloaded.
-        subprocess.CalledProcessError: If the installer script fails.
+        subprocess.CalledProcessError: If the TinyTeX installer script fails.
 
     Examples:
         - Guard a PDF build on pdflatex being available:
@@ -328,26 +393,40 @@ def check_pdflatex_installed(
             ```
 
     See Also:
+        install_texlive_apt: The apt backend.
         sanity_check: The PATH-only probe this builds on.
         check_pdflatex_cli: Thin wrapper mapping the result to an exit code.
     """
     installed = sanity_check("pdflatex")
     if not installed:
-        bin_dir = find_tex_bin_dir()
-        if bin_dir is None:
-            _install_tinytex()
-            bin_dir = find_tex_bin_dir()
+        if backend == "auto":
+            use_apt = platform.system() == "Linux" and shutil.which("apt-get") is not None
+        else:
+            use_apt = backend == "apt"
 
-        if bin_dir:
-            _prepend_to_path(bin_dir)
-            if install_packages:
-                install_tlmgr_packages(packages)
+        if use_apt:
+            apt_packages = APT_TEXLIVE_PACKAGES if install_packages else ("texlive-latex-base",)
+            install_texlive_apt(apt_packages)
             installed = sanity_check("pdflatex")
             if installed:
                 print("pdflatex is now accessible!")
 
+        if not installed and backend != "apt":
+            bin_dir = find_tex_bin_dir()
+            if bin_dir is None:
+                _install_tinytex()
+                bin_dir = find_tex_bin_dir()
+
+            if bin_dir:
+                _prepend_to_path(bin_dir)
+                if install_packages:
+                    install_tlmgr_packages(packages)
+                installed = sanity_check("pdflatex")
+                if installed:
+                    print("pdflatex is now accessible!")
+
         if not installed:
-            print("Warning: TinyTeX was installed but pdflatex is not accessible from the command line.")
+            print("Warning: pdflatex could not be made available from the command line.")
     return installed
 
 
@@ -450,10 +529,14 @@ def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
     """
     install_packages = True
     packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES
+    backend = "auto"
     if args is not None:
         if getattr(args, "no_packages", False):
             install_packages = False
         elif getattr(args, "packages", None):
             packages = [p for p in args.packages.replace(",", " ").split() if p]
-    accessible = check_pdflatex_installed(install_packages=install_packages, packages=packages)
+        backend = getattr(args, "backend", None) or "auto"
+    accessible = check_pdflatex_installed(
+        install_packages=install_packages, packages=packages, backend=backend,
+    )
     return 0 if accessible else 1

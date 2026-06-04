@@ -194,6 +194,12 @@ Examples:
         action='store_true',
         help='Only ensure pdflatex; do not install any extra TeX packages'
     )
+    check_pdflatex.add_argument(
+        '--backend',
+        choices=['auto', 'apt', 'tinytex'],
+        default='auto',
+        help='Install backend: apt (fast, Debian/Ubuntu+sudo), tinytex (cross-platform), or auto'
+    )
 
     return parser
 
