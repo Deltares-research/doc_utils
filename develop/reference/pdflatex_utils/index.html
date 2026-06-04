@@ -1051,7 +1051,7 @@ built on TeX Live -- as the install backend:</p>
    uses <code>apt-get install texlive-*</code> (fast); elsewhere it falls back to TinyTeX (root-free,
    cross-platform) and <code>tlmgr install</code>s the requested packages. Either way the packages a
    bare <code>pdflatex</code> needs for Deltares documents are provided. Tune via
-   <code>ddocs check-pdflatex --backend apt|tinytex|auto</code>, <code>--packages ...</code>, or <code>--no-packages</code>.</li>
+   <code>ddocs pdflatex download --backend apt|tinytex|auto</code>, <code>--packages ...</code>, or <code>--no-packages</code>.</li>
 <li><code>install_missing_packages</code> -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and <code>tlmgr install</code>s them on demand (TeX Live does not do this
    natively). <code>build_pdf</code> uses it to fetch any package a document still needs.</li>
