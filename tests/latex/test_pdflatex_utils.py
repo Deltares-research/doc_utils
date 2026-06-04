@@ -1,6 +1,6 @@
 """Unit tests for ddocs.latex.pdflatex_utils (TinyTeX backend), fully mocked."""
 import subprocess
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
@@ -231,33 +231,52 @@ class TestInternals:
 
     @pytest.mark.unit
     def test_install_tinytex_unix_downloads_and_runs(self):
-        """Test the unix installer is downloaded and executed with sh, then cleaned up."""
+        """Test the unix installer is downloaded (with a User-Agent) and run via sh.
+
+        Test scenario:
+            urlopen fetches the script with the browser User-Agent header, the bytes
+            are written to a temp .sh, sh runs it, and the temp file is removed.
+        """
         tmp = MagicMock()
         tmp.__enter__.return_value.name = "/tmp/install.sh"
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = b"#!/bin/sh\n"
         with patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"), \
              patch("ddocs.latex.pdflatex_utils.tempfile.NamedTemporaryFile", return_value=tmp), \
-             patch("ddocs.latex.pdflatex_utils.urllib.request.urlretrieve") as mock_dl, \
+             patch("ddocs.latex.pdflatex_utils.urllib.request.urlopen", return_value=response) as mock_open_url, \
              patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run, \
+             patch("builtins.open", mock_open()), \
              patch("os.path.exists", return_value=True), \
              patch("os.unlink") as mock_unlink:
             pdflatex_utils._install_tinytex()
-        mock_dl.assert_called_once()
+        request = mock_open_url.call_args.args[0]
+        assert request.get_header("User-agent") == "Mozilla/5.0", "should send a browser User-Agent"
         assert mock_run.call_args.args[0] == ["sh", "/tmp/install.sh"], "unix should run via sh"
         mock_unlink.assert_called_once_with("/tmp/install.sh")
 
     @pytest.mark.unit
-    def test_install_tinytex_windows_uses_cmd(self):
-        """Test the Windows installer is executed via cmd /c."""
+    def test_install_tinytex_windows_uses_powershell(self):
+        """Test the Windows installer (.ps1) is run via PowerShell, not cmd.
+
+        Test scenario:
+            The download is run via PowerShell with -File so the cmd/curl single-quote
+            bug in the .bat wrapper is avoided.
+        """
         tmp = MagicMock()
-        tmp.__enter__.return_value.name = "C:/tmp/install.bat"
+        tmp.__enter__.return_value.name = "C:/tmp/install.ps1"
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = b"# ps1"
         with patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Windows"), \
              patch("ddocs.latex.pdflatex_utils.tempfile.NamedTemporaryFile", return_value=tmp), \
-             patch("ddocs.latex.pdflatex_utils.urllib.request.urlretrieve"), \
+             patch("ddocs.latex.pdflatex_utils.urllib.request.urlopen", return_value=response), \
              patch("ddocs.latex.pdflatex_utils.subprocess.run") as mock_run, \
+             patch("builtins.open", mock_open()), \
              patch("os.path.exists", return_value=False), \
              patch("os.unlink"):
             pdflatex_utils._install_tinytex()
-        assert mock_run.call_args.args[0] == ["cmd", "/c", "C:/tmp/install.bat"], "windows should run via cmd /c"
+        assert mock_run.call_args.args[0] == [
+            "powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:/tmp/install.ps1",
+        ], "windows should run the .ps1 via PowerShell"
 
 
 class TestBuildPdf:

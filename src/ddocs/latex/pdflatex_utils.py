@@ -45,7 +45,11 @@ REQUIRED_TLMGR_PACKAGES = (
 )
 
 _UNIX_INSTALLER_URL = "https://yihui.org/tinytex/install-bin-unix.sh"
-_WINDOWS_INSTALLER_URL = "https://yihui.org/tinytex/install-bin-windows.bat"
+# Use the PowerShell installer directly: the .bat wrapper runs `curl -O 'URL'`, whose
+# single-quoted URL is mis-parsed by cmd.exe (curl error 3 / bad URL).
+_WINDOWS_INSTALLER_URL = "https://tinytex.yihui.org/install-bin-windows.ps1"
+# yihui.org rejects the default urllib User-Agent (HTTP 403), so send a browser-like one.
+_DOWNLOAD_HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 # Matches lines such as: ! LaTeX Error: File `tikz.sty' not found.
 _MISSING_FILE_RE = re.compile(r"File `([^']+\.(?:sty|cls|tex|fd|cfg))' not found")
@@ -161,14 +165,18 @@ def _install_tinytex() -> None:
     system = platform.system()
     print("pdflatex not found. Installing TinyTeX (this may take a few minutes)...")
     if system == "Windows":
-        url, suffix, runner = _WINDOWS_INSTALLER_URL, ".bat", ["cmd", "/c"]
+        url = _WINDOWS_INSTALLER_URL
+        suffix = ".ps1"
+        runner = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File"]
     else:
         url, suffix, runner = _UNIX_INSTALLER_URL, ".sh", ["sh"]
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as handle:
         script_path = handle.name
     try:
-        urllib.request.urlretrieve(url, script_path)
+        request = urllib.request.Request(url, headers=_DOWNLOAD_HEADERS)
+        with urllib.request.urlopen(request) as response, open(script_path, "wb") as out:
+            out.write(response.read())
         subprocess.run([*runner, script_path], check=True)
     finally:
         if os.path.exists(script_path):
