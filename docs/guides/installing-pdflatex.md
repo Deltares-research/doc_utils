@@ -22,11 +22,11 @@ ddocs pdflatex download     # install using the best available backend
 
 `ddocs pdflatex download` installs TeX using one of two backends, chosen with `--backend`:
 
-| Backend | When it is used | Notes |
-| --- | --- | --- |
-| **apt** | Debian/Ubuntu with `sudo` | `apt-get install texlive-*` — prebuilt `.deb`s from a fast mirror; by far the quickest on CI. Needs root. |
-| **tinytex** | everywhere else | Downloads and runs the official **TinyTeX** installer (root-free, cross-platform) and `tlmgr install`s the packages. |
-| **auto** *(default)* | — | Use **apt** when `apt-get` is available on Linux, otherwise fall back to **TinyTeX**. |
+| Backend              | When it is used           | Notes                                                                                                                |
+|----------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------|
+| **apt**              | Debian/Ubuntu with `sudo` | `apt-get install texlive-*` — prebuilt `.deb`s from a fast mirror; by far the quickest on CI. Needs root.            |
+| **tinytex**          | everywhere else           | Downloads and runs the official **TinyTeX** installer (root-free, cross-platform) and `tlmgr install`s the packages. |
+| **auto** *(default)* | —                         | Use **apt** when `apt-get` is available on Linux, otherwise fall back to **TinyTeX**.                                |
 
 ```bash
 ddocs pdflatex download --backend auto      # default: apt on Debian/Ubuntu, else TinyTeX
