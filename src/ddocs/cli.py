@@ -181,9 +181,18 @@ Examples:
     )
 
     # sub-command: check-pdflatex
-    subparsers.add_parser(
+    check_pdflatex = subparsers.add_parser(
         'check-pdflatex',
         help='Check that pdflatex is installed; install TinyTeX if missing',
+    )
+    check_pdflatex.add_argument(
+        '--packages',
+        help='Comma/space-separated tlmgr packages to install (overrides the default collections)'
+    )
+    check_pdflatex.add_argument(
+        '--no-packages',
+        action='store_true',
+        help='Only ensure pdflatex; do not install any extra TeX packages'
     )
 
     return parser

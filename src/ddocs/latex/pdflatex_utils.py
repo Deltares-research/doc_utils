@@ -7,14 +7,13 @@ built on TeX Live -- as the install backend:
 
 1. `sanity_check` -- is `pdflatex` (or `biber`) already callable?
 2. `check_pdflatex_installed` -- if not, download and run the official TinyTeX
-   installer (no admin rights) and add its `bin` directory to `PATH` for the current
-   process. The default bundle already ships `pdflatex` and ~200 common packages; no
-   large `collection-*` sets are pre-installed (set ``TINYTEX_INSTALLER`` to override
-   the bundle).
+   installer (no admin rights), add its `bin` directory to `PATH`, and `tlmgr install`
+   the requested packages (default :data:`REQUIRED_TLMGR_PACKAGES`) so a bare `pdflatex`
+   can build Deltares documents. Pass a smaller `packages` list (or
+   `ddocs check-pdflatex --packages ...` / `--no-packages`) for a faster, leaner install.
 3. `install_missing_packages` -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and `tlmgr install`s them on demand (TeX Live does not do this
-   natively). `build_pdf` uses it so only the packages a specific document needs are
-   fetched, keeping the download small.
+   natively). `build_pdf` uses it to fetch any package a document still needs.
 
 The `PATH` change affects only the current process and the subprocesses it spawns,
 not the parent shell.
@@ -30,12 +29,21 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
-# Packages to install eagerly when provisioning TinyTeX. Kept empty on purpose: the
-# default TinyTeX bundle already ships pdflatex plus ~200 common packages, and
-# ``build_pdf`` installs anything else a specific document references on demand (a few
-# small packages) instead of pulling whole multi-hundred-MB ``collection-*`` sets. Set
-# the ``TINYTEX_INSTALLER`` env var (e.g. ``TinyTeX-2``) for a larger base if you prefer.
-REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = ()
+# Default tlmgr collections installed by ``check_pdflatex_installed`` so consumers that
+# compile with a bare ``pdflatex`` (not ``build_pdf``) have the packages Deltares docs
+# need. These mirror the ``texlive-*`` apt packages. Pass a smaller list to
+# ``check_pdflatex_installed`` / ``ddocs check-pdflatex --packages ...`` for a faster,
+# leaner install when you know exactly what a document needs; ``build_pdf`` additionally
+# installs anything still missing on demand.
+REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = (
+    "collection-latexextra",
+    "collection-fontsrecommended",
+    "collection-fontsextra",
+    "collection-bibtexextra",
+    "collection-mathscience",
+    "biber",
+    "biblatex",
+)
 
 _UNIX_INSTALLER_URL = "https://yihui.org/tinytex/install-bin-unix.sh"
 # Use the PowerShell installer directly: the .bat wrapper runs `curl -O 'URL'`, whose
@@ -283,19 +291,24 @@ def install_missing_packages(log_text: str) -> list[str]:
     return packages
 
 
-def check_pdflatex_installed(install_packages: bool = True) -> bool:
+def check_pdflatex_installed(
+    install_packages: bool = True,
+    packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES,
+) -> bool:
     """Ensure `pdflatex` is callable, installing TinyTeX when it is missing.
 
     If pdflatex is already on `PATH` this returns immediately. Otherwise an existing
-    TinyTeX install is located (or the official installer is downloaded and run) and its
-    `bin` directory is prepended to `PATH` for this process. The default TinyTeX bundle
-    already provides `pdflatex`; document-specific packages are added on demand by
-    `build_pdf`, so no large collections are downloaded here.
+    TinyTeX install is located (or the official installer is downloaded and run), its
+    `bin` directory is prepended to `PATH` for this process, and (unless disabled) the
+    requested `tlmgr` packages are installed so a bare `pdflatex` can compile Deltares
+    documents. `build_pdf` additionally installs anything still missing on demand.
 
     Args:
-        install_packages: When True (default), run `tlmgr install` for
-            :data:`REQUIRED_TLMGR_PACKAGES` after a fresh TinyTeX install. That set is
-            empty by default, so this is a no-op unless it has been customised.
+        install_packages: When True (default), run `tlmgr install` for `packages`
+            after locating/installing TinyTeX.
+        packages: The tlmgr packages/collections to install. Defaults to
+            :data:`REQUIRED_TLMGR_PACKAGES`. Pass a smaller list for a faster, leaner
+            install when you know exactly what a document needs.
 
     Returns:
         True if pdflatex is accessible after the call, False otherwise.
@@ -328,7 +341,7 @@ def check_pdflatex_installed(install_packages: bool = True) -> bool:
         if bin_dir:
             _prepend_to_path(bin_dir)
             if install_packages:
-                install_tlmgr_packages()
+                install_tlmgr_packages(packages)
             installed = sanity_check("pdflatex")
             if installed:
                 print("pdflatex is now accessible!")
@@ -412,10 +425,12 @@ def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
     Ensures pdflatex is available (installing TinyTeX if necessary) and maps the result
     to a process exit code suitable for :func:`sys.exit`.
 
+    Honours two optional argparse fields: ``no_packages`` (only ensure pdflatex, install
+    no extra TeX packages) and ``packages`` (a comma/space-separated string overriding
+    the default :data:`REQUIRED_TLMGR_PACKAGES`).
+
     Args:
-        args: Parsed CLI arguments from argparse. Unused -- accepted only so the handler
-            matches the calling convention of the other `ddocs` subcommand handlers.
-            Defaults to None.
+        args: Parsed CLI arguments from argparse, or None to use the defaults.
 
     Returns:
         0 if pdflatex is accessible, 1 otherwise.
@@ -433,4 +448,12 @@ def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
     See Also:
         check_pdflatex_installed: The underlying check-and-install routine.
     """
-    return 0 if check_pdflatex_installed() else 1
+    install_packages = True
+    packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES
+    if args is not None:
+        if getattr(args, "no_packages", False):
+            install_packages = False
+        elif getattr(args, "packages", None):
+            packages = [p for p in args.packages.replace(",", " ").split() if p]
+    accessible = check_pdflatex_installed(install_packages=install_packages, packages=packages)
+    return 0 if accessible else 1

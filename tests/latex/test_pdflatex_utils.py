@@ -369,3 +369,39 @@ class TestCheckPdflatexCli:
         """
         with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=available):
             assert check_pdflatex_cli() == code, f"expected exit {code}"
+
+    @pytest.mark.unit
+    def test_defaults_install_required_packages(self):
+        """Test that with no args the default REQUIRED_TLMGR_PACKAGES are installed.
+
+        Test scenario:
+            check_pdflatex_cli() -> check_pdflatex_installed(install_packages=True,
+            packages=REQUIRED_TLMGR_PACKAGES). This is the contract bare-pdflatex
+            consumers (e.g. ddocs check-pdflatex) rely on.
+        """
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
+            check_pdflatex_cli()
+        assert mock.call_args.kwargs["install_packages"] is True, "should install packages by default"
+        assert tuple(mock.call_args.kwargs["packages"]) == pdflatex_utils.REQUIRED_TLMGR_PACKAGES, \
+            "should default to REQUIRED_TLMGR_PACKAGES"
+
+    @pytest.mark.unit
+    def test_packages_override_is_forwarded(self):
+        """Test --packages overrides the default package list (comma/space separated)."""
+        import argparse
+
+        args = argparse.Namespace(packages="lipsum, tcolorbox foo", no_packages=False)
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
+            check_pdflatex_cli(args)
+        assert mock.call_args.kwargs["packages"] == ["lipsum", "tcolorbox", "foo"], "should parse the override list"
+        assert mock.call_args.kwargs["install_packages"] is True
+
+    @pytest.mark.unit
+    def test_no_packages_disables_install(self):
+        """Test --no-packages ensures pdflatex without installing extra packages."""
+        import argparse
+
+        args = argparse.Namespace(packages=None, no_packages=True)
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
+            check_pdflatex_cli(args)
+        assert mock.call_args.kwargs["install_packages"] is False, "--no-packages should disable installs"
