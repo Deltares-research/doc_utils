@@ -777,17 +777,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#ddocs.latex.pdflatex_utils.check_pdflatex_cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        check_pdflatex_cli
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1006,17 +995,6 @@
     <span class="md-ellipsis">
       
         pdflatex_download_cli
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ddocs.latex.pdflatex_utils.check_pdflatex_cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        check_pdflatex_cli
       
     </span>
   </a>
@@ -2275,7 +2253,7 @@ engine is provisioned.</p>
   <summary>See Also</summary>
   <p>install_texlive_apt: The apt backend.
 sanity_check: The PATH-only probe this builds on.
-check_pdflatex_cli: Thin wrapper mapping the result to an exit code.</p>
+pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</p>
 </details>
 
             <details class="mkdocstrings-source">
@@ -2408,7 +2386,7 @@ check_pdflatex_cli: Thin wrapper mapping the result to an exit code.</p>
 <span class="sd">    See Also:</span>
 <span class="sd">        install_texlive_apt: The apt backend.</span>
 <span class="sd">        sanity_check: The PATH-only probe this builds on.</span>
-<span class="sd">        check_pdflatex_cli: Thin wrapper mapping the result to an exit code.</span>
+<span class="sd">        pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">(</span><span class="s2">&quot;pdflatex&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">installed</span><span class="p">:</span>
@@ -3058,103 +3036,6 @@ default :data:<code>REQUIRED_TLMGR_PACKAGES</code>), and <code>backend</code> (a
         <span class="n">install_packages</span><span class="o">=</span><span class="n">install_packages</span><span class="p">,</span> <span class="n">packages</span><span class="o">=</span><span class="n">packages</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">accessible</span> <span class="k">else</span> <span class="mi">1</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="ddocs.latex.pdflatex_utils.check_pdflatex_cli" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">check_pdflatex_cli</span>
-
-
-<a href="#ddocs.latex.pdflatex_utils.check_pdflatex_cli" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">check_pdflatex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Deprecated alias for :func:<code>pdflatex_download_cli</code> (the old <code>check-pdflatex</code>).</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>args</code>
-            </td>
-            <td>
-                  <code><span title="argparse.Namespace">Namespace</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Parsed CLI arguments from argparse, or None to use the defaults.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>0 if pdflatex is accessible after the call, 1 otherwise.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">574</span>
-<span class="normal">575</span>
-<span class="normal">576</span>
-<span class="normal">577</span>
-<span class="normal">578</span>
-<span class="normal">579</span>
-<span class="normal">580</span>
-<span class="normal">581</span>
-<span class="normal">582</span>
-<span class="normal">583</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated alias for :func:`pdflatex_download_cli` (the old ``check-pdflatex``).</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        args: Parsed CLI arguments from argparse, or None to use the defaults.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        0 if pdflatex is accessible after the call, 1 otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">pdflatex_download_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

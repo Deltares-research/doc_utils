@@ -965,10 +965,6 @@ distribution, so <code>ddocs</code> provisions it on demand through the <code>pd
 <div class="highlight"><pre><span></span><code>ddocs<span class="w"> </span>pdflatex<span class="w"> </span>check<span class="w">        </span><span class="c1"># just verify; good for a fast CI gate</span>
 ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w">     </span><span class="c1"># install using the best available backend</span>
 </code></pre></div>
-<blockquote>
-<p>The old <code>ddocs check-pdflatex</code> still works as a <strong>deprecated alias</strong> for
-<code>ddocs pdflatex download</code>. Prefer the new form.</p>
-</blockquote>
 <h2 id="backends">Backends<a class="headerlink" href="#backends" title="Permanent link">&para;</a></h2>
 <p><code>ddocs pdflatex download</code> installs TeX using one of two backends, chosen with <code>--backend</code>:</p>
 <table>

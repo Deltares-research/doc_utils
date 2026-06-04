@@ -1158,14 +1158,7 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the ``ddocs`` argument parser with all subcommands.</span>
 
 <span class="sd">    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean`` and</span>
@@ -1360,13 +1353,6 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
     <span class="p">)</span>
     <span class="n">_add_pdflatex_install_options</span><span class="p">(</span><span class="n">pdflatex_download</span><span class="p">)</span>
 
-    <span class="c1"># deprecated alias: `check-pdflatex` == `pdflatex download`</span>
-    <span class="n">check_pdflatex</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">&#39;check-pdflatex&#39;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;(deprecated) alias for &quot;pdflatex download&quot;&#39;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">_add_pdflatex_install_options</span><span class="p">(</span><span class="n">check_pdflatex</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">parser</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1444,7 +1430,14 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/cli.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
 <span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
@@ -1499,16 +1492,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 <span class="normal">288</span>
 <span class="normal">289</span>
 <span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the command line and dispatch to the selected subcommand handler.</span>
 
 <span class="sd">    Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the</span>
@@ -1566,8 +1550,6 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
             <span class="n">exit_code</span> <span class="o">=</span> <span class="n">pdflatex_check_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">exit_code</span> <span class="o">=</span> <span class="n">pdflatex_download_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;check-pdflatex&#39;</span><span class="p">:</span>
-        <span class="n">exit_code</span> <span class="o">=</span> <span class="n">pdflatex_download_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
         <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
