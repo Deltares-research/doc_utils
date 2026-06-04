@@ -8,18 +8,15 @@ For the auto-generated API, see [`ddocs.latex.pdflatex_utils`](../reference/pdfl
 
 ## The two commands
 
-| Command | What it does |
-| --- | --- |
-| `ddocs pdflatex check` | **Probe only** — is `pdflatex` already callable? Exits `0` if yes, `1` if no. Installs nothing. |
-| `ddocs pdflatex download` | **Install** `pdflatex` (and the TeX packages) if it is missing. |
+| Command                   | What it does                                                                                    |
+|---------------------------|-------------------------------------------------------------------------------------------------|
+| `ddocs pdflatex check`    | **Probe only** — is `pdflatex` already callable? Exits `0` if yes, `1` if no. Installs nothing. |
+| `ddocs pdflatex download` | **Install** `pdflatex` (and the TeX packages) if it is missing.                                 |
 
 ```bash
 ddocs pdflatex check        # just verify; good for a fast CI gate
 ddocs pdflatex download     # install using the best available backend
 ```
-
-> The old `ddocs check-pdflatex` still works as a **deprecated alias** for
-> `ddocs pdflatex download`. Prefer the new form.
 
 ## Backends
 

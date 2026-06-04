@@ -125,12 +125,12 @@ class TestMainDispatch:
         mock_check.assert_not_called()
 
     @pytest.mark.unit
-    def test_deprecated_check_pdflatex_alias_dispatches_to_download(self, monkeypatch):
-        """Test the legacy `ddocs check-pdflatex` still maps to the download handler."""
+    def test_old_check_pdflatex_command_is_rejected(self, monkeypatch):
+        """Test the removed `ddocs check-pdflatex` command no longer exists (exit 2)."""
         monkeypatch.setattr(sys, "argv", ["ddocs", "check-pdflatex"])
-        with patch("ddocs.cli.pdflatex_download_cli", return_value=0) as mock_download:
-            assert main() == 0, "main should return the handler's exit code"
-        mock_download.assert_called_once()
+        with pytest.raises(SystemExit) as exc_info:
+            main()
+        assert exc_info.value.code == 2, f"argparse should reject the removed command, got {exc_info.value.code}"
 
     @pytest.mark.unit
     def test_pdflatex_requires_a_subcommand(self, monkeypatch):

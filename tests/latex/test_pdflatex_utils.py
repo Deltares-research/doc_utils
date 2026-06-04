@@ -6,12 +6,12 @@ import pytest
 
 from ddocs.latex import pdflatex_utils
 from ddocs.latex.pdflatex_utils import (
-    check_pdflatex_cli,
     check_pdflatex_installed,
     find_missing_packages,
     find_tex_bin_dir,
     install_missing_packages,
     install_tlmgr_packages,
+    pdflatex_download_cli,
     sanity_check,
 )
 
@@ -433,8 +433,8 @@ class TestBuildPdf:
                 pdflatex_utils.build_pdf(tex)
 
 
-class TestCheckPdflatexCli:
-    """Tests for check_pdflatex_cli."""
+class TestPdflatexDownloadCli:
+    """Tests for pdflatex_download_cli."""
 
     @pytest.mark.unit
     @pytest.mark.parametrize("available, code", [(True, 0), (False, 1)])
@@ -446,19 +446,19 @@ class TestCheckPdflatexCli:
             code: The expected process exit code.
         """
         with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=available):
-            assert check_pdflatex_cli() == code, f"expected exit {code}"
+            assert pdflatex_download_cli() == code, f"expected exit {code}"
 
     @pytest.mark.unit
     def test_defaults_install_required_packages(self):
         """Test that with no args the default REQUIRED_TLMGR_PACKAGES are installed.
 
         Test scenario:
-            check_pdflatex_cli() -> check_pdflatex_installed(install_packages=True,
+            pdflatex_download_cli() -> check_pdflatex_installed(install_packages=True,
             packages=REQUIRED_TLMGR_PACKAGES). This is the contract bare-pdflatex
             consumers (e.g. ddocs pdflatex download) rely on.
         """
         with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
-            check_pdflatex_cli()
+            pdflatex_download_cli()
         assert mock.call_args.kwargs["install_packages"] is True, "should install packages by default"
         assert tuple(mock.call_args.kwargs["packages"]) == pdflatex_utils.REQUIRED_TLMGR_PACKAGES, \
             "should default to REQUIRED_TLMGR_PACKAGES"
@@ -470,7 +470,7 @@ class TestCheckPdflatexCli:
 
         args = argparse.Namespace(packages="lipsum, tcolorbox foo", no_packages=False)
         with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
-            check_pdflatex_cli(args)
+            pdflatex_download_cli(args)
         assert mock.call_args.kwargs["packages"] == ["lipsum", "tcolorbox", "foo"], "should parse the override list"
         assert mock.call_args.kwargs["install_packages"] is True
 
@@ -481,5 +481,5 @@ class TestCheckPdflatexCli:
 
         args = argparse.Namespace(packages=None, no_packages=True)
         with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True) as mock:
-            check_pdflatex_cli(args)
+            pdflatex_download_cli(args)
         assert mock.call_args.kwargs["install_packages"] is False, "--no-packages should disable installs"

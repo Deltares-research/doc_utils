@@ -395,7 +395,7 @@ def check_pdflatex_installed(
     See Also:
         install_texlive_apt: The apt backend.
         sanity_check: The PATH-only probe this builds on.
-        check_pdflatex_cli: Thin wrapper mapping the result to an exit code.
+        pdflatex_download_cli: CLI wrapper mapping the result to an exit code.
     """
     installed = sanity_check("pdflatex")
     if not installed:
@@ -569,15 +569,3 @@ def pdflatex_download_cli(args: argparse.Namespace | None = None) -> int:
         install_packages=install_packages, packages=packages, backend=backend,
     )
     return 0 if accessible else 1
-
-
-def check_pdflatex_cli(args: argparse.Namespace | None = None) -> int:
-    """Deprecated alias for :func:`pdflatex_download_cli` (the old ``check-pdflatex``).
-
-    Args:
-        args: Parsed CLI arguments from argparse, or None to use the defaults.
-
-    Returns:
-        0 if pdflatex is accessible after the call, 1 otherwise.
-    """
-    return pdflatex_download_cli(args)

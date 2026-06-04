@@ -204,18 +204,11 @@ Examples:
     )
     _add_pdflatex_install_options(pdflatex_download)
 
-    # deprecated alias: `check-pdflatex` == `pdflatex download`
-    check_pdflatex = subparsers.add_parser(
-        'check-pdflatex',
-        help='(deprecated) alias for "pdflatex download"',
-    )
-    _add_pdflatex_install_options(check_pdflatex)
-
     return parser
 
 
 def _add_pdflatex_install_options(parser: argparse.ArgumentParser) -> None:
-    """Add the shared install options to a pdflatex download/check-pdflatex subparser."""
+    """Add the shared install options to the ``pdflatex download`` subparser."""
     parser.add_argument(
         '--packages',
         help='Comma/space-separated tlmgr packages to install (overrides the default collections)'
@@ -291,8 +284,6 @@ def main() -> int:
             exit_code = pdflatex_check_cli(args)
         else:
             exit_code = pdflatex_download_cli(args)
-    elif args.command == 'check-pdflatex':
-        exit_code = pdflatex_download_cli(args)
     else:
         parser.print_help()
         exit_code = 1
