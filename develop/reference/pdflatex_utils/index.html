@@ -982,14 +982,13 @@ built on TeX Live -- as the install backend:</p>
 <ol>
 <li><code>sanity_check</code> -- is <code>pdflatex</code> (or <code>biber</code>) already callable?</li>
 <li><code>check_pdflatex_installed</code> -- if not, download and run the official TinyTeX
-   installer (no admin rights) and add its <code>bin</code> directory to <code>PATH</code> for the current
-   process. The default bundle already ships <code>pdflatex</code> and ~200 common packages; no
-   large <code>collection-*</code> sets are pre-installed (set <code>TINYTEX_INSTALLER</code> to override
-   the bundle).</li>
+   installer (no admin rights), add its <code>bin</code> directory to <code>PATH</code>, and <code>tlmgr install</code>
+   the requested packages (default :data:<code>REQUIRED_TLMGR_PACKAGES</code>) so a bare <code>pdflatex</code>
+   can build Deltares documents. Pass a smaller <code>packages</code> list (or
+   <code>ddocs check-pdflatex --packages ...</code> / <code>--no-packages</code>) for a faster, leaner install.</li>
 <li><code>install_missing_packages</code> -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and <code>tlmgr install</code>s them on demand (TeX Live does not do this
-   natively). <code>build_pdf</code> uses it so only the packages a specific document needs are
-   fetched, keeping the download small.</li>
+   natively). <code>build_pdf</code> uses it to fetch any package a document still needs.</li>
 </ol>
 <p>The <code>PATH</code> change affects only the current process and the subprocesses it spawns,
 not the parent shell.</p>
@@ -1109,51 +1108,51 @@ reachable on <code>PATH</code> -- it never downloads or installs anything.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sanity_check</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pdflatex&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sanity_check</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pdflatex&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether a TeX command is callable from the command line.</span>
 
 <span class="sd">    Runs `&lt;command&gt; --version` as a subprocess. This only inspects what is already</span>
@@ -1269,15 +1268,7 @@ globbing so it works across architectures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
@@ -1299,7 +1290,15 @@ globbing so it works across architectures.</p>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_tex_bin_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_tex_bin_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate the TinyTeX `bin` directory that contains `pdflatex`.</span>
 
 <span class="sd">    TinyTeX installs the binaries under `&lt;root&gt;/bin/&lt;platform&gt;` (e.g.</span>
@@ -1434,15 +1433,7 @@ globbing so it works across architectures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">187</span>
 <span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
@@ -1470,7 +1461,15 @@ globbing so it works across architectures.</p>
 <span class="normal">212</span>
 <span class="normal">213</span>
 <span class="normal">214</span>
-<span class="normal">215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_tlmgr_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_tlmgr_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Install TeX packages with `tlmgr`.</span>
 
 <span class="sd">    Args:</span>
@@ -1603,15 +1602,7 @@ globbing so it works across architectures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
@@ -1637,7 +1628,15 @@ globbing so it works across architectures.</p>
 <span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
-<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract package names for files reported missing in a LaTeX build log.</span>
 
 <span class="sd">    Scans for `File `name.sty&#39; not found` style errors and returns the file stems</span>
@@ -1768,15 +1767,7 @@ install_tlmgr_packages: Runs the actual <code>tlmgr install</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
@@ -1796,7 +1787,15 @@ install_tlmgr_packages: Runs the actual <code>tlmgr install</code>.</p>
 <span class="normal">280</span>
 <span class="normal">281</span>
 <span class="normal">282</span>
-<span class="normal">283</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Install packages for any files a LaTeX log reports as missing.</span>
 
 <span class="sd">    This is the TeX Live equivalent of MiKTeX&#39;s install-on-build behaviour: parse the</span>
@@ -1839,17 +1838,17 @@ install_tlmgr_packages: Runs the actual <code>tlmgr install</code>.</p>
 
 
 <a href="#ddocs.latex.pdflatex_utils.check_pdflatex_installed" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">check_pdflatex_installed</span><span class="p">(</span><span class="n">install_packages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">check_pdflatex_installed</span><span class="p">(</span><span class="n">install_packages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Ensure <code>pdflatex</code> is callable, installing TinyTeX when it is missing.</p>
 <p>If pdflatex is already on <code>PATH</code> this returns immediately. Otherwise an existing
-TinyTeX install is located (or the official installer is downloaded and run) and its
-<code>bin</code> directory is prepended to <code>PATH</code> for this process. The default TinyTeX bundle
-already provides <code>pdflatex</code>; document-specific packages are added on demand by
-<code>build_pdf</code>, so no large collections are downloaded here.</p>
+TinyTeX install is located (or the official installer is downloaded and run), its
+<code>bin</code> directory is prepended to <code>PATH</code> for this process, and (unless disabled) the
+requested <code>tlmgr</code> packages are installed so a bare <code>pdflatex</code> can compile Deltares
+documents. <code>build_pdf</code> additionally installs anything still missing on demand.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1872,13 +1871,30 @@ already provides <code>pdflatex</code>; document-specific packages are added on 
             </td>
             <td>
               <div class="doc-md-description">
-                <p>When True (default), run <code>tlmgr install</code> for
-:data:<code>REQUIRED_TLMGR_PACKAGES</code> after a fresh TinyTeX install. That set is
-empty by default, so this is a no-op unless it has been customised.</p>
+                <p>When True (default), run <code>tlmgr install</code> for <code>packages</code>
+after locating/installing TinyTeX.</p>
               </div>
             </td>
             <td>
                   <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>packages</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="str">str</span>, ...] | <span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The tlmgr packages/collections to install. Defaults to
+:data:<code>REQUIRED_TLMGR_PACKAGES</code>. Pass a smaller list for a faster, leaner
+install when you know exactly what a document needs.</p>
+              </div>
+            </td>
+            <td>
+                  <code><span title="ddocs.latex.pdflatex_utils.REQUIRED_TLMGR_PACKAGES">REQUIRED_TLMGR_PACKAGES</span></code>
             </td>
           </tr>
       </tbody>
@@ -1960,15 +1976,7 @@ check_pdflatex_cli: Thin wrapper mapping the result to an exit code.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">294</span>
 <span class="normal">295</span>
 <span class="normal">296</span>
 <span class="normal">297</span>
@@ -2012,19 +2020,37 @@ check_pdflatex_cli: Thin wrapper mapping the result to an exit code.</p>
 <span class="normal">335</span>
 <span class="normal">336</span>
 <span class="normal">337</span>
-<span class="normal">338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_installed</span><span class="p">(</span><span class="n">install_packages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_installed</span><span class="p">(</span>
+    <span class="n">install_packages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure `pdflatex` is callable, installing TinyTeX when it is missing.</span>
 
 <span class="sd">    If pdflatex is already on `PATH` this returns immediately. Otherwise an existing</span>
-<span class="sd">    TinyTeX install is located (or the official installer is downloaded and run) and its</span>
-<span class="sd">    `bin` directory is prepended to `PATH` for this process. The default TinyTeX bundle</span>
-<span class="sd">    already provides `pdflatex`; document-specific packages are added on demand by</span>
-<span class="sd">    `build_pdf`, so no large collections are downloaded here.</span>
+<span class="sd">    TinyTeX install is located (or the official installer is downloaded and run), its</span>
+<span class="sd">    `bin` directory is prepended to `PATH` for this process, and (unless disabled) the</span>
+<span class="sd">    requested `tlmgr` packages are installed so a bare `pdflatex` can compile Deltares</span>
+<span class="sd">    documents. `build_pdf` additionally installs anything still missing on demand.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        install_packages: When True (default), run `tlmgr install` for</span>
-<span class="sd">            :data:`REQUIRED_TLMGR_PACKAGES` after a fresh TinyTeX install. That set is</span>
-<span class="sd">            empty by default, so this is a no-op unless it has been customised.</span>
+<span class="sd">        install_packages: When True (default), run `tlmgr install` for `packages`</span>
+<span class="sd">            after locating/installing TinyTeX.</span>
+<span class="sd">        packages: The tlmgr packages/collections to install. Defaults to</span>
+<span class="sd">            :data:`REQUIRED_TLMGR_PACKAGES`. Pass a smaller list for a faster, leaner</span>
+<span class="sd">            install when you know exactly what a document needs.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        True if pdflatex is accessible after the call, False otherwise.</span>
@@ -2057,7 +2083,7 @@ check_pdflatex_cli: Thin wrapper mapping the result to an exit code.</p>
         <span class="k">if</span> <span class="n">bin_dir</span><span class="p">:</span>
             <span class="n">_prepend_to_path</span><span class="p">(</span><span class="n">bin_dir</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">install_packages</span><span class="p">:</span>
-                <span class="n">install_tlmgr_packages</span><span class="p">()</span>
+                <span class="n">install_tlmgr_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">)</span>
             <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">(</span><span class="s2">&quot;pdflatex&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">installed</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pdflatex is now accessible!&quot;</span><span class="p">)</span>
@@ -2221,20 +2247,7 @@ install_missing_packages: Installs packages reported missing in the log.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
 <span class="normal">357</span>
@@ -2286,7 +2299,20 @@ install_missing_packages: Installs packages reported missing in the log.</p>
 <span class="normal">403</span>
 <span class="normal">404</span>
 <span class="normal">405</span>
-<span class="normal">406</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_pdf</span><span class="p">(</span><span class="n">tex_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">max_runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">install_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_pdf</span><span class="p">(</span><span class="n">tex_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">max_runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">install_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a `.tex` file to PDF with `pdflatex`, installing missing packages.</span>
 
 <span class="sd">    Ensures `pdflatex` is available (installing TinyTeX if needed), then runs it from</span>
@@ -2374,6 +2400,9 @@ install_missing_packages: Installs packages reported missing in the log.</p>
         <p>CLI handler for the <code>check-pdflatex</code> command.</p>
 <p>Ensures pdflatex is available (installing TinyTeX if necessary) and maps the result
 to a process exit code suitable for :func:<code>sys.exit</code>.</p>
+<p>Honours two optional argparse fields: <code>no_packages</code> (only ensure pdflatex, install
+no extra TeX packages) and <code>packages</code> (a comma/space-separated string overriding
+the default :data:<code>REQUIRED_TLMGR_PACKAGES</code>).</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2396,9 +2425,7 @@ to a process exit code suitable for :func:<code>sys.exit</code>.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Parsed CLI arguments from argparse. Unused -- accepted only so the handler
-matches the calling convention of the other <code>ddocs</code> subcommand handlers.
-Defaults to None.</p>
+                <p>Parsed CLI arguments from argparse, or None to use the defaults.</p>
               </div>
             </td>
             <td>
@@ -2450,20 +2477,7 @@ Defaults to None.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">422</span>
 <span class="normal">423</span>
 <span class="normal">424</span>
 <span class="normal">425</span>
@@ -2477,16 +2491,41 @@ Defaults to None.</p>
 <span class="normal">433</span>
 <span class="normal">434</span>
 <span class="normal">435</span>
-<span class="normal">436</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;CLI handler for the `check-pdflatex` command.</span>
 
 <span class="sd">    Ensures pdflatex is available (installing TinyTeX if necessary) and maps the result</span>
 <span class="sd">    to a process exit code suitable for :func:`sys.exit`.</span>
 
+<span class="sd">    Honours two optional argparse fields: ``no_packages`` (only ensure pdflatex, install</span>
+<span class="sd">    no extra TeX packages) and ``packages`` (a comma/space-separated string overriding</span>
+<span class="sd">    the default :data:`REQUIRED_TLMGR_PACKAGES`).</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        args: Parsed CLI arguments from argparse. Unused -- accepted only so the handler</span>
-<span class="sd">            matches the calling convention of the other `ddocs` subcommand handlers.</span>
-<span class="sd">            Defaults to None.</span>
+<span class="sd">        args: Parsed CLI arguments from argparse, or None to use the defaults.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        0 if pdflatex is accessible, 1 otherwise.</span>
@@ -2504,7 +2543,15 @@ Defaults to None.</p>
 <span class="sd">    See Also:</span>
 <span class="sd">        check_pdflatex_installed: The underlying check-and-install routine.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">check_pdflatex_installed</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">install_packages</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span>
+    <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;no_packages&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">install_packages</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;packages&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">packages</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="p">]</span>
+    <span class="n">accessible</span> <span class="o">=</span> <span class="n">check_pdflatex_installed</span><span class="p">(</span><span class="n">install_packages</span><span class="o">=</span><span class="n">install_packages</span><span class="p">,</span> <span class="n">packages</span><span class="o">=</span><span class="n">packages</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">accessible</span> <span class="k">else</span> <span class="mi">1</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
