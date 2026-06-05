@@ -32,7 +32,7 @@ class RepoCloner:
 
     Examples:
         - Construct with a token and read back the stored credentials:
-            ``python
+            ```python
             >>> from ddocs.templates.repo_cloner import RepoCloner
             >>> cloner = RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")
             >>> cloner.token
@@ -40,14 +40,14 @@ class RepoCloner:
             >>> cloner.repo_url
             'https://github.com/Deltares/LatexInstallation'
 
-            ``
+            ```
         - A token turns the public URL into an authenticated HTTPS clone URL:
-            ``python
+            ```python
             >>> from ddocs.templates.repo_cloner import RepoCloner
             >>> RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._resolve_clone_url()
             'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'
 
-            ``
+            ```
 
     See Also:
         clone_repo_cli: Uses this class to fetch the Deltares LaTeX templates.
