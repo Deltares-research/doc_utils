@@ -30,12 +30,8 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
-# Default tlmgr collections installed by ``check_pdflatex_installed`` so consumers that
-# compile with a bare ``pdflatex`` (not ``build_pdf``) have the packages Deltares docs
-# need. These mirror the ``texlive-*`` apt packages. Pass a smaller list to
-# ``check_pdflatex_installed`` / ``ddocs pdflatex download --packages ...`` for a faster,
-# leaner install when you know exactly what a document needs; ``build_pdf`` additionally
-# installs anything still missing on demand.
+# Default tlmgr collections so a bare ``pdflatex`` (i.e. not via ``build_pdf``) can build
+# Deltares docs. Override with a smaller list for a leaner install (see check_pdflatex_installed).
 REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = (
     "collection-latexextra",
     "collection-fontsrecommended",
@@ -46,9 +42,7 @@ REQUIRED_TLMGR_PACKAGES: tuple[str, ...] = (
     "biblatex",
 )
 
-# Debian/Ubuntu ``apt`` packages providing the same TeX coverage. apt pulls prebuilt
-# .debs from a fast mirror in parallel, so on a Linux runner with sudo this is far
-# quicker than TinyTeX + per-package ``tlmgr`` downloads.
+# Equivalent apt packages for the apt backend (much faster than tlmgr on Linux CI).
 APT_TEXLIVE_PACKAGES: tuple[str, ...] = (
     "texlive-latex-base",
     "texlive-latex-extra",
