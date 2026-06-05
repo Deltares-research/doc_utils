@@ -1434,7 +1434,12 @@ RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._r
 <span class="normal">375</span>
 <span class="normal">376</span>
 <span class="normal">377</span>
-<span class="normal">378</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RepoCloner</span><span class="p">:</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RepoCloner</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clone a git repository into a temporary directory and manage file operations.</span>
 
 <span class="sd">    Authentication is resolved from the supplied arguments or the environment with a fixed</span>
@@ -1630,6 +1635,11 @@ RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._r
 <span class="sd">        The clone URL is built by :meth:`_resolve_clone_url`, so authentication</span>
 <span class="sd">        (token, basic auth, or SSH) is applied automatically.</span>
 
+<span class="sd">        Security note: when a token/password is used over HTTPS, git stores the</span>
+<span class="sd">        credential in the temporary clone&#39;s ``.git/config`` remote URL. This is removed</span>
+<span class="sd">        with the temp directory on :meth:`cleanup` / context-manager exit, but the</span>
+<span class="sd">        credential lives on disk for the lifetime of the clone.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Path to the cloned repository.</span>
 
@@ -1820,6 +1830,10 @@ RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._r
         <p>Clone the repository into a temporary directory.</p>
 <p>The clone URL is built by :meth:<code>_resolve_clone_url</code>, so authentication
 (token, basic auth, or SSH) is applied automatically.</p>
+<p>Security note: when a token/password is used over HTTPS, git stores the
+credential in the temporary clone's <code>.git/config</code> remote URL. This is removed
+with the temp directory on :meth:<code>cleanup</code> / context-manager exit, but the
+credential lives on disk for the lifetime of the clone.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -1939,11 +1953,21 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
-<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clone the repository into a temporary directory.</span>
 
 <span class="sd">    The clone URL is built by :meth:`_resolve_clone_url`, so authentication</span>
 <span class="sd">    (token, basic auth, or SSH) is applied automatically.</span>
+
+<span class="sd">    Security note: when a token/password is used over HTTPS, git stores the</span>
+<span class="sd">    credential in the temporary clone&#39;s ``.git/config`` remote URL. This is removed</span>
+<span class="sd">    with the temp directory on :meth:`cleanup` / context-manager exit, but the</span>
+<span class="sd">    credential lives on disk for the lifetime of the clone.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Path to the cloned repository.</span>
@@ -2114,12 +2138,7 @@ token/password so secrets are never written to logs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/templates/repo_cloner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
@@ -2142,7 +2161,12 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">289</span>
 <span class="normal">290</span>
 <span class="normal">291</span>
-<span class="normal">292</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">move_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">move_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Move a file from the cloned repository to a new location.</span>
 
@@ -2298,12 +2322,7 @@ token/password so secrets are never written to logs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/templates/repo_cloner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
 <span class="normal">302</span>
@@ -2330,7 +2349,12 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">323</span>
 <span class="normal">324</span>
 <span class="normal">325</span>
-<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Copy a file from the cloned repository to a new location.</span>
 
@@ -2480,12 +2504,7 @@ token/password so secrets are never written to logs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/templates/repo_cloner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">333</span>
 <span class="normal">334</span>
 <span class="normal">335</span>
 <span class="normal">336</span>
@@ -2501,7 +2520,12 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">346</span>
 <span class="normal">347</span>
 <span class="normal">348</span>
-<span class="normal">349</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List files in the cloned repository.</span>
 
@@ -2547,15 +2571,15 @@ token/password so secrets are never written to logs.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/templates/repo_cloner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">366</span>
 <span class="normal">367</span>
 <span class="normal">368</span>
-<span class="normal">369</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the temporary directory and all its contents.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
@@ -2743,12 +2767,7 @@ passing nothing falls back to the machine's SSH key.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/templates/repo_cloner.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">381</span>
-<span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">386</span>
 <span class="normal">387</span>
 <span class="normal">388</span>
 <span class="normal">389</span>
@@ -2812,7 +2831,12 @@ passing nothing falls back to the machine's SSH key.</p>
 <span class="normal">447</span>
 <span class="normal">448</span>
 <span class="normal">449</span>
-<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone_repo_cli</span><span class="p">(</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone_repo_cli</span><span class="p">(</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
