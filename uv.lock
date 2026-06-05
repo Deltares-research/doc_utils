@@ -539,7 +539,6 @@ source = { editable = "." }
 dependencies = [
     { name = "gitpython" },
     { name = "pypandoc-binary" },
-    { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "tqdm" },
 ]
@@ -552,6 +551,7 @@ dev = [
     { name = "pre-commit-hooks" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "python-dotenv" },
 ]
 docs = [
     { name = "jupyter" },
@@ -574,7 +574,6 @@ docs = [
 requires-dist = [
     { name = "gitpython", specifier = ">=3.1.45" },
     { name = "pypandoc-binary", specifier = ">=1.16.2" },
-    { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "tqdm", specifier = ">=4.67.1,<5.0.0" },
 ]
@@ -587,6 +586,7 @@ dev = [
     { name = "pre-commit-hooks", specifier = ">=6.0.0" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest-cov", specifier = ">=7.0.0" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
 ]
 docs = [
     { name = "jupyter" },

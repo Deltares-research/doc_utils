@@ -19,7 +19,6 @@ dependencies = [
     "pyyaml>=6.0.3",
     "pypandoc-binary>=1.16.2",
     "gitpython>=3.1.45",
-    "python-dotenv>=1.2.2",
 ]
 
 [dependency-groups]
@@ -30,6 +29,7 @@ dev = [
     "pre-commit-hooks>=6.0.0",
     "nbval>=0.11.0",
     "commitizen (>=4.8.3,<5.0.0)",
+    "python-dotenv>=1.2.2",
 ]
 
 docs = [
