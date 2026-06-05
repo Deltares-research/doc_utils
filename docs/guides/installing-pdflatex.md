@@ -116,3 +116,7 @@ pdf = build_pdf("docs/manual.tex")                # -> Path to the produced PDF
   apt on Linux CI, or cache the install.
 - `texlive-fonts-extra` (apt) / `collection-fontsextra` (tlmgr) is the heaviest item; drop
   it from `--packages` if your documents do not need exotic fonts.
+- The **TinyTeX backend downloads and runs the official upstream installer script** (from
+  `yihui.org` over HTTPS) — i.e. it executes remote code, the same trust model as the
+  documented `curl … | sh` install. There is no checksum/signature pinning. If that is not
+  acceptable in your environment, use `--backend apt` (or pre-install TeX yourself) instead.

@@ -167,6 +167,10 @@ def _prepend_to_path(directory: str) -> None:
 def _install_tinytex() -> None:
     """Download and run the official TinyTeX installer for the current platform.
 
+    Security note: this fetches the upstream installer script over HTTPS and executes it
+    (the same trust model as `curl ... | sh`); there is no checksum/signature pinning. It
+    installs into the user's home directory and needs no root.
+
     Raises:
         urllib.error.URLError: If the installer script cannot be downloaded.
         subprocess.CalledProcessError: If the installer script exits non-zero.
