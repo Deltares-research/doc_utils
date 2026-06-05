@@ -5,9 +5,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Load the project's .env (token, RUN_NETWORK_TESTS, ...) into the environment
-# before tests collect, so credential lookups and skip markers see it. Existing
-# environment variables take precedence (override=False).
+# Load the project's .env (e.g. LATEX_REPO_TOKEN) into the environment before tests
+# collect, so credential lookups see it. Existing environment variables take precedence
+# (override=False).
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 # RepoCloner reads GITHUB_TOKEN/GH_TOKEN; allow the CI-style secret name

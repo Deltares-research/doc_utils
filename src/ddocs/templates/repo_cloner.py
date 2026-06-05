@@ -218,6 +218,11 @@ class RepoCloner:
         The clone URL is built by :meth:`_resolve_clone_url`, so authentication
         (token, basic auth, or SSH) is applied automatically.
 
+        Security note: when a token/password is used over HTTPS, git stores the
+        credential in the temporary clone's ``.git/config`` remote URL. This is removed
+        with the temp directory on :meth:`cleanup` / context-manager exit, but the
+        credential lives on disk for the lifetime of the clone.
+
         Returns:
             Path to the cloned repository.
 
