@@ -3,10 +3,6 @@ name: ci
 permissions:
     contents: read
 
-env:
-  SVN_USERNAME: x-access-token
-  SVN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-
 on:
   push:
   workflow_dispatch:
@@ -25,10 +21,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup Python with uv
+        uses: Deltares-research/github-actions/actions/python-setup/uv@d60c8767cd8efb9c42850eabac6845cbe015d772 # uv/v1.0.1
         with:
           python-version: ${{ matrix.python-version }}
+          install-groups: dev
 
       - name: Install Pandoc
         run: |
@@ -36,29 +33,33 @@ jobs:
           sudo apt-get install -y pandoc
           pandoc --version
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
-          cache-dependency-glob: uv.lock
-
-      - name: Verify lock file is up to date
+      - name: Install LaTeX (TeX Live)
+        # Provides a system pdflatex/biber so the PDF e2e test uses it instead of
+        # downloading TinyTeX on the runner. Mirrors the tlmgr collections that
+        # pdflatex_utils would otherwise install.
         run: |
-          uv lock --check
-
-      - name: Install Dependencies
-        run: uv sync --frozen --group dev
-
-      - name: list env contents
-        run: |
-          uv pip list
+          sudo apt-get install -y \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-bibtex-extra \
+            texlive-science biber
+          pdflatex --version
 
       - name: tests
+        # A token with read access to the private Deltares/LatexInstallation repo is
+        # required by the live clone / PDF e2e tests (conftest bridges
+        # LATEX_REPO_TOKEN -> GITHUB_TOKEN). Scoped to this step only so it is not
+        # exposed to checkout/setup/upload steps. GITHUB_* names are reserved by
+        # Actions, so a distinct secret name is required.
+        env:
+          LATEX_REPO_TOKEN: ${{ secrets.LATEX_REPO_TOKEN }}
         run: |
           uv run pytest -svvv --cov=src/ddocs --cov-report=xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
 
       - name: test Jupyter notebook
         shell: bash

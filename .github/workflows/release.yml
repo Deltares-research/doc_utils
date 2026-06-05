@@ -1,0 +1,55 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: 'Version increment (patch | minor | major)'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      prerelease-type:
+        description: 'Prerelease type'
+        required: false
+        type: choice
+        default: 'none'
+        options:
+          - none
+          - alpha
+          - beta
+          - rc
+      draft:
+        description: 'Create the GitHub release as a draft'
+        required: false
+        type: boolean
+        default: false
+      build-wheel:
+        description: 'Build and attach a wheel to the release'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub Release
+        uses: Deltares-research/github-actions/actions/release/github@73618deb1feaffe481d69063ce7bf229fab6598b # github-release/v1.1.4
+        with:
+          increment: ${{ inputs.increment }}
+          prerelease-type: ${{ inputs.prerelease-type }}
+          draft: ${{ inputs.draft }}
+          python-version: '3.11'
+          package-manager: 'uv'
+          install-groups: 'dev'
+          build-wheel: ${{ inputs.build-wheel }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

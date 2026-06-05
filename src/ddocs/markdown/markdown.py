@@ -6,10 +6,9 @@ that can be included in PDF documentation. It uses Pandoc for the conversion.
 
 from pathlib import Path
 import subprocess
-from ddocs.pandoc_utils import sanity_check
 import argparse
 from ddocs import __path__
-from ddocs.pandoc_utils import check_pandoc_installed
+from ddocs.markdown.pandoc_utils import check_pandoc_installed
 
 data_dir = Path(__path__[0]) / 'data'
 
@@ -344,10 +343,8 @@ def convert_all_markdown_files(
 
 
 def mark_down_to_latex_cli(args: argparse.Namespace) -> int:
-    # check_pandoc_installed()
-
-    if not sanity_check():
-        print("Error: Pandoc is not installed or not in PATH")
+    if not check_pandoc_installed():
+        print("Error: Pandoc is not installed and could not be downloaded automatically")
         print("Please install Pandoc: https://pandoc.org/installing.html")
         print()
         print("On Ubuntu/Debian: sudo apt-get install pandoc")

@@ -17,7 +17,7 @@ requires-python = ">=3.11"
 dependencies = [
     "tqdm (>=4.67.1,<5.0.0)",
     "pyyaml>=6.0.3",
-    "pypandoc>=1.16.2",
+    "pypandoc-binary>=1.16.2",
     "gitpython>=3.1.45",
 ]
 
@@ -28,6 +28,8 @@ dev = [
     "pre-commit>=4.3.0",
     "pre-commit-hooks>=6.0.0",
     "nbval>=0.11.0",
+    "commitizen (>=4.8.3,<5.0.0)",
+    "python-dotenv>=1.2.2",
 ]
 
 docs = [
@@ -45,13 +47,12 @@ docs = [
     "mkdocs-panzoom-plugin",
     "notebook<7.0",
     "jupyter",
-    "commitizen (>=4.8.3,<5.0.0)",
 ]
 
 
 [project.urls]
-"Homepage" = "https://github.com/Deltares/toets-svkw"
-"Bug Tracker" = "https://github.com/Deltares/toets-svkw/issues"
+"Homepage" = "https://github.com/Deltares-research/doc_utils"
+"Bug Tracker" = "https://github.com/Deltares-research/doc_utils/issues"
 
 [project.scripts]
 ddocs = "ddocs.cli:main"
@@ -88,6 +89,19 @@ markers = [
 ]
 
 
+#[tool.uv]
+#managed = false
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+tag_format = "$version"
+version_files = [
+    "pyproject.toml:^version",
+]
+changelog_file = "docs/changelog.md"
+update_changelog_on_bump = true
+major_version_zero = true
 
 [build-system]
 requires = ["hatchling"]

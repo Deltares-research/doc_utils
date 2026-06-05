@@ -1,0 +1,455 @@
+"""Clone the Deltares LaTeX template repository and copy files out of it.
+
+Authentication precedence (first available wins):
+
+1. Token  -- `token` arg or `GITHUB_TOKEN` / `GH_TOKEN` env (HTTPS).
+2. Basic  -- `username`/`password` args or `GIT_USERNAME`/`GIT_PASSWORD` env vars.
+3. SSH    -- when `prefer_ssh` is set and no credentials are given, clone via an
+   SSH URL using the machine's key (typical on developer laptops).
+4. Anonymous HTTPS -- public repos only.
+
+CI should set `GITHUB_TOKEN`; laptops typically use their existing SSH key.
+"""
+
+import os
+import re
+import stat
+import sys
+import tempfile
+import shutil
+from pathlib import Path
+from typing import Optional
+from git import Repo, GitCommandError
+
+
+class RepoCloner:
+    """Clone a git repository into a temporary directory and manage file operations.
+
+    Authentication is resolved from the supplied arguments or the environment with a fixed
+    precedence: token, then username+password, then SSH (when `prefer_ssh` is set), then an
+    anonymous HTTPS clone. This lets the same code authenticate via a token in CI and via the
+    developer's SSH key on a laptop.
+
+    Examples:
+        - Construct with a token and read back the stored credentials:
+            ```python
+            >>> from ddocs.templates.repo_cloner import RepoCloner
+            >>> cloner = RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")
+            >>> cloner.token
+            'ghp_demo'
+            >>> cloner.repo_url
+            'https://github.com/Deltares/LatexInstallation'
+
+            ```
+        - A token turns the public URL into an authenticated HTTPS clone URL:
+            ```python
+            >>> from ddocs.templates.repo_cloner import RepoCloner
+            >>> RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._resolve_clone_url()
+            'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'
+
+            ```
+
+    See Also:
+        clone_repo_cli: Uses this class to fetch the Deltares LaTeX templates.
+    """
+
+    def __init__(
+        self,
+        repo_url: str,
+        token: Optional[str] = None,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        prefer_ssh: bool = True,
+    ):
+        """Initialize the RepoCloner.
+
+        Args:
+            repo_url: The URL of the git repository to clone (HTTPS or SSH form).
+            token: Personal access / app token for HTTPS auth. Defaults to the
+                `GITHUB_TOKEN` or `GH_TOKEN` environment variable.
+            username: Username for HTTPS basic auth. Defaults to the
+                `GIT_USERNAME` environment variable.
+            password: Password/token for HTTPS basic auth. Defaults to the
+                `GIT_PASSWORD` environment variable.
+            prefer_ssh: When no token or username/password is available, clone via an
+                SSH URL (using the machine's SSH key) instead of anonymously.
+
+        Examples:
+            - An explicit token is stored verbatim (it wins over any environment value):
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> cloner.token
+                'ghp_demo'
+                >>> cloner.prefer_ssh
+                True
+
+                ```
+            - Basic-auth credentials are stored for later HTTPS injection:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", username="alice", password="pw")
+                >>> (cloner.username, cloner.password)
+                ('alice', 'pw')
+
+                ```
+        """
+        self.repo_url = repo_url
+        self.token = token or os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
+        self.username = username or os.getenv("GIT_USERNAME")
+        self.password = password or os.getenv("GIT_PASSWORD")
+        self.prefer_ssh = prefer_ssh
+        self.temp_dir: Optional[Path] = None
+        self.repo_path: Optional[Path] = None
+        self.repo: Optional[Repo] = None
+
+    @staticmethod
+    def _to_ssh_url(url: str) -> str:
+        """Convert an HTTPS git URL to its `git@host:owner/repo.git` SSH form.
+
+        URLs that are already SSH (`git@` or `ssh://`) are returned unchanged.
+
+        Args:
+            url: An HTTPS/HTTP or SSH git URL.
+
+        Returns:
+            The SSH-form URL, or `url` unchanged if it was already SSH.
+
+        Examples:
+            - An HTTPS URL is rewritten and given a `.git` suffix:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> RepoCloner._to_ssh_url("https://github.com/Deltares/LatexInstallation")
+                'git@github.com:Deltares/LatexInstallation.git'
+
+                ```
+            - An already-SSH URL is returned untouched:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> RepoCloner._to_ssh_url("git@github.com:Deltares/LatexInstallation.git")
+                'git@github.com:Deltares/LatexInstallation.git'
+
+                ```
+        """
+        if url.startswith("git@") or url.startswith("ssh://"):
+            ssh_url = url
+        else:
+            without_scheme = re.sub(r"^https?://", "", url.rstrip("/"))
+            host, _, path = without_scheme.partition("/")
+            if not path.endswith(".git"):
+                path = f"{path}.git"
+            ssh_url = f"git@{host}:{path}"
+        return ssh_url
+
+    def _resolve_clone_url(self) -> str:
+        """Build the effective clone URL from the available credentials.
+
+        Precedence: token, then username+password, then SSH (when `prefer_ssh`),
+        then an anonymous HTTPS clone. An input that is already an SSH URL is used as-is.
+
+        Returns:
+            The clone URL git should use, with any token/credentials embedded.
+
+        Examples:
+            - A token is embedded as an `x-access-token` HTTPS credential:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> RepoCloner("https://github.com/owner/repo", token="ghp_demo")._resolve_clone_url()
+                'https://x-access-token:ghp_demo@github.com/owner/repo'
+
+                ```
+            - An SSH input URL is used as-is, even when a token is set:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> RepoCloner("git@github.com:owner/repo.git", token="ghp_demo")._resolve_clone_url()
+                'git@github.com:owner/repo.git'
+
+                ```
+        """
+        url = self.repo_url.rstrip("/")
+        if url.startswith("git@") or url.startswith("ssh://"):
+            clone_url = url
+        elif self.token:
+            clone_url = re.sub(r"^https://", f"https://x-access-token:{self.token}@", url, count=1)
+        elif self.username and self.password:
+            clone_url = re.sub(r"^https://", f"https://{self.username}:{self.password}@", url, count=1)
+        elif self.prefer_ssh:
+            clone_url = self._to_ssh_url(url)
+        else:
+            clone_url = url
+        return clone_url
+
+    def _scrub_secrets(self, text: str) -> str:
+        """Replace any known secret (token/password) in `text` with `***`.
+
+        Args:
+            text: Arbitrary text (e.g. a git error message) that may contain secrets.
+
+        Returns:
+            The text with every configured token/password occurrence masked.
+
+        Examples:
+            - A token embedded in an error message is masked:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> cloner._scrub_secrets("fatal: auth failed for ghp_demo")
+                'fatal: auth failed for ***'
+
+                ```
+            - Text without any secret is returned unchanged:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> cloner._scrub_secrets("fatal: repository not found")
+                'fatal: repository not found'
+
+                ```
+        """
+        scrubbed = text
+        for secret in (self.token, self.password):
+            if secret:
+                scrubbed = scrubbed.replace(secret, "***")
+        return scrubbed
+
+    def clone(self) -> Path:
+        """Clone the repository into a temporary directory.
+
+        The clone URL is built by :meth:`_resolve_clone_url`, so authentication
+        (token, basic auth, or SSH) is applied automatically.
+
+        Security note: when a token/password is used over HTTPS, git stores the
+        credential in the temporary clone's ``.git/config`` remote URL. This is removed
+        with the temp directory on :meth:`cleanup` / context-manager exit, but the
+        credential lives on disk for the lifetime of the clone.
+
+        Returns:
+            Path to the cloned repository.
+
+        Raises:
+            RuntimeError: If the clone fails. The message is scrubbed of any
+                token/password so secrets are never written to logs.
+
+        Examples:
+            - Clone a repository and use the returned path (network access required):
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")
+                >>> repo_path = cloner.clone()  # doctest: +SKIP
+                >>> sorted(p.name for p in repo_path.iterdir())  # doctest: +SKIP
+                ['.git', 'README.md']
+
+                ```
+            - A failed clone raises a RuntimeError whose message hides the token:
+                ```python
+                >>> from ddocs.templates.repo_cloner import RepoCloner
+                >>> cloner = RepoCloner("https://github.com/owner/does-not-exist", token="ghp_demo")
+                >>> try:  # doctest: +SKIP
+                ...     cloner.clone()
+                ... except RuntimeError as err:
+                ...     "ghp_demo" in str(err)
+                False
+
+                ```
+        """
+        if self.temp_dir is None:
+            self.temp_dir = Path(tempfile.mkdtemp())
+
+        repo_name = self.repo_url.rstrip('/').split('/')[-1].replace('.git', '')
+        self.repo_path = self.temp_dir / repo_name
+
+        clone_url = self._resolve_clone_url()
+        try:
+            self.repo = Repo.clone_from(clone_url, str(self.repo_path))
+        except GitCommandError as exc:
+            raise RuntimeError(f"Failed to clone repository: {self._scrub_secrets(str(exc))}") from None
+
+        return self.repo_path
+
+    def move_file(self, source_rel_path: str | Path, destination: str | Path) -> Path:
+        """
+        Move a file from the cloned repository to a new location.
+
+        Args:
+            source_rel_path: Relative path to the file within the cloned repository
+            destination: Destination path (can be absolute or relative)
+
+        Returns:
+            Path to the moved file
+
+        Raises:
+            FileNotFoundError: If source file doesn't exist
+            RuntimeError: If repository hasn't been cloned yet
+        """
+        if self.repo_path is None:
+            raise RuntimeError("Repository not cloned yet. Call clone() first.")
+
+        source = self.repo_path / source_rel_path
+        if not source.exists():
+            raise FileNotFoundError(f"Source file not found: {source}")
+
+        destination = Path(destination)
+
+        # Create parent directories if they don't exist
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        shutil.move(str(source), str(destination))
+        return destination
+
+    def copy_file(self, source_rel_path: str | Path, destination: str | Path) -> Path:
+        """
+        Copy a file from the cloned repository to a new location.
+
+        Args:
+            source_rel_path: Relative path to the file within the cloned repository
+            destination: Destination path (can be absolute or relative)
+
+        Returns:
+            Path to the copied file
+
+        Raises:
+            FileNotFoundError: If source file doesn't exist
+            RuntimeError: If repository hasn't been cloned yet
+        """
+        if self.repo_path is None:
+            raise RuntimeError("Repository not cloned yet. Call clone() first.")
+
+        source = self.repo_path / source_rel_path
+        if not source.exists():
+            raise FileNotFoundError(f"Source file not found: {source}")
+
+        destination = Path(destination)
+
+        # Create parent directories if they don't exist
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        if source.is_dir():
+            shutil.copytree(str(source), str(destination), dirs_exist_ok=True)
+        else:
+            shutil.copy2(str(source), str(destination))
+
+        return destination
+
+    def list_files(self, relative_path: str = "", pattern: str = "*") -> list[Path]:
+        """
+        List files in the cloned repository.
+
+        Args:
+            relative_path: Relative path within the repository to list files from
+            pattern: Glob pattern to filter files (default: "*")
+
+        Returns:
+            List of Path objects matching the pattern
+
+        Raises:
+            RuntimeError: If repository hasn't been cloned yet
+        """
+        if self.repo_path is None:
+            raise RuntimeError("Repository not cloned yet. Call clone() first.")
+
+        search_path = self.repo_path / relative_path
+        if not search_path.exists():
+            return []
+
+        return list(search_path.glob(pattern))
+
+    @staticmethod
+    def _on_rmtree_error(func, path, _exc):
+        """Clear the read-only bit and retry a failed rmtree operation.
+
+        Git marks files under ``.git/objects`` read-only; on Windows
+        ``shutil.rmtree`` cannot delete them until that attribute is removed.
+        """
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+
+    def cleanup(self):
+        """Remove the temporary directory and all its contents."""
+        if self.temp_dir and self.temp_dir.exists():
+            if sys.version_info >= (3, 12):
+                shutil.rmtree(self.temp_dir, onexc=self._on_rmtree_error)
+            else:
+                shutil.rmtree(self.temp_dir, onerror=self._on_rmtree_error)
+            self.temp_dir = None
+            self.repo_path = None
+
+    def __enter__(self):
+        """Context manager entry."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit - cleanup temporary directory."""
+        self.cleanup()
+        return False
+
+
+def clone_repo_cli(
+    output_dir: Path,
+    token: Optional[str] = None,
+    username: Optional[str] = None,
+    password: Optional[str] = None,
+    prefer_ssh: bool = True,
+) -> int:
+    """Clone the Deltares LatexInstallation repo and copy template files to `output_dir`.
+
+    Uses :class:`RepoCloner` as a context manager so the temporary clone is always
+    removed, even if copying fails. Credentials are resolved by `RepoCloner` with the
+    precedence token -> username/password -> SSH (when `prefer_ssh`) -> anonymous, so
+    passing nothing falls back to the machine's SSH key.
+
+    Args:
+        output_dir: Directory the template files are copied into. Created if missing.
+        token: Personal access / app token for HTTPS auth. Falls back to the
+            `GITHUB_TOKEN` / `GH_TOKEN` environment variables when omitted.
+        username: Username for HTTPS basic auth. Falls back to `GIT_USERNAME`.
+        password: Password/token for HTTPS basic auth. Falls back to `GIT_PASSWORD`.
+        prefer_ssh: When no token or username/password is available, clone via SSH
+            (using the machine's key) instead of anonymously. Defaults to True.
+
+    Returns:
+        `0` on success.
+
+    Examples:
+        - Fetch the templates into a local folder (network access required):
+            ```python
+            >>> from pathlib import Path
+            >>> from ddocs.templates.repo_cloner import clone_repo_cli
+            >>> clone_repo_cli(Path("./templates"))  # doctest: +SKIP
+            0
+
+            ```
+        - The returned code can drive a process exit status:
+            ```python
+            >>> import sys
+            >>> from pathlib import Path
+            >>> from ddocs.templates.repo_cloner import clone_repo_cli
+            >>> sys.exit(clone_repo_cli(Path("./templates")))  # doctest: +SKIP
+
+            ```
+
+    See Also:
+        RepoCloner: The context manager used to clone and clean up the temporary repo.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print("Cloning LatexInstallation repository...")
+    paths = [
+        "MiKTeX/tex/latex/deltares",
+        "MiKTeX/tex/latex/nomentbl/deltares",
+        "MiKTeX/bibtex/bst/deltares",
+    ]
+
+    with RepoCloner(
+        "https://github.com/Deltares/LatexInstallation",
+        token=token,
+        username=username,
+        password=password,
+        prefer_ssh=prefer_ssh,
+    ) as cloner:
+        cloner.clone()
+        for path in paths:
+            print(f"Copying {path}...")
+            cloner.copy_file(path, output_dir)
+
+    print(f"Template files copied to {output_dir}")
+    return 0
