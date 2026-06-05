@@ -192,6 +192,28 @@ def _install_tinytex() -> None:
             os.unlink(script_path)
 
 
+def _tex_command(name: str) -> list[str]:
+    """Return the argv prefix to invoke a TeX helper, handling Windows `.bat` wrappers.
+
+    `subprocess.run([name, ...])` cannot launch a bare `.bat`/`.cmd` on Windows (only
+    `.exe` images), and TinyTeX ships `tlmgr` as `tlmgr.bat`. This resolves the command
+    on `PATH` and, for a Windows batch wrapper, runs it through `cmd /c`.
+
+    Args:
+        name: The command to resolve, e.g. `"tlmgr"`.
+
+    Returns:
+        The argv prefix to prepend before the command's own arguments. Falls back to
+        `[name]` when the command is not found on `PATH`.
+    """
+    resolved = shutil.which(name)
+    if resolved is None:
+        return [name]
+    if platform.system() == "Windows" and resolved.lower().endswith((".bat", ".cmd")):
+        return ["cmd", "/c", resolved]
+    return [resolved]
+
+
 def install_tlmgr_packages(packages: tuple[str, ...] | list[str] = REQUIRED_TLMGR_PACKAGES) -> bool:
     """Install TeX packages with `tlmgr`.
 
@@ -224,7 +246,7 @@ def install_tlmgr_packages(packages: tuple[str, ...] | list[str] = REQUIRED_TLMG
         return True
     print(f"Installing TeX packages via tlmgr: {' '.join(package_list)}")
     try:
-        subprocess.run(["tlmgr", "install", *package_list], check=True)
+        subprocess.run([*_tex_command("tlmgr"), "install", *package_list], check=True)
         ok = True
     except (subprocess.CalledProcessError, FileNotFoundError, OSError):
         ok = False

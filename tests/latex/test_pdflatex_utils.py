@@ -98,15 +98,55 @@ class TestInstallTlmgrPackages:
         Test scenario:
             A successful tlmgr run returns True and passes the package list through.
         """
-        with patch("subprocess.run") as mock_run:
+        with patch("ddocs.latex.pdflatex_utils._tex_command", return_value=["tlmgr"]), \
+             patch("subprocess.run") as mock_run:
             assert install_tlmgr_packages(["tikz", "biber"]) is True, "should report success"
         assert mock_run.call_args.args[0] == ["tlmgr", "install", "tikz", "biber"], "wrong tlmgr command"
 
     @pytest.mark.unit
     def test_returns_false_when_tlmgr_missing(self):
         """Test a missing tlmgr yields False rather than raising."""
-        with patch("subprocess.run", side_effect=FileNotFoundError()):
+        with patch("ddocs.latex.pdflatex_utils._tex_command", return_value=["tlmgr"]), \
+             patch("subprocess.run", side_effect=FileNotFoundError()):
             assert install_tlmgr_packages(["tikz"]) is False, "should be False when tlmgr is absent"
+
+
+class TestTexCommand:
+    """Tests for _tex_command (Windows .bat handling)."""
+
+    @pytest.mark.unit
+    def test_not_found_falls_back_to_bare_name(self):
+        """Test the bare name is returned when the command is not on PATH."""
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value=None):
+            assert pdflatex_utils._tex_command("tlmgr") == ["tlmgr"], "should fall back to the bare name"
+
+    @pytest.mark.unit
+    @pytest.mark.parametrize("resolved", ["C:/texlive/bin/tlmgr.bat", "C:/texlive/bin/tlmgr.CMD"])
+    def test_windows_batch_wrapped_in_cmd(self, resolved):
+        """Test a Windows .bat/.cmd wrapper is run via ``cmd /c``.
+
+        Args:
+            resolved: The resolved path returned by shutil.which.
+        """
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value=resolved), \
+             patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Windows"):
+            assert pdflatex_utils._tex_command("tlmgr") == ["cmd", "/c", resolved], "should wrap with cmd /c"
+
+    @pytest.mark.unit
+    def test_windows_exe_used_directly(self):
+        """Test a Windows .exe is used directly (no cmd wrapper)."""
+        resolved = "C:/texlive/bin/tlmgr.exe"
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value=resolved), \
+             patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Windows"):
+            assert pdflatex_utils._tex_command("tlmgr") == [resolved], "an .exe needs no cmd wrapper"
+
+    @pytest.mark.unit
+    def test_posix_uses_resolved_path(self):
+        """Test the resolved path is used directly on POSIX systems."""
+        resolved = "/usr/bin/tlmgr"
+        with patch("ddocs.latex.pdflatex_utils.shutil.which", return_value=resolved), \
+             patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"):
+            assert pdflatex_utils._tex_command("tlmgr") == [resolved], "posix should use the resolved path"
 
 
 class TestInstallMissingPackages:
