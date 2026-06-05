@@ -3,6 +3,10 @@ __pycache__
 .vscode
 .venv
 
+# Secrets / local environment (never commit tokens)
+.env
+*.env
+
 # Latex generated files
 docs/**/*.aux
 docs/**/*.mtc
