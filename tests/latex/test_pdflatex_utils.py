@@ -472,6 +472,63 @@ class TestBuildPdf:
             with pytest.raises(RuntimeError, match="did not produce"):
                 pdflatex_utils.build_pdf(tex)
 
+    @pytest.mark.unit
+    def test_stops_when_install_fails(self, tmp_path):
+        """Test the loop stops (no spin) when tlmgr cannot install the missing package.
+
+        Test scenario:
+            Every pass reports `lipsum.sty` missing and install_tlmgr_packages returns
+            False -> install is attempted once, then the loop gives up instead of
+            burning all max_runs.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=False) as mock_pkgs, \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout="! LaTeX Error: File `lipsum.sty' not found.",
+                                          stderr="")) as mock_run:
+            with pytest.raises(RuntimeError, match=r"lipsum\.sty"):
+                pdflatex_utils.build_pdf(tex)
+        mock_pkgs.assert_called_once_with(["lipsum"])
+        assert mock_run.call_count == 1, f"should not spin; ran pdflatex {mock_run.call_count} times"
+
+    @pytest.mark.unit
+    def test_stops_on_no_progress(self, tmp_path):
+        """Test the loop stops when the same package stays missing after a 'successful' install.
+
+        Test scenario:
+            install_tlmgr_packages returns True but `lipsum` is still reported missing on
+            the next pass -> the loop breaks on the repeated set instead of looping
+            forever; install is attempted only once.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True) as mock_pkgs, \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout="! LaTeX Error: File `lipsum.sty' not found.",
+                                          stderr="")) as mock_run:
+            with pytest.raises(RuntimeError, match="did not produce"):
+                pdflatex_utils.build_pdf(tex)
+        mock_pkgs.assert_called_once_with(["lipsum"])
+        assert mock_run.call_count == 2, f"should stop after no progress; ran {mock_run.call_count} times"
+
+
+class TestFirstLatexError:
+    """Tests for the _first_latex_error log helper."""
+
+    @pytest.mark.unit
+    def test_returns_first_error_line(self):
+        """Test the first ``!``-prefixed line is returned, stripped."""
+        log = "This is pdfTeX\n  ! LaTeX Error: File `tikz.sty' not found.\nmore"
+        assert pdflatex_utils._first_latex_error(log) == "! LaTeX Error: File `tikz.sty' not found."
+
+    @pytest.mark.unit
+    def test_falls_back_when_no_error_line(self):
+        """Test a helpful fallback is returned when no error line is present."""
+        assert "log file" in pdflatex_utils._first_latex_error("clean output, no errors")
+
 
 class TestPdflatexDownloadCli:
     """Tests for pdflatex_download_cli."""

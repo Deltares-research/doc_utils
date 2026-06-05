@@ -446,7 +446,16 @@ def check_pdflatex_installed(
     return installed
 
 
-def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = True) -> Path:
+def _first_latex_error(log_text: str) -> str:
+    """Return the first LaTeX/pdfTeX error line from a build log, for diagnostics."""
+    for line in log_text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("!"):
+            return stripped
+    return "see the .log file for details"
+
+
+def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = True) -> Path:
     """Compile a `.tex` file to PDF with `pdflatex`, installing missing packages.
 
     Ensures `pdflatex` is available (installing TinyTeX if needed), then runs it from
@@ -455,9 +464,14 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
     retrying (the MiKTeX-style behaviour); on success it runs a second pass to resolve
     cross-references and the table of contents.
 
+    The retry loop stops as soon as it stops making progress -- when no missing package
+    is reported, the same set is reported twice in a row, or a `tlmgr install` fails --
+    so it never spins pointlessly on a package it cannot install.
+
     Args:
         tex_file: Path to the `.tex` file to compile.
-        max_runs: Maximum number of `pdflatex` attempts before giving up.
+        max_runs: Upper bound on `pdflatex` attempts (a safety cap; the loop usually
+            stops earlier once it stops making progress).
         install_missing: When True, `tlmgr install` packages reported missing in the
             log between attempts.
 
@@ -465,7 +479,8 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
         The :class:`pathlib.Path` of the produced PDF (`<stem>.pdf` next to the source).
 
     Raises:
-        RuntimeError: If pdflatex cannot be made available, or no PDF is produced.
+        RuntimeError: If pdflatex cannot be made available, or no PDF is produced (the
+            message includes the first LaTeX error from the build log).
 
     Examples:
         - Build a PDF from a LaTeX file (requires a TeX engine):
@@ -486,9 +501,11 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
     pdf_path = work_dir / f"{tex_path.stem}.pdf"
 
     if not check_pdflatex_installed():
-        raise RuntimeError("pdflatex is not available and TinyTeX could not be installed")
+        raise RuntimeError("pdflatex is not available and could not be installed")
 
     succeeded = False
+    log = ""
+    previous_missing: list[str] = []
     for _ in range(max_runs):
         result = subprocess.run(
             ["pdflatex", "-interaction=nonstopmode", tex_path.name],
@@ -506,11 +523,17 @@ def build_pdf(tex_file: str | Path, max_runs: int = 4, install_missing: bool = T
                 text=True,
             )
             break
-        if not (install_missing and install_missing_packages(log)):
+        if not install_missing:
             break
+        missing = find_missing_packages(log)
+        # Stop if there is nothing to install, no progress since the previous attempt,
+        # or the install itself failed -- otherwise the loop would spin pointlessly.
+        if not missing or missing == previous_missing or not install_tlmgr_packages(missing):
+            break
+        previous_missing = missing
 
     if not (succeeded and pdf_path.exists()):
-        raise RuntimeError(f"pdflatex did not produce {pdf_path.name}")
+        raise RuntimeError(f"pdflatex did not produce {pdf_path.name}: {_first_latex_error(log)}")
     return pdf_path
 
 
