@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -967,16 +967,16 @@ reachable -- it never downloads or installs anything.</p>
 <li>Branch on whether pandoc is available:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">sanity_check</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">sanity_check</span><span class="p">():</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"ready to convert"</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ready to convert&quot;</span><span class="p">)</span>
 <span class="o">...</span> <span class="k">else</span><span class="p">:</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"pandoc missing"</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandoc missing&quot;</span><span class="p">)</span>
 <span class="n">ready</span> <span class="n">to</span> <span class="n">convert</span>
 </code></pre></div></li>
 <li>Use the boolean result to pick a fallback message:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">sanity_check</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">available</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s2">"ok"</span> <span class="k">if</span> <span class="n">available</span> <span class="k">else</span> <span class="s2">"install pandoc first"</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="s1">'ok'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s2">&quot;ok&quot;</span> <span class="k">if</span> <span class="n">available</span> <span class="k">else</span> <span class="s2">&quot;install pandoc first&quot;</span>  <span class="c1"># doctest: +SKIP</span>
+<span class="s1">&#39;ok&#39;</span>
 </code></pre></div></li>
 </ul>
 
@@ -1034,7 +1034,7 @@ reachable -- it never downloads or installs anything.</p>
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sanity_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Check whether a ``pandoc`` executable is callable from the command line.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether a ``pandoc`` executable is callable from the command line.</span>
 
 <span class="sd">    Runs ``pandoc --version`` as a subprocess. On success the detected version is</span>
 <span class="sd">    printed and ``True`` is returned; if pandoc is missing from ``PATH`` or the</span>
@@ -1049,9 +1049,9 @@ reachable -- it never downloads or installs anything.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import sanity_check</span>
 <span class="sd">            &gt;&gt;&gt; if sanity_check():  # doctest: +SKIP</span>
-<span class="sd">            ...     print("ready to convert")</span>
+<span class="sd">            ...     print(&quot;ready to convert&quot;)</span>
 <span class="sd">            ... else:</span>
-<span class="sd">            ...     print("pandoc missing")</span>
+<span class="sd">            ...     print(&quot;pandoc missing&quot;)</span>
 <span class="sd">            ready to convert</span>
 
 <span class="sd">            ```</span>
@@ -1059,22 +1059,22 @@ reachable -- it never downloads or installs anything.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import sanity_check</span>
 <span class="sd">            &gt;&gt;&gt; available = sanity_check()  # doctest: +SKIP</span>
-<span class="sd">            &gt;&gt;&gt; "ok" if available else "install pandoc first"  # doctest: +SKIP</span>
-<span class="sd">            'ok'</span>
+<span class="sd">            &gt;&gt;&gt; &quot;ok&quot; if available else &quot;install pandoc first&quot;  # doctest: +SKIP</span>
+<span class="sd">            &#39;ok&#39;</span>
 
 <span class="sd">            ```</span>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        check_pandoc_installed: Verify pandoc and download it when it is missing.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-            <span class="p">[</span><span class="s1">'pandoc'</span><span class="p">,</span> <span class="s1">'--version'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">&#39;pandoc&#39;</span><span class="p">,</span> <span class="s1">&#39;--version&#39;</span><span class="p">],</span>
             <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found Pandoc: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found Pandoc: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">):</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1144,13 +1144,13 @@ change affects only the current process, not the parent shell.</p>
 <li>Guard a conversion step on pandoc being available:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pandoc_installed</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">check_pandoc_installed</span><span class="p">():</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"converting"</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;converting&quot;</span><span class="p">)</span>
 <span class="n">converting</span>
 </code></pre></div></li>
 <li>Abort early when pandoc cannot be made available:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pandoc_installed</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">ready</span> <span class="o">=</span> <span class="n">check_pandoc_installed</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">ready</span> <span class="ow">or</span> <span class="s2">"could not install pandoc"</span>  <span class="c1"># doctest: +SKIP</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ready</span> <span class="ow">or</span> <span class="s2">&quot;could not install pandoc&quot;</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="kc">True</span>
 </code></pre></div></li>
 </ul>
@@ -1215,11 +1215,11 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pandoc_installed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Ensure ``pandoc`` is callable from the command line.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure ``pandoc`` is callable from the command line.</span>
 
 <span class="sd">    If pandoc is already on ``PATH`` this returns immediately. Otherwise the pandoc</span>
 <span class="sd">    binary bundled with ``pypandoc-binary`` is located and its directory is prepended</span>
-<span class="sd">    to this process's ``PATH`` so the binary (and any subprocess spawned from this</span>
+<span class="sd">    to this process&#39;s ``PATH`` so the binary (and any subprocess spawned from this</span>
 <span class="sd">    process) can invoke ``pandoc`` directly. No network download happens; the ``PATH``</span>
 <span class="sd">    change affects only the current process, not the parent shell.</span>
 
@@ -1232,7 +1232,7 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import check_pandoc_installed</span>
 <span class="sd">            &gt;&gt;&gt; if check_pandoc_installed():  # doctest: +SKIP</span>
-<span class="sd">            ...     print("converting")</span>
+<span class="sd">            ...     print(&quot;converting&quot;)</span>
 <span class="sd">            converting</span>
 
 <span class="sd">            ```</span>
@@ -1240,7 +1240,7 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import check_pandoc_installed</span>
 <span class="sd">            &gt;&gt;&gt; ready = check_pandoc_installed()  # doctest: +SKIP</span>
-<span class="sd">            &gt;&gt;&gt; ready or "could not install pandoc"  # doctest: +SKIP</span>
+<span class="sd">            &gt;&gt;&gt; ready or &quot;could not install pandoc&quot;  # doctest: +SKIP</span>
 <span class="sd">            True</span>
 
 <span class="sd">            ```</span>
@@ -1248,21 +1248,21 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="sd">    See Also:</span>
 <span class="sd">        sanity_check: The PATH-only check this function builds on.</span>
 <span class="sd">        check_pandoc_cli: Thin wrapper that maps the result to an exit code.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">installed</span><span class="p">:</span>
         <span class="n">pandoc_dir</span> <span class="o">=</span> <span class="n">_get_pandoc_dir</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">pandoc_dir</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pandoc_dir</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">pandoc_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"PATH"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pandoc_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"PATH"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Added pandoc to PATH: </span><span class="si">{</span><span class="n">pandoc_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pandoc_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pandoc_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added pandoc to PATH: </span><span class="si">{</span><span class="n">pandoc_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">installed</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">"Pandoc is now accessible!"</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pandoc is now accessible!&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">installed</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: bundled Pandoc could not be located on the command line."</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: bundled Pandoc could not be located on the command line.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">installed</span>
 </code></pre></div></td></tr></table></div>
@@ -1357,7 +1357,7 @@ subcommand handlers. Defaults to None.</p>
 <li>The argparse namespace is accepted but ignored:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pandoc_cli</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">ns</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">"check-pandoc"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ns</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;check-pandoc&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">check_pandoc_cli</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="mi">0</span>
 </code></pre></div></li>
@@ -1409,7 +1409,7 @@ subcommand handlers. Defaults to None.</p>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pandoc_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""CLI handler for the ``check-pandoc`` command.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CLI handler for the ``check-pandoc`` command.</span>
 
 <span class="sd">    Ensures pandoc is available (downloading it if necessary) and maps the</span>
 <span class="sd">    result to a process exit code suitable for ``sys.exit``.</span>
@@ -1436,7 +1436,7 @@ subcommand handlers. Defaults to None.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; import argparse</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import check_pandoc_cli</span>
-<span class="sd">            &gt;&gt;&gt; ns = argparse.Namespace(command="check-pandoc")</span>
+<span class="sd">            &gt;&gt;&gt; ns = argparse.Namespace(command=&quot;check-pandoc&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; check_pandoc_cli(ns)  # doctest: +SKIP</span>
 <span class="sd">            0</span>
 
@@ -1444,7 +1444,7 @@ subcommand handlers. Defaults to None.</p>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        check_pandoc_installed: The underlying check-and-install routine.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">check_pandoc_installed</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1514,10 +1514,10 @@ subcommand handlers. Defaults to None.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

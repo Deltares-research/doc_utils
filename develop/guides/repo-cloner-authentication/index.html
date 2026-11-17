@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -1213,9 +1213,9 @@ private repository <code>https://github.com/Deltares/LatexInstallation</code>:</
 <p>It supports the context-manager protocol, so the temp clone is always removed:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
 
-<span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">"https://github.com/Deltares/LatexInstallation"</span><span class="p">)</span> <span class="k">as</span> <span class="n">cloner</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">cloner</span><span class="p">:</span>
     <span class="n">cloner</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-    <span class="n">cloner</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span><span class="s2">"MiKTeX/tex/latex/deltares"</span><span class="p">,</span> <span class="s2">"./templates"</span><span class="p">)</span>
+    <span class="n">cloner</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span><span class="s2">&quot;MiKTeX/tex/latex/deltares&quot;</span><span class="p">,</span> <span class="s2">&quot;./templates&quot;</span><span class="p">)</span>
 <span class="c1"># temp dir cleaned up here</span>
 </code></pre></div>
 <h2 id="how-authentication-is-resolved">How authentication is resolved<a class="headerlink" href="#how-authentication-is-resolved" title="Permanent link">&para;</a></h2>
@@ -1466,12 +1466,12 @@ a fine-grained PAT (Option A), a deploy key, or an App token (Option C) stored a
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">PowerShell</label><label for="__tabbed_1_2">bash</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nv">$env:GITHUB_TOKEN</span> <span class="p">=</span> <span class="s2">"ghp_your_token_here"</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$env:GITHUB_TOKEN</span> <span class="p">=</span> <span class="s2">&quot;ghp_your_token_here&quot;</span>
 <span class="n">ddocs</span> <span class="nb">get-tex</span><span class="n">-template</span> <span class="p">-</span><span class="n">-output-dir</span> <span class="p">./</span><span class="n">templates</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">"ghp_your_token_here"</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&quot;ghp_your_token_here&quot;</span>
 ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>--output-dir<span class="w"> </span>./templates
 </code></pre></div>
 </div>
@@ -1483,7 +1483,7 @@ to its SSH form and clones with your SSH key — no extra configuration in <code
 a working SSH key on GitHub:</p>
 <ol>
 <li>Generate a key (if you don't have one):
-   <div class="highlight"><pre><span></span><code>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">"you@example.com"</span>
+   <div class="highlight"><pre><span></span><code>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;you@example.com&quot;</span>
 </code></pre></div></li>
 <li>Add the <strong>public</strong> key to GitHub → <strong>Settings → SSH and GPG keys → New SSH key</strong>.</li>
 <li>Confirm access:
@@ -1622,10 +1622,10 @@ a working SSH key on GitHub:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

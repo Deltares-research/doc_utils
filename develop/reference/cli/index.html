@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -938,18 +938,18 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <li>Parse a <code>get-tex-template</code> invocation and read the auth options:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.cli</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parser</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">args</span> <span class="o">=</span> <span class="n">create_parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span>
-<span class="o">...</span>     <span class="p">[</span><span class="s2">"get-tex-template"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">,</span> <span class="s2">"--token"</span><span class="p">,</span> <span class="s2">"tok"</span><span class="p">]</span>
+<span class="o">...</span>     <span class="p">[</span><span class="s2">&quot;get-tex-template&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;--token&quot;</span><span class="p">,</span> <span class="s2">&quot;tok&quot;</span><span class="p">]</span>
 <span class="o">...</span> <span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span>
-<span class="s1">'get-tex-template'</span>
+<span class="s1">&#39;get-tex-template&#39;</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">token</span>
-<span class="s1">'tok'</span>
+<span class="s1">&#39;tok&#39;</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">no_ssh</span><span class="p">)</span>
 <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </code></pre></div></li>
 <li><code>--no-ssh</code> flips the SSH-fallback flag:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.cli</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parser</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">args</span> <span class="o">=</span> <span class="n">create_parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">([</span><span class="s2">"get-tex-template"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">,</span> <span class="s2">"--no-ssh"</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">args</span> <span class="o">=</span> <span class="n">create_parser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">([</span><span class="s2">&quot;get-tex-template&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-ssh&quot;</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">no_ssh</span>
 <span class="kc">True</span>
 </code></pre></div></li>
@@ -1159,7 +1159,7 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Build the ``ddocs`` argument parser with all subcommands.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the ``ddocs`` argument parser with all subcommands.</span>
 
 <span class="sd">    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean`` and</span>
 <span class="sd">    ``check-pandoc`` subcommands. ``get-tex-template`` accepts ``--output-dir`` plus</span>
@@ -1174,12 +1174,12 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.cli import create_parser</span>
 <span class="sd">            &gt;&gt;&gt; args = create_parser().parse_args(</span>
-<span class="sd">            ...     ["get-tex-template", "-o", "out", "--token", "tok"]</span>
+<span class="sd">            ...     [&quot;get-tex-template&quot;, &quot;-o&quot;, &quot;out&quot;, &quot;--token&quot;, &quot;tok&quot;]</span>
 <span class="sd">            ... )</span>
 <span class="sd">            &gt;&gt;&gt; args.command</span>
-<span class="sd">            'get-tex-template'</span>
+<span class="sd">            &#39;get-tex-template&#39;</span>
 <span class="sd">            &gt;&gt;&gt; args.token</span>
-<span class="sd">            'tok'</span>
+<span class="sd">            &#39;tok&#39;</span>
 <span class="sd">            &gt;&gt;&gt; (args.username, args.password, args.no_ssh)</span>
 <span class="sd">            (None, None, False)</span>
 
@@ -1187,7 +1187,7 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <span class="sd">        - ``--no-ssh`` flips the SSH-fallback flag:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.cli import create_parser</span>
-<span class="sd">            &gt;&gt;&gt; args = create_parser().parse_args(["get-tex-template", "-o", "out", "--no-ssh"])</span>
+<span class="sd">            &gt;&gt;&gt; args = create_parser().parse_args([&quot;get-tex-template&quot;, &quot;-o&quot;, &quot;out&quot;, &quot;--no-ssh&quot;])</span>
 <span class="sd">            &gt;&gt;&gt; args.no_ssh</span>
 <span class="sd">            True</span>
 
@@ -1195,12 +1195,12 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        main: Parses arguments with this parser and dispatches to the handlers.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">prog</span><span class="o">=</span><span class="s1">'ddocs'</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s1">'Deltares HMS documentation utility tool'</span><span class="p">,</span>
+        <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;ddocs&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Deltares HMS documentation utility tool&#39;</span><span class="p">,</span>
         <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
-        <span class="n">epilog</span><span class="o">=</span><span class="s2">"""</span>
+        <span class="n">epilog</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">Examples:</span>
 <span class="s2">  # Convert all markdown files in user_docs</span>
 <span class="s2">  ddocs markdown-to-latex --input docs/mkdocs --output docs/latex</span>
@@ -1226,130 +1226,130 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 
 <span class="s2">  # Download/install pdflatex (apt on Debian/Ubuntu, else TinyTeX)</span>
 <span class="s2">  ddocs pdflatex download</span>
-<span class="s2">        """</span>
+<span class="s2">        &quot;&quot;&quot;</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">"--version"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"version"</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">"%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span>
+        <span class="s2">&quot;--version&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%(prog)s </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
 
     <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">'operation type'</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s1">'Select the operation to perform'</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">'command'</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;operation type&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Select the operation to perform&#39;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;command&#39;</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc, pdflatex'</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Available operations: markdown-to-latex, get-tex-template, clean, check-pandoc, pdflatex&#39;</span>
     <span class="p">)</span>
 
     <span class="c1"># sub-command: markdown-to-latex</span>
     <span class="n">markdown_to_latex</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s2">"markdown-to-latex"</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Convert Markdown to LaTeX'</span><span class="p">,</span>
+        <span class="s2">&quot;markdown-to-latex&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Convert Markdown to LaTeX&#39;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">markdown_to_latex</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--input'</span><span class="p">,</span>
-        <span class="s2">"-i"</span><span class="p">,</span>
+        <span class="s1">&#39;--input&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Input directory with Markdown files'</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input directory with Markdown files&#39;</span>
     <span class="p">)</span>
     <span class="n">markdown_to_latex</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--output'</span><span class="p">,</span>
-        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s1">&#39;--output&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Output directory for LaTeX files'</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for LaTeX files&#39;</span>
     <span class="p">)</span>
     <span class="n">markdown_to_latex</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--template'</span><span class="p">,</span>
+        <span class="s1">&#39;--template&#39;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Custom Pandoc LaTeX template'</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Custom Pandoc LaTeX template&#39;</span>
     <span class="p">)</span>
     <span class="n">markdown_to_latex</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--standalone'</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Generate standalone LaTeX documents (vs. fragments for inclusion)'</span>
+        <span class="s1">&#39;--standalone&#39;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Generate standalone LaTeX documents (vs. fragments for inclusion)&#39;</span>
     <span class="p">)</span>
     <span class="n">markdown_to_latex</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--pattern'</span><span class="p">,</span>
+        <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">'*.md'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Glob pattern for matching files (default: *.md)'</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;*.md&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern for matching files (default: *.md)&#39;</span>
     <span class="p">)</span>
 
     <span class="c1"># sub-command: get-tex-template</span>
     <span class="n">get_tex_template</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">'get-tex-template'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Clone Deltares LatexInstallation repo and copy template files'</span><span class="p">,</span>
+        <span class="s1">&#39;get-tex-template&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Clone Deltares LatexInstallation repo and copy template files&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">get_tex_template</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--output-dir'</span><span class="p">,</span>
-        <span class="s2">"-o"</span><span class="p">,</span>
+        <span class="s1">&#39;--output-dir&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Output directory for the template files'</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for the template files&#39;</span>
     <span class="p">)</span>
     <span class="n">get_tex_template</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--token'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Token for HTTPS auth (defaults to the GITHUB_TOKEN / GH_TOKEN env var)'</span>
+        <span class="s1">&#39;--token&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Token for HTTPS auth (defaults to the GITHUB_TOKEN / GH_TOKEN env var)&#39;</span>
     <span class="p">)</span>
     <span class="n">get_tex_template</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--username'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Username for HTTPS basic auth (defaults to the GIT_USERNAME env var)'</span>
+        <span class="s1">&#39;--username&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Username for HTTPS basic auth (defaults to the GIT_USERNAME env var)&#39;</span>
     <span class="p">)</span>
     <span class="n">get_tex_template</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--password'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Password/token for HTTPS basic auth (defaults to the GIT_PASSWORD env var)'</span>
+        <span class="s1">&#39;--password&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Password/token for HTTPS basic auth (defaults to the GIT_PASSWORD env var)&#39;</span>
     <span class="p">)</span>
     <span class="n">get_tex_template</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--no-ssh'</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Disable the SSH-key fallback; clone anonymously when no credentials are given'</span>
+        <span class="s1">&#39;--no-ssh&#39;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Disable the SSH-key fallback; clone anonymously when no credentials are given&#39;</span>
     <span class="p">)</span>
 
     <span class="c1"># sub-command: clean</span>
     <span class="n">clean</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">'clean'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Clean LaTeX build files (aux, log, bbl, etc.)'</span><span class="p">,</span>
+        <span class="s1">&#39;clean&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Clean LaTeX build files (aux, log, bbl, etc.)&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">clean</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--directory'</span><span class="p">,</span>
-        <span class="s2">"-d"</span><span class="p">,</span>
+        <span class="s1">&#39;--directory&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;-d&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Directory to clean LaTeX build files from'</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Directory to clean LaTeX build files from&#39;</span>
     <span class="p">)</span>
     <span class="n">clean</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s1">'--recursive'</span><span class="p">,</span>
-        <span class="s2">"-r"</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Clean recursively in subdirectories'</span>
+        <span class="s1">&#39;--recursive&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;-r&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Clean recursively in subdirectories&#39;</span>
     <span class="p">)</span>
 
     <span class="c1"># sub-command: check-pandoc</span>
     <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">'check-pandoc'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Check that Pandoc is installed; download it if missing'</span><span class="p">,</span>
+        <span class="s1">&#39;check-pandoc&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Check that Pandoc is installed; download it if missing&#39;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># sub-command group: pdflatex (check / download)</span>
     <span class="n">pdflatex</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">'pdflatex'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'pdfLaTeX operations: check whether it is installed, or download it'</span><span class="p">,</span>
+        <span class="s1">&#39;pdflatex&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;pdfLaTeX operations: check whether it is installed, or download it&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">pdflatex_sub</span> <span class="o">=</span> <span class="n">pdflatex</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">'pdflatex operation'</span><span class="p">,</span>
-        <span class="n">dest</span><span class="o">=</span><span class="s1">'pdflatex_command'</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;pdflatex operation&#39;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;pdflatex_command&#39;</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'check (probe only) or download (install pdflatex + packages)'</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;check (probe only) or download (install pdflatex + packages)&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">pdflatex_sub</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">'check'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Check whether pdflatex is already callable (does not install anything)'</span><span class="p">,</span>
+        <span class="s1">&#39;check&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Check whether pdflatex is already callable (does not install anything)&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">pdflatex_download</span> <span class="o">=</span> <span class="n">pdflatex_sub</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
-        <span class="s1">'download'</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">'Install pdflatex (apt or TinyTeX) and the required TeX packages'</span><span class="p">,</span>
+        <span class="s1">&#39;download&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Install pdflatex (apt or TinyTeX) and the required TeX packages&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">_add_pdflatex_install_options</span><span class="p">(</span><span class="n">pdflatex_download</span><span class="p">)</span>
 
@@ -1414,7 +1414,7 @@ caller can pass it to :func:<code>sys.exit</code>.</p>
 <li>Authenticate <code>get-tex-template</code> with a token (sets <code>sys.argv</code> first):
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.cli</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ddocs"</span><span class="p">,</span> <span class="s2">"get-tex-template"</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="s2">"out"</span><span class="p">,</span> <span class="s2">"--token"</span><span class="p">,</span> <span class="s2">"tok"</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ddocs&quot;</span><span class="p">,</span> <span class="s2">&quot;get-tex-template&quot;</span><span class="p">,</span> <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;--token&quot;</span><span class="p">,</span> <span class="s2">&quot;tok&quot;</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">code</span> <span class="o">=</span> <span class="n">main</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">code</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="mi">0</span>
@@ -1493,16 +1493,16 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 <span class="normal">289</span>
 <span class="normal">290</span>
 <span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Parse the command line and dispatch to the selected subcommand handler.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the command line and dispatch to the selected subcommand handler.</span>
 
 <span class="sd">    Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the</span>
 <span class="sd">    matching handler. For ``get-tex-template`` the authentication options</span>
 <span class="sd">    (``--token`` / ``--username`` / ``--password`` / ``--no-ssh``) are forwarded to</span>
-<span class="sd">    :func:`ddocs.templates.repo_cloner.clone_repo_cli`. The handler's exit code is returned so a</span>
+<span class="sd">    :func:`ddocs.templates.repo_cloner.clone_repo_cli`. The handler&#39;s exit code is returned so a</span>
 <span class="sd">    caller can pass it to :func:`sys.exit`.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        The subcommand handler's exit code (``0`` on success, non-zero on failure).</span>
+<span class="sd">        The subcommand handler&#39;s exit code (``0`` on success, non-zero on failure).</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        - Run a command and use the result as a process exit status:</span>
@@ -1516,7 +1516,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; import sys</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.cli import main</span>
-<span class="sd">            &gt;&gt;&gt; sys.argv = ["ddocs", "get-tex-template", "-o", "out", "--token", "tok"]</span>
+<span class="sd">            &gt;&gt;&gt; sys.argv = [&quot;ddocs&quot;, &quot;get-tex-template&quot;, &quot;-o&quot;, &quot;out&quot;, &quot;--token&quot;, &quot;tok&quot;]</span>
 <span class="sd">            &gt;&gt;&gt; code = main()  # doctest: +SKIP</span>
 <span class="sd">            &gt;&gt;&gt; code  # doctest: +SKIP</span>
 <span class="sd">            0</span>
@@ -1526,12 +1526,12 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 <span class="sd">    See Also:</span>
 <span class="sd">        create_parser: Builds the parser this function uses.</span>
 <span class="sd">        ddocs.templates.repo_cloner.clone_repo_cli: Handles ``get-tex-template``.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">create_parser</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="c1"># Dispatch to the selected command and propagate its exit code</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">'get-tex-template'</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;get-tex-template&#39;</span><span class="p">:</span>
         <span class="n">exit_code</span> <span class="o">=</span> <span class="n">clone_repo_cli</span><span class="p">(</span>
             <span class="n">args</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
             <span class="n">token</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">token</span><span class="p">,</span>
@@ -1539,14 +1539,14 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
             <span class="n">password</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
             <span class="n">prefer_ssh</span><span class="o">=</span><span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">no_ssh</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">'markdown-to-latex'</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;markdown-to-latex&#39;</span><span class="p">:</span>
         <span class="n">exit_code</span> <span class="o">=</span> <span class="n">mark_down_to_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">'clean'</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;clean&#39;</span><span class="p">:</span>
         <span class="n">exit_code</span> <span class="o">=</span> <span class="n">clean_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">'check-pandoc'</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;check-pandoc&#39;</span><span class="p">:</span>
         <span class="n">exit_code</span> <span class="o">=</span> <span class="n">check_pandoc_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">'pdflatex'</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pdflatex_command</span> <span class="o">==</span> <span class="s1">'check'</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="s1">&#39;pdflatex&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pdflatex_command</span> <span class="o">==</span> <span class="s1">&#39;check&#39;</span><span class="p">:</span>
             <span class="n">exit_code</span> <span class="o">=</span> <span class="n">pdflatex_check_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">exit_code</span> <span class="o">=</span> <span class="n">pdflatex_download_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -1623,10 +1623,10 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -1046,16 +1046,16 @@ developer's SSH key on a laptop.</p>
     <ul>
 <li>Construct with a token and read back the stored credentials:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span> <span class="o">=</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">"https://github.com/Deltares/LatexInstallation"</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">"ghp_demo"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span> <span class="o">=</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">&quot;ghp_demo&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span><span class="o">.</span><span class="n">token</span>
-<span class="s1">'ghp_demo'</span>
+<span class="s1">&#39;ghp_demo&#39;</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span><span class="o">.</span><span class="n">repo_url</span>
-<span class="s1">'https://github.com/Deltares/LatexInstallation'</span>
+<span class="s1">&#39;https://github.com/Deltares/LatexInstallation&#39;</span>
 </code></pre></div></li>
 <li>A token turns the public URL into an authenticated HTTPS clone URL:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">"https://github.com/Deltares/LatexInstallation"</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">"ghp_demo"</span><span class="p">)</span><span class="o">.</span><span class="n">_resolve_clone_url</span><span class="p">()</span>
-<span class="s1">'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">&quot;ghp_demo&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">_resolve_clone_url</span><span class="p">()</span>
+<span class="s1">&#39;https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation&#39;</span>
 </code></pre></div></li>
 </ul>
 
@@ -1432,35 +1432,35 @@ developer's SSH key on a laptop.</p>
 <span class="normal">381</span>
 <span class="normal">382</span>
 <span class="normal">383</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RepoCloner</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Clone a git repository into a temporary directory and manage file operations.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clone a git repository into a temporary directory and manage file operations.</span>
 
 <span class="sd">    Authentication is resolved from the supplied arguments or the environment with a fixed</span>
 <span class="sd">    precedence: token, then username+password, then SSH (when `prefer_ssh` is set), then an</span>
 <span class="sd">    anonymous HTTPS clone. This lets the same code authenticate via a token in CI and via the</span>
-<span class="sd">    developer's SSH key on a laptop.</span>
+<span class="sd">    developer&#39;s SSH key on a laptop.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        - Construct with a token and read back the stored credentials:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">            &gt;&gt;&gt; cloner = RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")</span>
+<span class="sd">            &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/Deltares/LatexInstallation&quot;, token=&quot;ghp_demo&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; cloner.token</span>
-<span class="sd">            'ghp_demo'</span>
+<span class="sd">            &#39;ghp_demo&#39;</span>
 <span class="sd">            &gt;&gt;&gt; cloner.repo_url</span>
-<span class="sd">            'https://github.com/Deltares/LatexInstallation'</span>
+<span class="sd">            &#39;https://github.com/Deltares/LatexInstallation&#39;</span>
 
 <span class="sd">            ```</span>
 <span class="sd">        - A token turns the public URL into an authenticated HTTPS clone URL:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">            &gt;&gt;&gt; RepoCloner("https://github.com/Deltares/LatexInstallation", token="ghp_demo")._resolve_clone_url()</span>
-<span class="sd">            'https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation'</span>
+<span class="sd">            &gt;&gt;&gt; RepoCloner(&quot;https://github.com/Deltares/LatexInstallation&quot;, token=&quot;ghp_demo&quot;)._resolve_clone_url()</span>
+<span class="sd">            &#39;https://x-access-token:ghp_demo@github.com/Deltares/LatexInstallation&#39;</span>
 
 <span class="sd">            ```</span>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        clone_repo_cli: Uses this class to fetch the Deltares LaTeX templates.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1470,7 +1470,7 @@ developer's SSH key on a laptop.</p>
         <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">prefer_ssh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Initialize the RepoCloner.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the RepoCloner.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            repo_url: The URL of the git repository to clone (HTTPS or SSH form).</span>
@@ -1481,15 +1481,15 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            password: Password/token for HTTPS basic auth. Defaults to the</span>
 <span class="sd">                `GIT_PASSWORD` environment variable.</span>
 <span class="sd">            prefer_ssh: When no token or username/password is available, clone via an</span>
-<span class="sd">                SSH URL (using the machine's SSH key) instead of anonymously.</span>
+<span class="sd">                SSH URL (using the machine&#39;s SSH key) instead of anonymously.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            - An explicit token is stored verbatim (it wins over any environment value):</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")</span>
+<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/repo&quot;, token=&quot;ghp_demo&quot;)</span>
 <span class="sd">                &gt;&gt;&gt; cloner.token</span>
-<span class="sd">                'ghp_demo'</span>
+<span class="sd">                &#39;ghp_demo&#39;</span>
 <span class="sd">                &gt;&gt;&gt; cloner.prefer_ssh</span>
 <span class="sd">                True</span>
 
@@ -1497,16 +1497,16 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            - Basic-auth credentials are stored for later HTTPS injection:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/repo", username="alice", password="pw")</span>
+<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/repo&quot;, username=&quot;alice&quot;, password=&quot;pw&quot;)</span>
 <span class="sd">                &gt;&gt;&gt; (cloner.username, cloner.password)</span>
-<span class="sd">                ('alice', 'pw')</span>
+<span class="sd">                (&#39;alice&#39;, &#39;pw&#39;)</span>
 
 <span class="sd">                ```</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span> <span class="o">=</span> <span class="n">repo_url</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GITHUB_TOKEN"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GH_TOKEN"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GIT_USERNAME"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"GIT_PASSWORD"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GITHUB_TOKEN&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GH_TOKEN&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GIT_USERNAME&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;GIT_PASSWORD&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prefer_ssh</span> <span class="o">=</span> <span class="n">prefer_ssh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1514,7 +1514,7 @@ developer's SSH key on a laptop.</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_to_ssh_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Convert an HTTPS git URL to its `git@host:owner/repo.git` SSH form.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert an HTTPS git URL to its `git@host:owner/repo.git` SSH form.</span>
 
 <span class="sd">        URLs that are already SSH (`git@` or `ssh://`) are returned unchanged.</span>
 
@@ -1528,30 +1528,30 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            - An HTTPS URL is rewritten and given a `.git` suffix:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; RepoCloner._to_ssh_url("https://github.com/Deltares/LatexInstallation")</span>
-<span class="sd">                'git@github.com:Deltares/LatexInstallation.git'</span>
+<span class="sd">                &gt;&gt;&gt; RepoCloner._to_ssh_url(&quot;https://github.com/Deltares/LatexInstallation&quot;)</span>
+<span class="sd">                &#39;git@github.com:Deltares/LatexInstallation.git&#39;</span>
 
 <span class="sd">                ```</span>
 <span class="sd">            - An already-SSH URL is returned untouched:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; RepoCloner._to_ssh_url("git@github.com:Deltares/LatexInstallation.git")</span>
-<span class="sd">                'git@github.com:Deltares/LatexInstallation.git'</span>
+<span class="sd">                &gt;&gt;&gt; RepoCloner._to_ssh_url(&quot;git@github.com:Deltares/LatexInstallation.git&quot;)</span>
+<span class="sd">                &#39;git@github.com:Deltares/LatexInstallation.git&#39;</span>
 
 <span class="sd">                ```</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"git@"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"ssh://"</span><span class="p">):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;git@&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ssh://&quot;</span><span class="p">):</span>
             <span class="n">ssh_url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">without_scheme</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^https?://"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">))</span>
-            <span class="n">host</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">without_scheme</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".git"</span><span class="p">):</span>
-                <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.git"</span>
-            <span class="n">ssh_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"git@</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">without_scheme</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^https?://&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">))</span>
+            <span class="n">host</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">without_scheme</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.git&quot;</span><span class="p">):</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.git&quot;</span>
+            <span class="n">ssh_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;git@</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">ssh_url</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_clone_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Build the effective clone URL from the available credentials.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the effective clone URL from the available credentials.</span>
 
 <span class="sd">        Precedence: token, then username+password, then SSH (when `prefer_ssh`),</span>
 <span class="sd">        then an anonymous HTTPS clone. An input that is already an SSH URL is used as-is.</span>
@@ -1563,25 +1563,25 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            - A token is embedded as an `x-access-token` HTTPS credential:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; RepoCloner("https://github.com/owner/repo", token="ghp_demo")._resolve_clone_url()</span>
-<span class="sd">                'https://x-access-token:ghp_demo@github.com/owner/repo'</span>
+<span class="sd">                &gt;&gt;&gt; RepoCloner(&quot;https://github.com/owner/repo&quot;, token=&quot;ghp_demo&quot;)._resolve_clone_url()</span>
+<span class="sd">                &#39;https://x-access-token:ghp_demo@github.com/owner/repo&#39;</span>
 
 <span class="sd">                ```</span>
 <span class="sd">            - An SSH input URL is used as-is, even when a token is set:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; RepoCloner("git@github.com:owner/repo.git", token="ghp_demo")._resolve_clone_url()</span>
-<span class="sd">                'git@github.com:owner/repo.git'</span>
+<span class="sd">                &gt;&gt;&gt; RepoCloner(&quot;git@github.com:owner/repo.git&quot;, token=&quot;ghp_demo&quot;)._resolve_clone_url()</span>
+<span class="sd">                &#39;git@github.com:owner/repo.git&#39;</span>
 
 <span class="sd">                ```</span>
-<span class="sd">        """</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"git@"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"ssh://"</span><span class="p">):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;git@&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;ssh://&quot;</span><span class="p">):</span>
             <span class="n">clone_url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
-            <span class="n">clone_url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^https://"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"https://x-access-token:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="si">}</span><span class="s2">@"</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">clone_url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^https://&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;https://x-access-token:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="si">}</span><span class="s2">@&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
-            <span class="n">clone_url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^https://"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">@"</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">clone_url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^https://&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">@&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefer_ssh</span><span class="p">:</span>
             <span class="n">clone_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_ssh_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1589,7 +1589,7 @@ developer's SSH key on a laptop.</p>
         <span class="k">return</span> <span class="n">clone_url</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_scrub_secrets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Replace any known secret (token/password) in `text` with `***`.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace any known secret (token/password) in `text` with `***`.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            text: Arbitrary text (e.g. a git error message) that may contain secrets.</span>
@@ -1601,34 +1601,34 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            - A token embedded in an error message is masked:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")</span>
-<span class="sd">                &gt;&gt;&gt; cloner._scrub_secrets("fatal: auth failed for ghp_demo")</span>
-<span class="sd">                'fatal: auth failed for ***'</span>
+<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/repo&quot;, token=&quot;ghp_demo&quot;)</span>
+<span class="sd">                &gt;&gt;&gt; cloner._scrub_secrets(&quot;fatal: auth failed for ghp_demo&quot;)</span>
+<span class="sd">                &#39;fatal: auth failed for ***&#39;</span>
 
 <span class="sd">                ```</span>
 <span class="sd">            - Text without any secret is returned unchanged:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")</span>
-<span class="sd">                &gt;&gt;&gt; cloner._scrub_secrets("fatal: repository not found")</span>
-<span class="sd">                'fatal: repository not found'</span>
+<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/repo&quot;, token=&quot;ghp_demo&quot;)</span>
+<span class="sd">                &gt;&gt;&gt; cloner._scrub_secrets(&quot;fatal: repository not found&quot;)</span>
+<span class="sd">                &#39;fatal: repository not found&#39;</span>
 
 <span class="sd">                ```</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">scrubbed</span> <span class="o">=</span> <span class="n">text</span>
         <span class="k">for</span> <span class="n">secret</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">secret</span><span class="p">:</span>
-                <span class="n">scrubbed</span> <span class="o">=</span> <span class="n">scrubbed</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="s2">"***"</span><span class="p">)</span>
+                <span class="n">scrubbed</span> <span class="o">=</span> <span class="n">scrubbed</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="s2">&quot;***&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">scrubbed</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Clone the repository into a temporary directory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clone the repository into a temporary directory.</span>
 
 <span class="sd">        The clone URL is built by :meth:`_resolve_clone_url`, so authentication</span>
 <span class="sd">        (token, basic auth, or SSH) is applied automatically.</span>
 
 <span class="sd">        Security note: when a token/password is used over HTTPS, git stores the</span>
-<span class="sd">        credential in the temporary clone's ``.git/config`` remote URL. This is removed</span>
+<span class="sd">        credential in the temporary clone&#39;s ``.git/config`` remote URL. This is removed</span>
 <span class="sd">        with the temp directory on :meth:`cleanup` / context-manager exit, but the</span>
 <span class="sd">        credential lives on disk for the lifetime of the clone.</span>
 
@@ -1643,40 +1643,40 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            - Clone a repository and use the returned path (network access required):</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")</span>
+<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/repo&quot;, token=&quot;ghp_demo&quot;)</span>
 <span class="sd">                &gt;&gt;&gt; repo_path = cloner.clone()  # doctest: +SKIP</span>
 <span class="sd">                &gt;&gt;&gt; sorted(p.name for p in repo_path.iterdir())  # doctest: +SKIP</span>
-<span class="sd">                ['.git', 'README.md']</span>
+<span class="sd">                [&#39;.git&#39;, &#39;README.md&#39;]</span>
 
 <span class="sd">                ```</span>
 <span class="sd">            - A failed clone raises a RuntimeError whose message hides the token:</span>
 <span class="sd">                ```python</span>
 <span class="sd">                &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/does-not-exist", token="ghp_demo")</span>
+<span class="sd">                &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/does-not-exist&quot;, token=&quot;ghp_demo&quot;)</span>
 <span class="sd">                &gt;&gt;&gt; try:  # doctest: +SKIP</span>
 <span class="sd">                ...     cloner.clone()</span>
 <span class="sd">                ... except RuntimeError as err:</span>
-<span class="sd">                ...     "ghp_demo" in str(err)</span>
+<span class="sd">                ...     &quot;ghp_demo&quot; in str(err)</span>
 <span class="sd">                False</span>
 
 <span class="sd">                ```</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">())</span>
 
-        <span class="n">repo_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.git'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+        <span class="n">repo_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.git&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="o">/</span> <span class="n">repo_name</span>
 
         <span class="n">clone_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_clone_url</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="o">.</span><span class="n">clone_from</span><span class="p">(</span><span class="n">clone_url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">GitCommandError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to clone repository: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scrub_secrets</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to clone repository: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scrub_secrets</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">move_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move a file from the cloned repository to a new location.</span>
 
 <span class="sd">        Args:</span>
@@ -1687,26 +1687,26 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            Path to the moved file</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            FileNotFoundError: If source file doesn't exist</span>
-<span class="sd">            RuntimeError: If repository hasn't been cloned yet</span>
-<span class="sd">        """</span>
+<span class="sd">            FileNotFoundError: If source file doesn&#39;t exist</span>
+<span class="sd">            RuntimeError: If repository hasn&#39;t been cloned yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Repository not cloned yet. Call clone() first."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Repository not cloned yet. Call clone() first.&quot;</span><span class="p">)</span>
 
         <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">/</span> <span class="n">source_rel_path</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
 
-        <span class="c1"># Create parent directories if they don't exist</span>
+        <span class="c1"># Create parent directories if they don&#39;t exist</span>
         <span class="n">destination</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">destination</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">destination</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">copy_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Copy a file from the cloned repository to a new location.</span>
 
 <span class="sd">        Args:</span>
@@ -1717,19 +1717,19 @@ developer's SSH key on a laptop.</p>
 <span class="sd">            Path to the copied file</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            FileNotFoundError: If source file doesn't exist</span>
-<span class="sd">            RuntimeError: If repository hasn't been cloned yet</span>
-<span class="sd">        """</span>
+<span class="sd">            FileNotFoundError: If source file doesn&#39;t exist</span>
+<span class="sd">            RuntimeError: If repository hasn&#39;t been cloned yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Repository not cloned yet. Call clone() first."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Repository not cloned yet. Call clone() first.&quot;</span><span class="p">)</span>
 
         <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">/</span> <span class="n">source_rel_path</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
 
-        <span class="c1"># Create parent directories if they don't exist</span>
+        <span class="c1"># Create parent directories if they don&#39;t exist</span>
         <span class="n">destination</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
@@ -1739,22 +1739,22 @@ developer's SSH key on a laptop.</p>
 
         <span class="k">return</span> <span class="n">destination</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"*"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        List files in the cloned repository.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            relative_path: Relative path within the repository to list files from</span>
-<span class="sd">            pattern: Glob pattern to filter files (default: "*")</span>
+<span class="sd">            pattern: Glob pattern to filter files (default: &quot;*&quot;)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            List of Path objects matching the pattern</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            RuntimeError: If repository hasn't been cloned yet</span>
-<span class="sd">        """</span>
+<span class="sd">            RuntimeError: If repository hasn&#39;t been cloned yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Repository not cloned yet. Call clone() first."</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Repository not cloned yet. Call clone() first.&quot;</span><span class="p">)</span>
 
         <span class="n">search_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">/</span> <span class="n">relative_path</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">search_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -1764,16 +1764,16 @@ developer's SSH key on a laptop.</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_rmtree_error</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">_exc</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Clear the read-only bit and retry a failed rmtree operation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the read-only bit and retry a failed rmtree operation.</span>
 
 <span class="sd">        Git marks files under ``.git/objects`` read-only; on Windows</span>
 <span class="sd">        ``shutil.rmtree`` cannot delete them until that attribute is removed.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_IWRITE</span><span class="p">)</span>
         <span class="n">func</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Remove the temporary directory and all its contents."""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the temporary directory and all its contents.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
                 <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="p">,</span> <span class="n">onexc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_rmtree_error</span><span class="p">)</span>
@@ -1783,11 +1783,11 @@ developer's SSH key on a laptop.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Context manager entry."""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context manager entry.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Context manager exit - cleanup temporary directory."""</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context manager exit - cleanup temporary directory.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span>
 </code></pre></div></td></tr></table></div>
@@ -1879,18 +1879,18 @@ token/password so secrets are never written to logs.</p>
     <ul>
 <li>Clone a repository and use the returned path (network access required):
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span> <span class="o">=</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">"https://github.com/owner/repo"</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">"ghp_demo"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span> <span class="o">=</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/owner/repo&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">&quot;ghp_demo&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">repo_path</span> <span class="o">=</span> <span class="n">cloner</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">repo_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="p">[</span><span class="s1">'.git'</span><span class="p">,</span> <span class="s1">'README.md'</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;.git&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">]</span>
 </code></pre></div></li>
 <li>A failed clone raises a RuntimeError whose message hides the token:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepoCloner</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span> <span class="o">=</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">"https://github.com/owner/does-not-exist"</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">"ghp_demo"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">cloner</span> <span class="o">=</span> <span class="n">RepoCloner</span><span class="p">(</span><span class="s2">&quot;https://github.com/owner/does-not-exist&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">&quot;ghp_demo&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">try</span><span class="p">:</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="o">...</span>     <span class="n">cloner</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
 <span class="o">...</span> <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-<span class="o">...</span>     <span class="s2">"ghp_demo"</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="o">...</span>     <span class="s2">&quot;ghp_demo&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 <span class="kc">False</span>
 </code></pre></div></li>
 </ul>
@@ -1951,13 +1951,13 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">265</span>
 <span class="normal">266</span>
 <span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Clone the repository into a temporary directory.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clone the repository into a temporary directory.</span>
 
 <span class="sd">    The clone URL is built by :meth:`_resolve_clone_url`, so authentication</span>
 <span class="sd">    (token, basic auth, or SSH) is applied automatically.</span>
 
 <span class="sd">    Security note: when a token/password is used over HTTPS, git stores the</span>
-<span class="sd">    credential in the temporary clone's ``.git/config`` remote URL. This is removed</span>
+<span class="sd">    credential in the temporary clone&#39;s ``.git/config`` remote URL. This is removed</span>
 <span class="sd">    with the temp directory on :meth:`cleanup` / context-manager exit, but the</span>
 <span class="sd">    credential lives on disk for the lifetime of the clone.</span>
 
@@ -1972,35 +1972,35 @@ token/password so secrets are never written to logs.</p>
 <span class="sd">        - Clone a repository and use the returned path (network access required):</span>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">            &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/repo", token="ghp_demo")</span>
+<span class="sd">            &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/repo&quot;, token=&quot;ghp_demo&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; repo_path = cloner.clone()  # doctest: +SKIP</span>
 <span class="sd">            &gt;&gt;&gt; sorted(p.name for p in repo_path.iterdir())  # doctest: +SKIP</span>
-<span class="sd">            ['.git', 'README.md']</span>
+<span class="sd">            [&#39;.git&#39;, &#39;README.md&#39;]</span>
 
 <span class="sd">            ```</span>
 <span class="sd">        - A failed clone raises a RuntimeError whose message hides the token:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.templates.repo_cloner import RepoCloner</span>
-<span class="sd">            &gt;&gt;&gt; cloner = RepoCloner("https://github.com/owner/does-not-exist", token="ghp_demo")</span>
+<span class="sd">            &gt;&gt;&gt; cloner = RepoCloner(&quot;https://github.com/owner/does-not-exist&quot;, token=&quot;ghp_demo&quot;)</span>
 <span class="sd">            &gt;&gt;&gt; try:  # doctest: +SKIP</span>
 <span class="sd">            ...     cloner.clone()</span>
 <span class="sd">            ... except RuntimeError as err:</span>
-<span class="sd">            ...     "ghp_demo" in str(err)</span>
+<span class="sd">            ...     &quot;ghp_demo&quot; in str(err)</span>
 <span class="sd">            False</span>
 
 <span class="sd">            ```</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">())</span>
 
-    <span class="n">repo_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.git'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+    <span class="n">repo_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.git&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="o">/</span> <span class="n">repo_name</span>
 
     <span class="n">clone_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_clone_url</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repo</span> <span class="o">=</span> <span class="n">Repo</span><span class="o">.</span><span class="n">clone_from</span><span class="p">(</span><span class="n">clone_url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span><span class="p">))</span>
     <span class="k">except</span> <span class="n">GitCommandError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to clone repository: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scrub_secrets</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to clone repository: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_scrub_secrets</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span>
 </code></pre></div></td></tr></table></div>
@@ -2159,7 +2159,7 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">295</span>
 <span class="normal">296</span>
 <span class="normal">297</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">move_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Move a file from the cloned repository to a new location.</span>
 
 <span class="sd">    Args:</span>
@@ -2170,19 +2170,19 @@ token/password so secrets are never written to logs.</p>
 <span class="sd">        Path to the moved file</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        FileNotFoundError: If source file doesn't exist</span>
-<span class="sd">        RuntimeError: If repository hasn't been cloned yet</span>
-<span class="sd">    """</span>
+<span class="sd">        FileNotFoundError: If source file doesn&#39;t exist</span>
+<span class="sd">        RuntimeError: If repository hasn&#39;t been cloned yet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Repository not cloned yet. Call clone() first."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Repository not cloned yet. Call clone() first.&quot;</span><span class="p">)</span>
 
     <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">/</span> <span class="n">source_rel_path</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
 
-    <span class="c1"># Create parent directories if they don't exist</span>
+    <span class="c1"># Create parent directories if they don&#39;t exist</span>
     <span class="n">destination</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">destination</span><span class="p">))</span>
@@ -2347,7 +2347,7 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">329</span>
 <span class="normal">330</span>
 <span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">copy_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_rel_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Copy a file from the cloned repository to a new location.</span>
 
 <span class="sd">    Args:</span>
@@ -2358,19 +2358,19 @@ token/password so secrets are never written to logs.</p>
 <span class="sd">        Path to the copied file</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        FileNotFoundError: If source file doesn't exist</span>
-<span class="sd">        RuntimeError: If repository hasn't been cloned yet</span>
-<span class="sd">    """</span>
+<span class="sd">        FileNotFoundError: If source file doesn&#39;t exist</span>
+<span class="sd">        RuntimeError: If repository hasn&#39;t been cloned yet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Repository not cloned yet. Call clone() first."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Repository not cloned yet. Call clone() first.&quot;</span><span class="p">)</span>
 
     <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">/</span> <span class="n">source_rel_path</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source file not found: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
 
-    <span class="c1"># Create parent directories if they don't exist</span>
+    <span class="c1"># Create parent directories if they don&#39;t exist</span>
     <span class="n">destination</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">source</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
@@ -2393,7 +2393,7 @@ token/password so secrets are never written to logs.</p>
 
 
 <a href="#ddocs.templates.repo_cloner.RepoCloner.list_files" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">list_files</span><span class="p">(</span><span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'*'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">list_files</span><span class="p">(</span><span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2517,22 +2517,22 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">351</span>
 <span class="normal">352</span>
 <span class="normal">353</span>
-<span class="normal">354</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"*"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""</span>
+<span class="normal">354</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List files in the cloned repository.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        relative_path: Relative path within the repository to list files from</span>
-<span class="sd">        pattern: Glob pattern to filter files (default: "*")</span>
+<span class="sd">        pattern: Glob pattern to filter files (default: &quot;*&quot;)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        List of Path objects matching the pattern</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        RuntimeError: If repository hasn't been cloned yet</span>
-<span class="sd">    """</span>
+<span class="sd">        RuntimeError: If repository hasn&#39;t been cloned yet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Repository not cloned yet. Call clone() first."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Repository not cloned yet. Call clone() first.&quot;</span><span class="p">)</span>
 
     <span class="n">search_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repo_path</span> <span class="o">/</span> <span class="n">relative_path</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">search_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -2572,7 +2572,7 @@ token/password so secrets are never written to logs.</p>
 <span class="normal">372</span>
 <span class="normal">373</span>
 <span class="normal">374</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Remove the temporary directory and all its contents."""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the temporary directory and all its contents.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="p">,</span> <span class="n">onexc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_rmtree_error</span><span class="p">)</span>
@@ -2740,14 +2740,14 @@ passing nothing falls back to the machine's SSH key.</p>
 <li>Fetch the templates into a local folder (network access required):
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone_repo_cli</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">clone_repo_cli</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"./templates"</span><span class="p">))</span>  <span class="c1"># doctest: +SKIP</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">clone_repo_cli</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./templates&quot;</span><span class="p">))</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="mi">0</span>
 </code></pre></div></li>
 <li>The returned code can drive a process exit status:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.templates.repo_cloner</span><span class="w"> </span><span class="kn">import</span> <span class="n">clone_repo_cli</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">clone_repo_cli</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"./templates"</span><span class="p">)))</span>  <span class="c1"># doctest: +SKIP</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">clone_repo_cli</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./templates&quot;</span><span class="p">)))</span>  <span class="c1"># doctest: +SKIP</span>
 </code></pre></div></li>
 </ul>
 
@@ -2835,12 +2835,12 @@ passing nothing falls back to the machine's SSH key.</p>
     <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">prefer_ssh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Clone the Deltares LatexInstallation repo and copy template files to `output_dir`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clone the Deltares LatexInstallation repo and copy template files to `output_dir`.</span>
 
 <span class="sd">    Uses :class:`RepoCloner` as a context manager so the temporary clone is always</span>
 <span class="sd">    removed, even if copying fails. Credentials are resolved by `RepoCloner` with the</span>
 <span class="sd">    precedence token -&gt; username/password -&gt; SSH (when `prefer_ssh`) -&gt; anonymous, so</span>
-<span class="sd">    passing nothing falls back to the machine's SSH key.</span>
+<span class="sd">    passing nothing falls back to the machine&#39;s SSH key.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        output_dir: Directory the template files are copied into. Created if missing.</span>
@@ -2849,7 +2849,7 @@ passing nothing falls back to the machine's SSH key.</p>
 <span class="sd">        username: Username for HTTPS basic auth. Falls back to `GIT_USERNAME`.</span>
 <span class="sd">        password: Password/token for HTTPS basic auth. Falls back to `GIT_PASSWORD`.</span>
 <span class="sd">        prefer_ssh: When no token or username/password is available, clone via SSH</span>
-<span class="sd">            (using the machine's key) instead of anonymously. Defaults to True.</span>
+<span class="sd">            (using the machine&#39;s key) instead of anonymously. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        `0` on success.</span>
@@ -2859,7 +2859,7 @@ passing nothing falls back to the machine's SSH key.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.templates.repo_cloner import clone_repo_cli</span>
-<span class="sd">            &gt;&gt;&gt; clone_repo_cli(Path("./templates"))  # doctest: +SKIP</span>
+<span class="sd">            &gt;&gt;&gt; clone_repo_cli(Path(&quot;./templates&quot;))  # doctest: +SKIP</span>
 <span class="sd">            0</span>
 
 <span class="sd">            ```</span>
@@ -2868,24 +2868,24 @@ passing nothing falls back to the machine's SSH key.</p>
 <span class="sd">            &gt;&gt;&gt; import sys</span>
 <span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.templates.repo_cloner import clone_repo_cli</span>
-<span class="sd">            &gt;&gt;&gt; sys.exit(clone_repo_cli(Path("./templates")))  # doctest: +SKIP</span>
+<span class="sd">            &gt;&gt;&gt; sys.exit(clone_repo_cli(Path(&quot;./templates&quot;)))  # doctest: +SKIP</span>
 
 <span class="sd">            ```</span>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        RepoCloner: The context manager used to clone and clean up the temporary repo.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Cloning LatexInstallation repository..."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cloning LatexInstallation repository...&quot;</span><span class="p">)</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">"MiKTeX/tex/latex/deltares"</span><span class="p">,</span>
-        <span class="s2">"MiKTeX/tex/latex/nomentbl/deltares"</span><span class="p">,</span>
-        <span class="s2">"MiKTeX/bibtex/bst/deltares"</span><span class="p">,</span>
+        <span class="s2">&quot;MiKTeX/tex/latex/deltares&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;MiKTeX/tex/latex/nomentbl/deltares&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;MiKTeX/bibtex/bst/deltares&quot;</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span>
-        <span class="s2">"https://github.com/Deltares/LatexInstallation"</span><span class="p">,</span>
+        <span class="s2">&quot;https://github.com/Deltares/LatexInstallation&quot;</span><span class="p">,</span>
         <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
         <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
         <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
@@ -2893,10 +2893,10 @@ passing nothing falls back to the machine's SSH key.</p>
     <span class="p">)</span> <span class="k">as</span> <span class="n">cloner</span><span class="p">:</span>
         <span class="n">cloner</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Copying </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copying </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
             <span class="n">cloner</span><span class="o">.</span><span class="n">copy_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Template files copied to </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Template files copied to </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="mi">0</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2966,10 +2966,10 @@ passing nothing falls back to the machine's SSH key.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
