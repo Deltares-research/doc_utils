@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Deploy PR documentation
-        uses: Deltares-research/github-actions/actions/mkdocs-deploy@b655376b4a9c0b0b37f7f730f840f11c7220d1a6 # mkdocs-deploy/v1.0.1
+        uses: Deltares-research/github-actions/actions/mkdocs-deploy@2362f622737db2d19ef48f8bc972a1cb268166b5 # mkdocs-deploy/v1.2.1
         with:
           python-version: '3.11'
           package-manager: uv
@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 0
 
       - name: Deploy main documentation
-        uses: Deltares-research/github-actions/actions/mkdocs-deploy@b655376b4a9c0b0b37f7f730f840f11c7220d1a6 # mkdocs-deploy/v1.0.1
+        uses: Deltares-research/github-actions/actions/mkdocs-deploy@2362f622737db2d19ef48f8bc972a1cb268166b5 # mkdocs-deploy/v1.2.1
         with:
           python-version: '3.11'
           package-manager: uv
@@ -68,7 +68,7 @@ jobs:
           fetch-depth: 0
 
       - name: Deploy release documentation
-        uses: Deltares-research/github-actions/actions/mkdocs-deploy@b655376b4a9c0b0b37f7f730f840f11c7220d1a6 # mkdocs-deploy/v1.0.1
+        uses: Deltares-research/github-actions/actions/mkdocs-deploy@2362f622737db2d19ef48f8bc972a1cb268166b5 # mkdocs-deploy/v1.2.1
         with:
           python-version: '3.11'
           package-manager: uv
