@@ -473,6 +473,41 @@ class TestBuildPdf:
                 pdflatex_utils.build_pdf(tex)
 
     @pytest.mark.unit
+    def test_failure_message_includes_log_excerpt_without_repeating_headline(self, tmp_path):
+        """Test the RuntimeError carries the log excerpt after the headline, without duplicating it.
+
+        Test scenario:
+            pdflatex fails with a wrapped multi-line error -> the message has the first error line
+            as headline, then an excerpt with the continuation and source context, and the first
+            error line appears exactly once.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        log = "! LaTeX Error: Unknown message 'x' for module\n(LaTeX)        'tocbasic'.\nl.12 \\usepackage{caption}"
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout=log, stderr="")):
+            with pytest.raises(RuntimeError) as excinfo:
+                pdflatex_utils.build_pdf(tex)
+        message = str(excinfo.value)
+        assert "pdflatex log excerpt" in message, "message should contain the excerpt section"
+        assert "'tocbasic'." in message and "l.12" in message, "continuation and source context should be included"
+        assert message.count("! LaTeX Error: Unknown message") == 1, "first error line should not be repeated"
+
+    @pytest.mark.unit
+    def test_failure_message_omits_excerpt_when_nothing_follows_error(self, tmp_path):
+        """Test a single-line error yields just the headline, with no empty excerpt section."""
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout="! Undefined control sequence", stderr="")):
+            with pytest.raises(RuntimeError) as excinfo:
+                pdflatex_utils.build_pdf(tex)
+        assert "pdflatex log excerpt" not in str(excinfo.value), "no excerpt section expected"
+        assert "! Undefined control sequence" in str(excinfo.value), "headline should still be present"
+
+    @pytest.mark.unit
     def test_stops_when_install_fails(self, tmp_path):
         """Test the loop stops (no spin) when tlmgr cannot install the missing package.
 

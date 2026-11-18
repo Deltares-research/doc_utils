@@ -561,10 +561,13 @@ def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = 
         previous_missing = missing
 
     if not (succeeded and pdf_path.exists()):
-        raise RuntimeError(
-            f"pdflatex did not produce {pdf_path.name}: {_first_latex_error(log)}\n"
-            f"--- pdflatex log excerpt ---\n{_latex_error_context(log)}"
-        )
+        headline = _first_latex_error(log)
+        # The excerpt starts at the headline's own line; drop it so it is not printed twice.
+        detail = _latex_error_context(log).removeprefix(headline).strip()
+        message = f"pdflatex did not produce {pdf_path.name}: {headline}"
+        if detail:
+            message += f"\n--- pdflatex log excerpt ---\n{detail}"
+        raise RuntimeError(message)
     return pdf_path
 
 
