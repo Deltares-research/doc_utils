@@ -3,6 +3,11 @@ name: release
 on:
   workflow_dispatch:
     inputs:
+      release-branch:
+        description: 'Branch to create the release from'
+        required: false
+        type: string
+        default: 'main'
       increment:
         description: 'Version increment (patch | minor | major)'
         required: true
@@ -38,13 +43,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ inputs.release-branch }}
 
       - name: Create GitHub Release
-        uses: Deltares-research/github-actions/actions/release/github@73618deb1feaffe481d69063ce7bf229fab6598b # github-release/v1.1.4
+        uses: Deltares-research/github-actions/actions/release/github@2362f622737db2d19ef48f8bc972a1cb268166b5 # github-release/v1.2.1
         with:
+          release-branch: ${{ inputs.release-branch }}
           increment: ${{ inputs.increment }}
           prerelease-type: ${{ inputs.prerelease-type }}
           draft: ${{ inputs.draft }}
