@@ -47,6 +47,12 @@ jobs:
             texlive-bibtex-extra \
             texlive-science biber
           pdflatex --version
+          echo "=== TeX package diagnostics ==="
+          kpsewhich -all tocbasic.sty caption.sty caption3.sty scrartcl.cls || true
+          grep -m1 -H "ProvidesPackage" "$(kpsewhich tocbasic.sty)" "$(kpsewhich caption.sty)" "$(kpsewhich caption3.sty)" || true
+          grep -rl "caption-code-by-class-deactivated" /usr/share/texlive /usr/share/texmf /var/lib/texmf 2>/dev/null || true
+          dpkg -S "$(kpsewhich tocbasic.sty)" "$(kpsewhich caption.sty)" || true
+          dpkg -l | grep -E "texlive-(base|latex)" || true
 
       - name: tests
         # A token with read access to the private Deltares/LatexInstallation repo is
