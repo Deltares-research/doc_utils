@@ -550,44 +550,47 @@ class TestBuildPdf:
         assert mock_run.call_count == 2, f"should stop after no progress; ran {mock_run.call_count} times"
 
 
-class TestFirstLatexError:
-    """Tests for the _first_latex_error log helper."""
+class TestLatexErrorParts:
+    """Tests for the _latex_error_parts log helper."""
 
     @pytest.mark.unit
-    def test_returns_first_error_line(self):
-        """Test the first ``!``-prefixed line is returned, stripped."""
+    def test_headline_is_first_error_line_stripped(self):
+        """Test the first ``!``-prefixed line is the headline, stripped, and earlier lines are ignored."""
         log = "This is pdfTeX\n  ! LaTeX Error: File `tikz.sty' not found.\nmore"
-        assert pdflatex_utils._first_latex_error(log) == "! LaTeX Error: File `tikz.sty' not found."
+        headline, _ = pdflatex_utils._latex_error_parts(log)
+        assert headline == "! LaTeX Error: File `tikz.sty' not found."
 
     @pytest.mark.unit
-    def test_falls_back_when_no_error_line(self):
-        """Test a helpful fallback is returned when no error line is present."""
-        assert "log file" in pdflatex_utils._first_latex_error("clean output, no errors")
-
-
-class TestLatexErrorContext:
-    """Tests for the _latex_error_context log helper."""
-
-    @pytest.mark.unit
-    def test_returns_error_line_and_following_lines(self):
-        """Test the excerpt starts at the first ``!`` line and includes its continuation."""
+    def test_detail_holds_lines_after_the_error(self):
+        """Test the detail has the continuation and source context but not the headline or earlier lines."""
         log = "preamble\n! LaTeX Error: Unknown message 'x' for module\n  'caption'.\nl.12 \\usepackage{caption}\nlater"
-        excerpt = pdflatex_utils._latex_error_context(log)
-        assert excerpt.splitlines()[0].startswith("! LaTeX Error"), "excerpt should start at the error line"
-        assert "'caption'." in excerpt and "l.12" in excerpt, "continuation and source context should be kept"
-        assert "preamble" not in excerpt, "lines before the error should be dropped"
+        headline, detail = pdflatex_utils._latex_error_parts(log)
+        assert headline.startswith("! LaTeX Error"), "headline should be the error line"
+        assert detail.splitlines() == ["'caption'.", "l.12 \\usepackage{caption}", "later"], "detail should follow it"
+        assert "preamble" not in detail, "lines before the error should be dropped"
+
+    @pytest.mark.unit
+    def test_detail_empty_when_nothing_follows_error(self):
+        """Test the detail is empty for a single-line error."""
+        assert pdflatex_utils._latex_error_parts("! Undefined control sequence") == (
+            "! Undefined control sequence",
+            "",
+        )
 
     @pytest.mark.unit
     def test_limits_line_count(self):
-        """Test the excerpt is capped at ``max_lines`` lines."""
+        """Test headline plus detail cover at most ``max_lines`` log lines."""
         log = "! boom\n" + "\n".join(f"line {i}" for i in range(50))
-        assert len(pdflatex_utils._latex_error_context(log, max_lines=5).splitlines()) == 5
+        _, detail = pdflatex_utils._latex_error_parts(log, max_lines=5)
+        assert detail.splitlines() == ["line 0", "line 1", "line 2", "line 3"]
 
     @pytest.mark.unit
-    def test_falls_back_to_log_tail_without_error_line(self):
-        """Test the log tail is returned when no ``!`` line exists."""
+    def test_falls_back_to_hint_and_log_tail_without_error_line(self):
+        """Test a generic hint and the log tail are returned when no ``!`` line exists."""
         log = "\n".join(f"line {i}" for i in range(30))
-        assert pdflatex_utils._latex_error_context(log, max_lines=3).splitlines() == ["line 27", "line 28", "line 29"]
+        headline, detail = pdflatex_utils._latex_error_parts(log, max_lines=3)
+        assert "log file" in headline, "headline should be the generic hint"
+        assert detail.splitlines() == ["line 27", "line 28", "line 29"], "detail should be the log tail"
 
 
 class TestPdflatexDownloadCli:
