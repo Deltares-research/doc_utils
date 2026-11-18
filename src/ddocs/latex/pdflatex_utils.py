@@ -507,7 +507,8 @@ def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = 
 
     Raises:
         RuntimeError: If pdflatex cannot be made available, or no PDF is produced (the
-            message includes the first LaTeX error from the build log).
+            message includes the first LaTeX error from the build log plus an excerpt of the
+            log starting at that error).
 
     Examples:
         - Build a PDF from a LaTeX file (requires a TeX engine):
