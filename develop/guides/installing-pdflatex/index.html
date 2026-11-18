@@ -501,6 +501,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#troubleshooting-ubuntu-2604-captiontocbasic-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting: Ubuntu 26.04 caption/tocbasic error
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#caveats" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -908,6 +919,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#troubleshooting-ubuntu-2604-captiontocbasic-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting: Ubuntu 26.04 caption/tocbasic error
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#caveats" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1027,6 +1049,12 @@ compiles:</p>
 </code></pre></div>
 <p>On an Ubuntu runner the <code>auto</code> backend picks <strong>apt</strong>, so this is fast and the
 <code>texlive-*</code> packages (e.g. <code>lipsum.sty</code>) are available to the bare <code>pdflatex</code> step.</p>
+<div class="admonition warning">
+<p class="admonition-title">Ubuntu 26.04 runners</p>
+<p>On <code>ubuntu-latest</code> (now Ubuntu 26.04) the apt TeX Live currently fails to build the Deltares
+templates. Until this is fixed, pin the job to <code>ubuntu-24.04</code>. See
+<a href="#troubleshooting-ubuntu-2604-captiontocbasic-error">Troubleshooting</a>.</p>
+</div>
 <h3 id="avoid-re-downloading-every-run">Avoid re-downloading every run<a class="headerlink" href="#avoid-re-downloading-every-run" title="Permanent link">&para;</a></h3>
 <p>The bytes only need to land once. Cache the TeX install between runs:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
@@ -1074,6 +1102,41 @@ compiles:</p>
 </tr>
 </tbody>
 </table>
+<h2 id="troubleshooting-ubuntu-2604-captiontocbasic-error">Troubleshooting: Ubuntu 26.04 <code>caption</code>/<code>tocbasic</code> error<a class="headerlink" href="#troubleshooting-ubuntu-2604-captiontocbasic-error" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom.</strong> Building a Deltares document (e.g. with <code>build_pdf</code> or a bare <code>pdflatex</code>) on Ubuntu 26.04
+(<code>ubuntu-latest</code> on GitHub Actions) fails with:</p>
+<div class="highlight"><pre><span></span><code>! LaTeX Error: Unknown message &#39;caption-code-by-class-deactivated&#39; for module
+(LaTeX)        &#39;tocbasic&#39;.
+</code></pre></div>
+<p>The <code>RuntimeError</code> raised by <code>build_pdf</code> includes this error plus a log excerpt starting at it.</p>
+<p><strong>Cause.</strong> The apt TeX Live on 26.04 (<code>2025.20260124</code>) ships <code>caption</code> v3.6o (2023/08/05) together with a newer
+KOMA-Script <code>tocbasic</code>. The older <code>caption</code> raises a message that the newer <code>tocbasic</code> no longer defines, and the
+Deltares document classes load <code>caption</code>. Adding <code>texlive-latex-recommended</code> does <strong>not</strong> help, because both packages
+already come from it. Tracked in
+<a href="https://github.com/Deltares-research/doc_utils/issues/14">issue #14</a>.</p>
+<p><strong>Workarounds</strong> (until #14 is fixed):</p>
+<ol>
+<li>
+<p><strong>Pin the runner to Ubuntu 24.04</strong> <em>(verified: this is what the project's own CI does)</em>. Its TeX Live ships a
+   matching <code>caption</code>/<code>tocbasic</code> pair.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build-docs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span><span class="w">   </span><span class="c1"># not ubuntu-latest, until issue #14 is fixed</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Use the TinyTeX backend</strong> <em>(not yet tested against this error)</em>. TinyTeX installs every package from one TeX Live
+   release via <code>tlmgr</code>, so the versions should be consistent. Do not install the apt <code>texlive-*</code> packages in the same
+   job, because <code>ddocs</code> skips the install when a <code>pdflatex</code> is already on <code>PATH</code>.</p>
+<div class="highlight"><pre><span></span><code>ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>tinytex
+</code></pre></div>
+</li>
+</ol>
+<p><strong>Check whether you are affected.</strong> On the runner, print the installed versions:</p>
+<div class="highlight"><pre><span></span><code>kpsewhich<span class="w"> </span>-all<span class="w"> </span>tocbasic.sty<span class="w"> </span>caption.sty
+grep<span class="w"> </span>-m1<span class="w"> </span>ProvidesPackage<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>kpsewhich<span class="w"> </span>caption.sty<span class="k">)</span><span class="s2">&quot;</span><span class="w">   </span><span class="c1"># 2023/08/05 v3.6o means the old caption is installed</span>
+</code></pre></div>
+<p>Remove the pin once issue #14 is resolved.</p>
 <h2 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>apt needs root</strong> (<code>sudo</code>). On a machine without passwordless <code>sudo</code>, <code>auto</code> falls back
