@@ -13,7 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.11"]
-        os: [ubuntu-latest]
+        # Pinned to 24.04: ubuntu-latest (26.04) ships a TeX Live whose `caption` (v3.6o) is older than its
+        # KOMA-Script `tocbasic`, which breaks the Deltares template build
+        # ("Unknown message 'caption-code-by-class-deactivated' for module 'tocbasic'").
+        os: [ubuntu-24.04]
 
     runs-on: ${{ matrix.os }}
     steps:
