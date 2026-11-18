@@ -1691,7 +1691,7 @@ wheels = [
 
 [[package]]
 name = "mkdocs-table-reader-plugin"
-version = "3.1.0"
+version = "4.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mkdocs" },
@@ -1699,9 +1699,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "tabulate" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a1/1b/ca35e4b51a1814924153f7c8afa5a9c2f961688a9c275fa9f4afe7f5083a/mkdocs_table_reader_plugin-3.1.0.tar.gz", hash = "sha256:eb15688ee8c0cd1a842f506f18973b87be22bd7baa5e2e551089de6b7f9ec25b", size = 12510, upload-time = "2024-08-29T14:08:09.54Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/61/10/1b05b9c65a08b9c73ca04ce8fee669af17d1d960ed3e066d4328369da54f/mkdocs_table_reader_plugin-4.0.2.tar.gz", hash = "sha256:a4cf2491c759ab1c11564254403100265ab65cd3d33a2ea4f2828bacfa18fddc", size = 241345, upload-time = "2026-10-11T16:50:23.393Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b3/6f/dcc966874f74f8580b99d2ffecbdc85dfd00c4a5039fedbee4ddd7fc8c7f/mkdocs_table_reader_plugin-3.1.0-py3-none-any.whl", hash = "sha256:50a1302661c14d96b90ba0434ae96110441e0c653ce23559e3c6911fe79e7bd2", size = 10564, upload-time = "2024-08-29T14:08:07.367Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/71/0bb3b8c1022228d795a39eb6db8d2b060e07ae5de2d392cbc5ca8150bb68/mkdocs_table_reader_plugin-4.0.2-py3-none-any.whl", hash = "sha256:c213c02a7cae424d63a93918488a7df1120628cef70033b1b0e0b8c7b780a7b4", size = 11609, upload-time = "2026-10-11T16:50:22.273Z" },
 ]
 
 [[package]]
