@@ -530,6 +530,31 @@ class TestFirstLatexError:
         assert "log file" in pdflatex_utils._first_latex_error("clean output, no errors")
 
 
+class TestLatexErrorContext:
+    """Tests for the _latex_error_context log helper."""
+
+    @pytest.mark.unit
+    def test_returns_error_line_and_following_lines(self):
+        """Test the excerpt starts at the first ``!`` line and includes its continuation."""
+        log = "preamble\n! LaTeX Error: Unknown message 'x' for module\n  'caption'.\nl.12 \\usepackage{caption}\nlater"
+        excerpt = pdflatex_utils._latex_error_context(log)
+        assert excerpt.splitlines()[0].startswith("! LaTeX Error"), "excerpt should start at the error line"
+        assert "'caption'." in excerpt and "l.12" in excerpt, "continuation and source context should be kept"
+        assert "preamble" not in excerpt, "lines before the error should be dropped"
+
+    @pytest.mark.unit
+    def test_limits_line_count(self):
+        """Test the excerpt is capped at ``max_lines`` lines."""
+        log = "! boom\n" + "\n".join(f"line {i}" for i in range(50))
+        assert len(pdflatex_utils._latex_error_context(log, max_lines=5).splitlines()) == 5
+
+    @pytest.mark.unit
+    def test_falls_back_to_log_tail_without_error_line(self):
+        """Test the log tail is returned when no ``!`` line exists."""
+        log = "\n".join(f"line {i}" for i in range(30))
+        assert pdflatex_utils._latex_error_context(log, max_lines=3).splitlines() == ["line 27", "line 28", "line 29"]
+
+
 class TestPdflatexDownloadCli:
     """Tests for pdflatex_download_cli."""
 

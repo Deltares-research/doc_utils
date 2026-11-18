@@ -459,6 +459,29 @@ def _first_latex_error(log_text: str) -> str:
     return "see the .log file for details"
 
 
+def _latex_error_context(log_text: str, max_lines: int = 15) -> str:
+    """Return the first error line of a build log plus the lines that follow it.
+
+    pdfTeX wraps long messages and prints the offending source context (`l.<n> ...`) and
+    help text after the `!` line, so the first line alone is often truncated. When the log
+    has no `!` line, the tail of the log is returned instead.
+
+    Args:
+        log_text: Combined stdout/stderr of a pdflatex run.
+        max_lines: Maximum number of lines to return.
+
+    Returns:
+        The excerpt, one stripped line per row.
+    """
+    lines = [line.strip() for line in log_text.splitlines()]
+    start = next((i for i, line in enumerate(lines) if line.startswith("!")), None)
+    if start is None:
+        excerpt = lines[-max_lines:]
+    else:
+        excerpt = lines[start : start + max_lines]
+    return "\n".join(excerpt).strip()
+
+
 def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = True) -> Path:
     """Compile a `.tex` file to PDF with `pdflatex`, installing missing packages.
 
@@ -537,7 +560,10 @@ def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = 
         previous_missing = missing
 
     if not (succeeded and pdf_path.exists()):
-        raise RuntimeError(f"pdflatex did not produce {pdf_path.name}: {_first_latex_error(log)}")
+        raise RuntimeError(
+            f"pdflatex did not produce {pdf_path.name}: {_first_latex_error(log)}\n"
+            f"--- pdflatex log excerpt ---\n{_latex_error_context(log)}"
+        )
     return pdf_path
 
 
