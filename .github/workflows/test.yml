@@ -13,7 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.11"]
-        os: [ubuntu-latest]
+        # Pinned to 24.04: ubuntu-latest (26.04) ships a TeX Live whose `caption` (v3.6o) is older than its
+        # KOMA-Script `tocbasic`, which breaks the Deltares template build
+        # ("Unknown message 'caption-code-by-class-deactivated' for module 'tocbasic'").
+        os: [ubuntu-24.04]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -40,19 +43,12 @@ jobs:
         run: |
           sudo apt-get install -y \
             texlive-latex-base \
-            texlive-latex-recommended \
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-bibtex-extra \
             texlive-science biber
           pdflatex --version
-          echo "=== TeX package diagnostics ==="
-          kpsewhich -all tocbasic.sty caption.sty caption3.sty scrartcl.cls || true
-          grep -m1 -H "ProvidesPackage" "$(kpsewhich tocbasic.sty)" "$(kpsewhich caption.sty)" "$(kpsewhich caption3.sty)" || true
-          grep -rl "caption-code-by-class-deactivated" /usr/share/texlive /usr/share/texmf /var/lib/texmf 2>/dev/null || true
-          dpkg -S "$(kpsewhich tocbasic.sty)" "$(kpsewhich caption.sty)" || true
-          dpkg -l | grep -E "texlive-(base|latex)" || true
 
       - name: tests
         # A token with read access to the private Deltares/LatexInstallation repo is
