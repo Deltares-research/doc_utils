@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1031,7 +1031,7 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
 
 
 <a href="#ddocs.markdown.convert_all_markdown_files" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">convert_all_markdown_files</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;*.md&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">convert_all_markdown_files</span><span class="p">(</span><span class="n">input_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'*.md'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1205,38 +1205,38 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;*.md&quot;</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"*.md"</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert all Markdown files in a directory to LaTeX.</span>
+<span class="w">    </span><span class="sd">"""Convert all Markdown files in a directory to LaTeX.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        input_dir: Directory containing Markdown files</span>
 <span class="sd">        output_dir: Directory for output LaTeX files</span>
 <span class="sd">        template: Optional custom Pandoc template</span>
 <span class="sd">        standalone: If True, generate complete LaTeX documents</span>
-<span class="sd">        pattern: Glob pattern for matching files (default: &quot;*.md&quot;)</span>
+<span class="sd">        pattern: Glob pattern for matching files (default: "*.md")</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple of (successful_conversions, total_files)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Create output directory if it doesn&#39;t exist</span>
+<span class="sd">    """</span>
+    <span class="c1"># Create output directory if it doesn't exist</span>
     <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Find all markdown files</span>
     <span class="n">md_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">md_files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No markdown files found in </span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No markdown files found in </span><span class="si">{</span><span class="n">input_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">md_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> markdown file(s) to convert&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">md_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> markdown file(s) to convert"</span><span class="p">)</span>
 
 
     <span class="c1"># Convert each file</span>
     <span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">md_file</span> <span class="ow">in</span> <span class="n">md_files</span><span class="p">:</span>
         <span class="c1"># Generate output filename</span>
-        <span class="n">tex_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">md_file</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.tex&quot;</span>
+        <span class="n">tex_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">md_file</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.tex"</span>
 
         <span class="k">if</span> <span class="n">convert_markdown_to_latex</span><span class="p">(</span><span class="n">md_file</span><span class="p">,</span> <span class="n">tex_file</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">standalone</span><span class="p">):</span>
             <span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1465,7 +1465,7 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
     <span class="n">template</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">standalone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Markdown file to LaTeX using Pandoc.</span>
+<span class="w">    </span><span class="sd">"""Convert a Markdown file to LaTeX using Pandoc.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        input_file: Path to input Markdown file</span>
@@ -1476,33 +1476,33 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
 
 <span class="sd">    Returns:</span>
 <span class="sd">        True if conversion succeeded, False otherwise</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">standalone</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">template</span><span class="p">:</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">/</span> <span class="s1">&#39;deltares_template.tex&#39;</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">/</span> <span class="s1">'deltares_template.tex'</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">template</span><span class="p">:</span>
-            <span class="n">template</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">/</span> <span class="s1">&#39;deltares_fragment_template.tex&#39;</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">/</span> <span class="s1">'deltares_fragment_template.tex'</span>
 
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;pandoc&#39;</span><span class="p">,</span>
+        <span class="s1">'pandoc'</span><span class="p">,</span>
         <span class="nb">str</span><span class="p">(</span><span class="n">input_file</span><span class="p">),</span>
-        <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_file</span><span class="p">),</span>
-        <span class="s1">&#39;--from&#39;</span><span class="p">,</span> <span class="s1">&#39;markdown&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;--to&#39;</span><span class="p">,</span> <span class="s1">&#39;latex&#39;</span><span class="p">,</span>
+        <span class="s1">'-o'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_file</span><span class="p">),</span>
+        <span class="s1">'--from'</span><span class="p">,</span> <span class="s1">'markdown'</span><span class="p">,</span>
+        <span class="s1">'--to'</span><span class="p">,</span> <span class="s1">'latex'</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="c1"># Add options</span>
     <span class="k">if</span> <span class="n">standalone</span><span class="p">:</span>
-        <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--standalone&#39;</span><span class="p">)</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--standalone'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">template</span><span class="p">:</span>
-        <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;--template&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="p">)])</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'--template'</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">template</span><span class="p">)])</span>
 
     <span class="c1"># Add some useful options for better LaTeX output</span>
     <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
-        <span class="s1">&#39;--listings&#39;</span><span class="p">,</span>  <span class="c1"># Use listings package for code blocks</span>
-        <span class="s1">&#39;--number-sections&#39;</span><span class="p">,</span>  <span class="c1"># Number sections</span>
+        <span class="s1">'--listings'</span><span class="p">,</span>  <span class="c1"># Use listings package for code blocks</span>
+        <span class="s1">'--number-sections'</span><span class="p">,</span>  <span class="c1"># Number sections</span>
     <span class="p">])</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -1515,7 +1515,7 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
 
         <span class="c1"># Post-process the generated LaTeX file to replace UTF-8 characters</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
             <span class="c1"># Replace UTF-8 box-drawing characters with ASCII</span>
@@ -1530,25 +1530,25 @@ long-word wrapping in tables). The <code>clean</code> command logic now lives in
             <span class="c1"># If not standalone mode, add necessary commands at the beginning</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">standalone</span><span class="p">:</span>
                 <span class="n">preamble</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="s2">&quot;% Pandoc compatibility commands</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">providecommand{</span><span class="se">\\</span><span class="s2">tightlist}{%</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;  </span><span class="se">\\</span><span class="s2">setlength{</span><span class="se">\\</span><span class="s2">itemsep}</span><span class="si">{0pt}</span><span class="se">\\</span><span class="s2">setlength{</span><span class="se">\\</span><span class="s2">parskip}</span><span class="si">{0pt}</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">providecommand{</span><span class="se">\\</span><span class="s2">passthrough}[1]{#1}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="s2">"% Pandoc compatibility commands</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"</span><span class="se">\\</span><span class="s2">providecommand{</span><span class="se">\\</span><span class="s2">tightlist}{%</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"  </span><span class="se">\\</span><span class="s2">setlength{</span><span class="se">\\</span><span class="s2">itemsep}</span><span class="si">{0pt}</span><span class="se">\\</span><span class="s2">setlength{</span><span class="se">\\</span><span class="s2">parskip}</span><span class="si">{0pt}</span><span class="s2">%</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"}</span><span class="se">\n</span><span class="s2">"</span>
+                    <span class="s2">"</span><span class="se">\\</span><span class="s2">providecommand{</span><span class="se">\\</span><span class="s2">passthrough}[1]{#1}</span><span class="se">\n\n</span><span class="s2">"</span>
                 <span class="p">)</span>
                 <span class="n">content</span> <span class="o">=</span> <span class="n">preamble</span> <span class="o">+</span> <span class="n">content</span>
 
             <span class="c1"># Write back the modified content</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: Could not post-process </span><span class="si">{</span><span class="n">output_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Warning: Could not post-process </span><span class="si">{</span><span class="n">output_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OK Converted: </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">output_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"OK Converted: </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">output_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR converting </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR converting </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">:"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1711,7 +1711,7 @@ to prevent overlap.</p>
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fix_table_column_widths</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix LaTeX table column widths for better formatting.</span>
+<span class="w">    </span><span class="sd">"""Fix LaTeX table column widths for better formatting.</span>
 
 <span class="sd">    Looks for tables and analyzes content to adjust column widths</span>
 <span class="sd">    to prevent overlap.</span>
@@ -1721,17 +1721,17 @@ to prevent overlap.</p>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Content with adjusted table column widths</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
     <span class="c1"># Find all longtable environments</span>
-    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})&#39;</span>
+    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})'</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">fix_single_table</span><span class="p">(</span><span class="n">table_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fix a single table by analyzing its content.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Fix a single table by analyzing its content."""</span>
 
         <span class="c1"># Find the column specification line</span>
-        <span class="n">col_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&gt;\{</span><span class="se">\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash\}p\{\(</span><span class="se">\\</span><span class="s1">linewidth - (\d+)</span><span class="se">\\</span><span class="s1">tabcolsep\) \* </span><span class="se">\\</span><span class="s1">real\{(0\.\d+)\}\}&#39;</span>
+        <span class="n">col_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'&gt;\{</span><span class="se">\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash\}p\{\(</span><span class="se">\\</span><span class="s1">linewidth - (\d+)</span><span class="se">\\</span><span class="s1">tabcolsep\) \* </span><span class="se">\\</span><span class="s1">real\{(0\.\d+)\}\}'</span>
 
         <span class="n">matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">col_pattern</span><span class="p">,</span> <span class="n">table_text</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">matches</span><span class="p">:</span>
@@ -1740,41 +1740,41 @@ to prevent overlap.</p>
         <span class="n">tabcolsep</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">num_cols</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
 
-        <span class="c1"># Check if this table has &quot;Short&quot; and &quot;Long&quot; headers (CLI argument tables)</span>
-        <span class="k">if</span> <span class="s1">&#39;Short&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">&#39;Long&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+        <span class="c1"># Check if this table has "Short" and "Long" headers (CLI argument tables)</span>
+        <span class="k">if</span> <span class="s1">'Short'</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">'Long'</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
             <span class="c1"># CLI argument table</span>
             <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
                 <span class="c1"># Check for very long options like --calculate-surge</span>
-                <span class="k">if</span> <span class="s1">&#39;--calculate-surge&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">'--calculate-surge'</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
                     <span class="c1"># Need extra space for long options</span>
-                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.16&#39;</span><span class="p">,</span> <span class="s1">&#39;0.07&#39;</span><span class="p">,</span> <span class="s1">&#39;0.22&#39;</span><span class="p">,</span> <span class="s1">&#39;0.10&#39;</span><span class="p">,</span> <span class="s1">&#39;0.35&#39;</span><span class="p">]</span>
+                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.16'</span><span class="p">,</span> <span class="s1">'0.07'</span><span class="p">,</span> <span class="s1">'0.22'</span><span class="p">,</span> <span class="s1">'0.10'</span><span class="p">,</span> <span class="s1">'0.35'</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.19&#39;</span><span class="p">,</span> <span class="s1">&#39;0.08&#39;</span><span class="p">,</span> <span class="s1">&#39;0.18&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12&#39;</span><span class="p">,</span> <span class="s1">&#39;0.33&#39;</span><span class="p">]</span>
+                    <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.19'</span><span class="p">,</span> <span class="s1">'0.08'</span><span class="p">,</span> <span class="s1">'0.18'</span><span class="p">,</span> <span class="s1">'0.12'</span><span class="p">,</span> <span class="s1">'0.33'</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.09&#39;</span><span class="p">,</span> <span class="s1">&#39;0.22&#39;</span><span class="p">,</span> <span class="s1">&#39;0.44&#39;</span><span class="p">]</span>
+                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.25'</span><span class="p">,</span> <span class="s1">'0.09'</span><span class="p">,</span> <span class="s1">'0.22'</span><span class="p">,</span> <span class="s1">'0.44'</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">table_text</span>
 
         <span class="c1"># Check for tables with very long column names</span>
-        <span class="k">elif</span> <span class="s1">&#39;Keringstoestand&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">or</span> <span class="s1">&#39;[open/gesloten]&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="s1">'Keringstoestand'</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">or</span> <span class="s1">'[open/gesloten]'</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
             <span class="c1"># Input file format table with long Dutch column names</span>
             <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
                 <span class="c1"># Column, Description, Unit, Required</span>
-                <span class="c1"># Column has long names like &quot;Keringstoestand[open/gesloten]&quot;</span>
-                <span class="c1"># Required has &quot;Only with --calculate-surge&quot;</span>
-                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.28&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12&#39;</span><span class="p">,</span> <span class="s1">&#39;0.30&#39;</span><span class="p">]</span>
+                <span class="c1"># Column has long names like "Keringstoestand[open/gesloten]"</span>
+                <span class="c1"># Required has "Only with --calculate-surge"</span>
+                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.28'</span><span class="p">,</span> <span class="s1">'0.30'</span><span class="p">,</span> <span class="s1">'0.12'</span><span class="p">,</span> <span class="s1">'0.30'</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">table_text</span>
 
         <span class="c1"># Check for tables with column headers but not the special cases above</span>
-        <span class="k">elif</span> <span class="s1">&#39;Column&#39;</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">&#39;Description&#39;</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="s1">'Column'</span> <span class="ow">in</span> <span class="n">table_text</span> <span class="ow">and</span> <span class="s1">'Description'</span> <span class="ow">in</span> <span class="n">table_text</span><span class="p">:</span>
             <span class="c1"># Generic column/description table</span>
             <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">,</span> <span class="s1">&#39;0.35&#39;</span><span class="p">,</span> <span class="s1">&#39;0.15&#39;</span><span class="p">,</span> <span class="s1">&#39;0.25&#39;</span><span class="p">]</span>
+                <span class="n">new_widths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'0.25'</span><span class="p">,</span> <span class="s1">'0.35'</span><span class="p">,</span> <span class="s1">'0.15'</span><span class="p">,</span> <span class="s1">'0.25'</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">table_text</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Don&#39;t modify tables we don&#39;t recognize</span>
+            <span class="c1"># Don't modify tables we don't recognize</span>
             <span class="k">return</span> <span class="n">table_text</span>
 
         <span class="c1"># Replace each column width</span>
@@ -1782,7 +1782,7 @@ to prevent overlap.</p>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">match</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_widths</span><span class="p">):</span>
                 <span class="n">old_spec</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">new_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&gt;</span><span class="se">{{\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash</span><span class="se">}}</span><span class="s1">p</span><span class="se">{{</span><span class="s1">(</span><span class="se">\\</span><span class="s1">linewidth - </span><span class="si">{</span><span class="n">tabcolsep</span><span class="si">}</span><span class="se">\\</span><span class="s1">tabcolsep) * </span><span class="se">\\</span><span class="s1">real</span><span class="se">{{</span><span class="si">{</span><span class="n">new_widths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">&#39;</span>
+                <span class="n">new_spec</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'&gt;</span><span class="se">{{\\</span><span class="s1">raggedright</span><span class="se">\\</span><span class="s1">arraybackslash</span><span class="se">}}</span><span class="s1">p</span><span class="se">{{</span><span class="s1">(</span><span class="se">\\</span><span class="s1">linewidth - </span><span class="si">{</span><span class="n">tabcolsep</span><span class="si">}</span><span class="se">\\</span><span class="s1">tabcolsep) * </span><span class="se">\\</span><span class="s1">real</span><span class="se">{{</span><span class="si">{</span><span class="n">new_widths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">}}}}</span><span class="s1">'</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_spec</span><span class="p">,</span> <span class="n">new_spec</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span>
@@ -1915,45 +1915,45 @@ to prevent overlap.</p>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">replace_utf8_tree_chars</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace UTF-8 box-drawing characters and symbols with LaTeX equivalents.</span>
+<span class="w">    </span><span class="sd">"""Replace UTF-8 box-drawing characters and symbols with LaTeX equivalents.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        content: LaTeX content string</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Content with UTF-8 characters replaced</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Map UTF-8 box-drawing characters to ASCII equivalents</span>
     <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;├&#39;</span><span class="p">:</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;│&#39;</span><span class="p">:</span> <span class="s1">&#39;|&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;└&#39;</span><span class="p">:</span> <span class="s1">&#39;`&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;─&#39;</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┌&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┐&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┘&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┴&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┬&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;┤&#39;</span><span class="p">:</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;├──&#39;</span><span class="p">:</span> <span class="s1">&#39;|--&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;└──&#39;</span><span class="p">:</span> <span class="s1">&#39;`--&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;│   &#39;</span><span class="p">:</span> <span class="s1">&#39;|   &#39;</span><span class="p">,</span>
+        <span class="s1">'├'</span><span class="p">:</span> <span class="s1">'|'</span><span class="p">,</span>
+        <span class="s1">'│'</span><span class="p">:</span> <span class="s1">'|'</span><span class="p">,</span>
+        <span class="s1">'└'</span><span class="p">:</span> <span class="s1">'`'</span><span class="p">,</span>
+        <span class="s1">'─'</span><span class="p">:</span> <span class="s1">'-'</span><span class="p">,</span>
+        <span class="s1">'┌'</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+        <span class="s1">'┐'</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+        <span class="s1">'┘'</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+        <span class="s1">'┴'</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+        <span class="s1">'┬'</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+        <span class="s1">'┤'</span><span class="p">:</span> <span class="s1">'+'</span><span class="p">,</span>
+        <span class="s1">'├──'</span><span class="p">:</span> <span class="s1">'|--'</span><span class="p">,</span>
+        <span class="s1">'└──'</span><span class="p">:</span> <span class="s1">'`--'</span><span class="p">,</span>
+        <span class="s1">'│   '</span><span class="p">:</span> <span class="s1">'|   '</span><span class="p">,</span>
         <span class="c1"># Common Unicode symbols to LaTeX commands</span>
-        <span class="s1">&#39;✓&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\checkmark&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;✗&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\texttimes&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;⚠&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\textbf{!}&#39;</span><span class="p">,</span>  <span class="c1"># Warning sign</span>
-        <span class="s1">&#39;⚠️&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\textbf{!}&#39;</span><span class="p">,</span>  <span class="c1"># Warning sign with emoji modifier</span>
-        <span class="s1">&#39;→&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\rightarrow$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;←&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\leftarrow$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;↔&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\leftrightarrow$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;…&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\ldots&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;—&#39;</span><span class="p">:</span> <span class="s1">&#39;---&#39;</span><span class="p">,</span>  <span class="c1"># em-dash</span>
-        <span class="s1">&#39;–&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>   <span class="c1"># en-dash</span>
-        <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span> <span class="s2">&quot;``&quot;</span><span class="p">,</span>   <span class="c1"># left double quote</span>
-        <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&#39;&quot;</span><span class="p">,</span>   <span class="c1"># right double quote</span>
-<span class="w">        </span><span class="sd">&#39;&#39;&#39;: &quot;`&quot;,    # left single quote</span>
-<span class="sd">        &#39;&#39;&#39;</span><span class="p">:</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span>    <span class="c1"># right single quote</span>
-        <span class="s1">&#39;</span><span class="se">\ufe0f</span><span class="s1">&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>  <span class="c1"># Remove emoji variation selector</span>
+        <span class="s1">'✓'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'\checkmark'</span><span class="p">,</span>
+        <span class="s1">'✗'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'\texttimes'</span><span class="p">,</span>
+        <span class="s1">'⚠'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'\textbf{!}'</span><span class="p">,</span>  <span class="c1"># Warning sign</span>
+        <span class="s1">'⚠️'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'\textbf{!}'</span><span class="p">,</span>  <span class="c1"># Warning sign with emoji modifier</span>
+        <span class="s1">'→'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$\rightarrow$'</span><span class="p">,</span>
+        <span class="s1">'←'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$\leftarrow$'</span><span class="p">,</span>
+        <span class="s1">'↔'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$\leftrightarrow$'</span><span class="p">,</span>
+        <span class="s1">'…'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'\ldots'</span><span class="p">,</span>
+        <span class="s1">'—'</span><span class="p">:</span> <span class="s1">'---'</span><span class="p">,</span>  <span class="c1"># em-dash</span>
+        <span class="s1">'–'</span><span class="p">:</span> <span class="s1">'--'</span><span class="p">,</span>   <span class="c1"># en-dash</span>
+        <span class="s1">'"'</span><span class="p">:</span> <span class="s2">"``"</span><span class="p">,</span>   <span class="c1"># left double quote</span>
+        <span class="s1">'"'</span><span class="p">:</span> <span class="s2">"''"</span><span class="p">,</span>   <span class="c1"># right double quote</span>
+<span class="w">        </span><span class="sd">''': "`",    # left single quote</span>
+<span class="sd">        '''</span><span class="p">:</span> <span class="s2">"'"</span><span class="p">,</span>    <span class="c1"># right single quote</span>
+        <span class="s1">'</span><span class="se">\ufe0f</span><span class="s1">'</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>  <span class="c1"># Remove emoji variation selector</span>
     <span class="p">}</span>
 
     <span class="k">for</span> <span class="n">utf8_char</span><span class="p">,</span> <span class="n">ascii_char</span> <span class="ow">in</span> <span class="n">replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -2097,7 +2097,7 @@ to break at any character position.</p>
 <span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wrap_long_words_in_tables</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap very long words in table cells with seqsplit for automatic breaking.</span>
+<span class="w">    </span><span class="sd">"""Wrap very long words in table cells with seqsplit for automatic breaking.</span>
 
 <span class="sd">    This prevents long words from overflowing table columns by allowing them</span>
 <span class="sd">    to break at any character position.</span>
@@ -2107,43 +2107,43 @@ to break at any character position.</p>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Content with long words wrapped in seqsplit</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
     <span class="c1"># Find all longtable environments</span>
-    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})&#39;</span>
+    <span class="n">longtable_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'(</span><span class="se">\\</span><span class="s1">begin\{longtable\}.*?</span><span class="se">\\</span><span class="s1">end\{longtable\})'</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">wrap_long_words_in_table</span><span class="p">(</span><span class="n">table_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap long words in a single table.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Wrap long words in a single table."""</span>
 
         <span class="c1"># Pattern to find table cell content (between &amp; and \\ or &amp;)</span>
         <span class="c1"># This is a simplified approach - wrap text in curly braces that looks problematic</span>
 
-        <span class="c1"># Find long words (&gt;15 characters without spaces) that aren&#39;t already in commands</span>
+        <span class="c1"># Find long words (&gt;15 characters without spaces) that aren't already in commands</span>
         <span class="c1"># Exclude content already in \lstinline, \passthrough, math mode, etc.</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">wrap_word</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
             <span class="n">word</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="c1"># Don&#39;t wrap if already in a command or if it&#39;s a LaTeX command itself</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span>
+            <span class="c1"># Don't wrap if already in a command or if it's a LaTeX command itself</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="se">}}</span><span class="s1">'</span>
 
-        <span class="c1"># Pattern: words with brackets like &quot;Keringstoestand[open/gesloten]&quot;</span>
+        <span class="c1"># Pattern: words with brackets like "Keringstoestand[open/gesloten]"</span>
         <span class="c1"># or long words without spaces (&gt;20 chars)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">table_text</span>
 
-        <span class="c1"># Wrap long column names with brackets (like &quot;Keringstoestand[open/gesloten]&quot;)</span>
+        <span class="c1"># Wrap long column names with brackets (like "Keringstoestand[open/gesloten]")</span>
         <span class="c1"># Match pattern: word followed by [text] where total length &gt; 20</span>
-        <span class="n">bracket_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;([A-Za-z]{10,})\{?\[([^\]]+)\]\}?&#39;</span>
+        <span class="n">bracket_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">'([A-Za-z]{10,})\{?\[([^\]]+)\]\}?'</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">wrap_bracket_text</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
             <span class="c1"># Check if already wrapped or in a command</span>
             <span class="n">before_match</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span><span class="o">-</span><span class="mi">20</span><span class="p">):</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
-            <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit&#39;</span> <span class="ow">in</span> <span class="n">before_match</span> <span class="ow">or</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">passthrough&#39;</span> <span class="ow">in</span> <span class="n">before_match</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'</span><span class="se">\\</span><span class="s1">seqsplit'</span> <span class="ow">in</span> <span class="n">before_match</span> <span class="ow">or</span> <span class="s1">'</span><span class="se">\\</span><span class="s1">passthrough'</span> <span class="ow">in</span> <span class="n">before_match</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
             <span class="n">word</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">bracket_content</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
             <span class="c1"># Return wrapped version</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">bracket_content</span><span class="si">}</span><span class="s1">]</span><span class="se">}}</span><span class="s1">&#39;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">'</span><span class="se">\\</span><span class="s1">seqsplit</span><span class="se">{{</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">bracket_content</span><span class="si">}</span><span class="s1">]</span><span class="se">}}</span><span class="s1">'</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">bracket_pattern</span><span class="p">,</span> <span class="n">wrap_bracket_text</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
@@ -2245,7 +2245,7 @@ subcommand handlers. Defaults to None.</p>
 <li>The argparse namespace is accepted but ignored:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pandoc_cli</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">ns</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;check-pandoc&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ns</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">"check-pandoc"</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">check_pandoc_cli</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="mi">0</span>
 </code></pre></div></li>
@@ -2297,7 +2297,7 @@ subcommand handlers. Defaults to None.</p>
 <span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pandoc_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;CLI handler for the ``check-pandoc`` command.</span>
+<span class="w">    </span><span class="sd">"""CLI handler for the ``check-pandoc`` command.</span>
 
 <span class="sd">    Ensures pandoc is available (downloading it if necessary) and maps the</span>
 <span class="sd">    result to a process exit code suitable for ``sys.exit``.</span>
@@ -2324,7 +2324,7 @@ subcommand handlers. Defaults to None.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; import argparse</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import check_pandoc_cli</span>
-<span class="sd">            &gt;&gt;&gt; ns = argparse.Namespace(command=&quot;check-pandoc&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; ns = argparse.Namespace(command="check-pandoc")</span>
 <span class="sd">            &gt;&gt;&gt; check_pandoc_cli(ns)  # doctest: +SKIP</span>
 <span class="sd">            0</span>
 
@@ -2332,7 +2332,7 @@ subcommand handlers. Defaults to None.</p>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        check_pandoc_installed: The underlying check-and-install routine.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">check_pandoc_installed</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2399,13 +2399,13 @@ change affects only the current process, not the parent shell.</p>
 <li>Guard a conversion step on pandoc being available:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pandoc_installed</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">check_pandoc_installed</span><span class="p">():</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;converting&quot;</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"converting"</span><span class="p">)</span>
 <span class="n">converting</span>
 </code></pre></div></li>
 <li>Abort early when pandoc cannot be made available:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pandoc_installed</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">ready</span> <span class="o">=</span> <span class="n">check_pandoc_installed</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">ready</span> <span class="ow">or</span> <span class="s2">&quot;could not install pandoc&quot;</span>  <span class="c1"># doctest: +SKIP</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ready</span> <span class="ow">or</span> <span class="s2">"could not install pandoc"</span>  <span class="c1"># doctest: +SKIP</span>
 <span class="kc">True</span>
 </code></pre></div></li>
 </ul>
@@ -2470,11 +2470,11 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pandoc_installed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure ``pandoc`` is callable from the command line.</span>
+<span class="w">    </span><span class="sd">"""Ensure ``pandoc`` is callable from the command line.</span>
 
 <span class="sd">    If pandoc is already on ``PATH`` this returns immediately. Otherwise the pandoc</span>
 <span class="sd">    binary bundled with ``pypandoc-binary`` is located and its directory is prepended</span>
-<span class="sd">    to this process&#39;s ``PATH`` so the binary (and any subprocess spawned from this</span>
+<span class="sd">    to this process's ``PATH`` so the binary (and any subprocess spawned from this</span>
 <span class="sd">    process) can invoke ``pandoc`` directly. No network download happens; the ``PATH``</span>
 <span class="sd">    change affects only the current process, not the parent shell.</span>
 
@@ -2487,7 +2487,7 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import check_pandoc_installed</span>
 <span class="sd">            &gt;&gt;&gt; if check_pandoc_installed():  # doctest: +SKIP</span>
-<span class="sd">            ...     print(&quot;converting&quot;)</span>
+<span class="sd">            ...     print("converting")</span>
 <span class="sd">            converting</span>
 
 <span class="sd">            ```</span>
@@ -2495,7 +2495,7 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import check_pandoc_installed</span>
 <span class="sd">            &gt;&gt;&gt; ready = check_pandoc_installed()  # doctest: +SKIP</span>
-<span class="sd">            &gt;&gt;&gt; ready or &quot;could not install pandoc&quot;  # doctest: +SKIP</span>
+<span class="sd">            &gt;&gt;&gt; ready or "could not install pandoc"  # doctest: +SKIP</span>
 <span class="sd">            True</span>
 
 <span class="sd">            ```</span>
@@ -2503,21 +2503,21 @@ check_pandoc_cli: Thin wrapper that maps the result to an exit code.</p>
 <span class="sd">    See Also:</span>
 <span class="sd">        sanity_check: The PATH-only check this function builds on.</span>
 <span class="sd">        check_pandoc_cli: Thin wrapper that maps the result to an exit code.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">installed</span><span class="p">:</span>
         <span class="n">pandoc_dir</span> <span class="o">=</span> <span class="n">_get_pandoc_dir</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">pandoc_dir</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pandoc_dir</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">pandoc_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pandoc_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added pandoc to PATH: </span><span class="si">{</span><span class="n">pandoc_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pandoc_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"PATH"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"PATH"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pandoc_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"PATH"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Added pandoc to PATH: </span><span class="si">{</span><span class="n">pandoc_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">installed</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pandoc is now accessible!&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Pandoc is now accessible!"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">installed</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: bundled Pandoc could not be located on the command line.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: bundled Pandoc could not be located on the command line."</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">installed</span>
 </code></pre></div></td></tr></table></div>
@@ -2574,16 +2574,16 @@ reachable -- it never downloads or installs anything.</p>
 <li>Branch on whether pandoc is available:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">sanity_check</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">sanity_check</span><span class="p">():</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ready to convert&quot;</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"ready to convert"</span><span class="p">)</span>
 <span class="o">...</span> <span class="k">else</span><span class="p">:</span>
-<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandoc missing&quot;</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">"pandoc missing"</span><span class="p">)</span>
 <span class="n">ready</span> <span class="n">to</span> <span class="n">convert</span>
 </code></pre></div></li>
 <li>Use the boolean result to pick a fallback message:
     <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.markdown.pandoc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">sanity_check</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">available</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s2">&quot;ok&quot;</span> <span class="k">if</span> <span class="n">available</span> <span class="k">else</span> <span class="s2">&quot;install pandoc first&quot;</span>  <span class="c1"># doctest: +SKIP</span>
-<span class="s1">&#39;ok&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s2">"ok"</span> <span class="k">if</span> <span class="n">available</span> <span class="k">else</span> <span class="s2">"install pandoc first"</span>  <span class="c1"># doctest: +SKIP</span>
+<span class="s1">'ok'</span>
 </code></pre></div></li>
 </ul>
 
@@ -2641,7 +2641,7 @@ reachable -- it never downloads or installs anything.</p>
 <span class="normal">63</span>
 <span class="normal">64</span>
 <span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sanity_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check whether a ``pandoc`` executable is callable from the command line.</span>
+<span class="w">    </span><span class="sd">"""Check whether a ``pandoc`` executable is callable from the command line.</span>
 
 <span class="sd">    Runs ``pandoc --version`` as a subprocess. On success the detected version is</span>
 <span class="sd">    printed and ``True`` is returned; if pandoc is missing from ``PATH`` or the</span>
@@ -2656,9 +2656,9 @@ reachable -- it never downloads or installs anything.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import sanity_check</span>
 <span class="sd">            &gt;&gt;&gt; if sanity_check():  # doctest: +SKIP</span>
-<span class="sd">            ...     print(&quot;ready to convert&quot;)</span>
+<span class="sd">            ...     print("ready to convert")</span>
 <span class="sd">            ... else:</span>
-<span class="sd">            ...     print(&quot;pandoc missing&quot;)</span>
+<span class="sd">            ...     print("pandoc missing")</span>
 <span class="sd">            ready to convert</span>
 
 <span class="sd">            ```</span>
@@ -2666,22 +2666,22 @@ reachable -- it never downloads or installs anything.</p>
 <span class="sd">            ```python</span>
 <span class="sd">            &gt;&gt;&gt; from ddocs.markdown.pandoc_utils import sanity_check</span>
 <span class="sd">            &gt;&gt;&gt; available = sanity_check()  # doctest: +SKIP</span>
-<span class="sd">            &gt;&gt;&gt; &quot;ok&quot; if available else &quot;install pandoc first&quot;  # doctest: +SKIP</span>
-<span class="sd">            &#39;ok&#39;</span>
+<span class="sd">            &gt;&gt;&gt; "ok" if available else "install pandoc first"  # doctest: +SKIP</span>
+<span class="sd">            'ok'</span>
 
 <span class="sd">            ```</span>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        check_pandoc_installed: Verify pandoc and download it when it is missing.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-            <span class="p">[</span><span class="s1">&#39;pandoc&#39;</span><span class="p">,</span> <span class="s1">&#39;--version&#39;</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'pandoc'</span><span class="p">,</span> <span class="s1">'--version'</span><span class="p">],</span>
             <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found Pandoc: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found Pandoc: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">):</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
@@ -2754,10 +2754,10 @@ reachable -- it never downloads or installs anything.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
