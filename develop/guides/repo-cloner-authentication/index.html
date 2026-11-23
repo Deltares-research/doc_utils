@@ -1163,10 +1163,11 @@ private repository <code>https://github.com/Deltares/LatexInstallation</code>:</
 <ol>
 <li>Creates <code>RepoCloner("https://github.com/Deltares/LatexInstallation")</code>.</li>
 <li>Clones the repo into a temporary directory (authenticating as described below).</li>
-<li>Copies three template sub-trees into <code>--output-dir</code>:</li>
+<li>Copies four template sub-trees into <code>--output-dir</code>:</li>
 <li><code>MiKTeX/tex/latex/deltares</code></li>
 <li><code>MiKTeX/tex/latex/nomentbl/deltares</code></li>
 <li><code>MiKTeX/bibtex/bst/deltares</code></li>
+<li><code>MiKTeX/makeindex/deltares</code> (the <code>deltares_nomentbl*.ist</code> makeindex style files)</li>
 <li>Removes the temporary clone (the <code>RepoCloner</code> is used as a context manager).</li>
 </ol>
 <p>Because <code>LatexInstallation</code> is <strong>private</strong>, the clone needs credentials — anonymous HTTPS will fail.</p>
