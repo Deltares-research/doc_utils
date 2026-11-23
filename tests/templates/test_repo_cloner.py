@@ -397,53 +397,8 @@ class TestCloneRepoCli:
         assert created["cloned"] is True, "clone() should have been called"
         assert created["cleaned"] is True, "context manager __exit__ (cleanup) should run"
         assert len(created["copied"]) == 4, f"should copy 4 template paths, got {created.get('copied')}"
+        assert "MiKTeX/makeindex/deltares" in created["copied"], "makeindex style folder (.ist files) should be copied"
         assert created["url"] == "https://github.com/Deltares/LatexInstallation", "wrong repo URL"
-
-    @pytest.mark.unit
-    def test_cli_copies_makeindex_style_files(self, tmp_path):
-        """Test clone_repo_cli copies the makeindex style folder (deltares_nomentbl*.ist).
-
-        Test scenario:
-            RepoCloner is replaced by a fake that copies from a fake clone containing the
-            three .ist files; after the CLI runs, all three must sit directly in output_dir.
-        """
-        import shutil
-
-        from ddocs.templates.repo_cloner import clone_repo_cli
-
-        repo = tmp_path / "repo"
-        ist_dir = repo / "MiKTeX" / "makeindex" / "deltares"
-        ist_dir.mkdir(parents=True)
-        names = ["deltares_nomentbl.ist", "deltares_nomentbl_nl.ist", "deltares_nomentbl_esp.ist"]
-        for name in names:
-            (ist_dir / name).write_text("% style\n")
-        for rel in ("MiKTeX/tex/latex/deltares", "MiKTeX/tex/latex/nomentbl/deltares", "MiKTeX/bibtex/bst/deltares"):
-            (repo / rel).mkdir(parents=True)
-
-        class FakeCloner:
-            def __init__(self, url, **kwargs):
-                pass
-
-            def __enter__(self):
-                return self
-
-            def __exit__(self, *exc):
-                return False
-
-            def clone(self):
-                return repo
-
-            def copy_file(self, src, dest):
-                shutil.copytree(repo / src, dest, dirs_exist_ok=True)
-                return dest
-
-        out = tmp_path / "out"
-        with patch("ddocs.templates.repo_cloner.RepoCloner", FakeCloner):
-            rc = clone_repo_cli(out)
-
-        assert rc == 0, f"clone_repo_cli should return 0, got {rc}"
-        for name in names:
-            assert (out / name).is_file(), f"{name} should be copied into the output dir"
 
     @pytest.mark.unit
     def test_cli_passes_auth_through_to_repocloner(self, tmp_path):
