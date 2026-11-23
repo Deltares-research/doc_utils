@@ -20,10 +20,11 @@ Under the hood this:
 
 1. Creates `RepoCloner("https://github.com/Deltares/LatexInstallation")`.
 2. Clones the repo into a temporary directory (authenticating as described below).
-3. Copies three template sub-trees into `--output-dir`:
+3. Copies four template sub-trees into `--output-dir`:
    - `MiKTeX/tex/latex/deltares`
    - `MiKTeX/tex/latex/nomentbl/deltares`
    - `MiKTeX/bibtex/bst/deltares`
+   - `MiKTeX/makeindex/deltares` (the `deltares_nomentbl*.ist` makeindex style files)
 4. Removes the temporary clone (the `RepoCloner` is used as a context manager).
 
 Because `LatexInstallation` is **private**, the clone needs credentials — anonymous HTTPS will fail.
