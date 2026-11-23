@@ -2828,7 +2828,8 @@ passing nothing falls back to the machine's SSH key.</p>
 <span class="normal">452</span>
 <span class="normal">453</span>
 <span class="normal">454</span>
-<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone_repo_cli</span><span class="p">(</span>
+<span class="normal">455</span>
+<span class="normal">456</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clone_repo_cli</span><span class="p">(</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2882,6 +2883,7 @@ passing nothing falls back to the machine's SSH key.</p>
         <span class="s2">"MiKTeX/tex/latex/deltares"</span><span class="p">,</span>
         <span class="s2">"MiKTeX/tex/latex/nomentbl/deltares"</span><span class="p">,</span>
         <span class="s2">"MiKTeX/bibtex/bst/deltares"</span><span class="p">,</span>
+        <span class="s2">"MiKTeX/makeindex/deltares"</span><span class="p">,</span>
     <span class="p">]</span>
 
     <span class="k">with</span> <span class="n">RepoCloner</span><span class="p">(</span>
