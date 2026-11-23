@@ -437,6 +437,7 @@ def clone_repo_cli(
         "MiKTeX/tex/latex/deltares",
         "MiKTeX/tex/latex/nomentbl/deltares",
         "MiKTeX/bibtex/bst/deltares",
+        "MiKTeX/makeindex/deltares",
     ]
 
     with RepoCloner(
