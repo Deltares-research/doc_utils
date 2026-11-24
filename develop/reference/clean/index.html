@@ -910,8 +910,9 @@
 <code>ddocs clean</code> command; independent of the Markdown-to-LaTeX conversion.</p>
 <p>By default it removes LaTeX build artifacts (<code>.aux</code>, <code>.log</code>, <code>.toc</code>, <code>.bbl</code>, minitoc <code>.mtc*</code>/<code>.maf</code>, nomencl
 <code>.nlo</code>/<code>.nls</code>, …); source <code>.tex</code> files and the produced <code>.pdf</code> are never touched. With <code>--templates</code> it also removes
-the files <code>ddocs get-tex-template</code> downloads: <code>deltares_*.cls/.sty/.bst/.ist</code> and the <code>pictures/</code> directory directly
-under the cleaned directory.</p>
+the files <code>ddocs get-tex-template</code> downloads: <code>deltares_*.cls/.sty/.bst/.ist</code> and the <code>pictures/</code> directory. These are
+looked up directly in the cleaned directory only, never in subdirectories, even with <code>-r</code>. The whole <code>pictures/</code>
+directory is deleted, including any file you added to it.</p>
 
 
 <div class="doc doc-object doc-module">
@@ -1024,8 +1025,9 @@ Source files (<code>.tex</code>) and the produced <code>.pdf</code> are never to
             <td>
               <div class="doc-md-description">
                 <p>When True, also remove the files <code>ddocs get-tex-template</code> downloads:
-<code>deltares_*.cls/.sty/.bst/.ist</code> (in <code>directory</code>, or below it when recursive) and the
-<code>pictures/</code> directory directly under <code>directory</code>. Defaults to False.</p>
+<code>deltares_*.cls/.sty/.bst/.ist</code> and the <code>pictures/</code> directory, both looked up directly in
+<code>directory</code> only (never in subdirectories, even for a recursive clean). The whole <code>pictures/</code>
+directory is deleted, including any file you added to it. Defaults to False.</p>
               </div>
             </td>
             <td>
@@ -1221,8 +1223,9 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 <span class="sd">        directory: Directory to clean</span>
 <span class="sd">        pattern: Glob pattern for subdirectories to include (default: "**/*" for recursive)</span>
 <span class="sd">        templates: When True, also remove the files ``ddocs get-tex-template`` downloads:</span>
-<span class="sd">            ``deltares_*.cls/.sty/.bst/.ist`` (in `directory`, or below it when recursive) and the</span>
-<span class="sd">            ``pictures/`` directory directly under `directory`. Defaults to False.</span>
+<span class="sd">            ``deltares_*.cls/.sty/.bst/.ist`` and the ``pictures/`` directory, both looked up directly in</span>
+<span class="sd">            `directory` only (never in subdirectories, even for a recursive clean). The whole ``pictures/``</span>
+<span class="sd">            directory is deleted, including any file you added to it. Defaults to False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Number of files removed</span>
@@ -1297,8 +1300,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 
         <span class="k">if</span> <span class="n">templates</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">template_pattern</span> <span class="ow">in</span> <span class="n">TEMPLATE_FILE_PATTERNS</span><span class="p">:</span>
-                <span class="n">glob_pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"**/</span><span class="si">{</span><span class="n">template_pattern</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">recursive</span> <span class="k">else</span> <span class="n">template_pattern</span>
-                <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">glob_pattern</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()):</span>
+                <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">template_pattern</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_file</span><span class="p">()):</span>
                     <span class="n">removed_count</span> <span class="o">+=</span> <span class="n">_remove_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">dir_name</span> <span class="ow">in</span> <span class="n">TEMPLATE_DIRECTORIES</span><span class="p">:</span>
                 <span class="n">template_dir</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="n">dir_name</span>

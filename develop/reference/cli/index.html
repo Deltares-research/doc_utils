@@ -1222,7 +1222,8 @@
 <span class="normal">213</span>
 <span class="normal">214</span>
 <span class="normal">215</span>
-<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="normal">216</span>
+<span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Build the ``ddocs`` argument parser with all subcommands.</span>
 
 <span class="sd">    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean``,</span>
@@ -1396,7 +1397,8 @@
         <span class="s1">'--templates'</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s1">'store_true'</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">'Also remove the template files downloaded by get-tex-template '</span>
-             <span class="s1">'(deltares_*.cls/.sty/.bst/.ist and the pictures/ directory)'</span>
+             <span class="s1">'(deltares_*.cls/.sty/.bst/.ist and the whole pictures/ directory, including files you added), '</span>
+             <span class="s1">'looked up in the given directory only, not in subdirectories'</span>
     <span class="p">)</span>
 
     <span class="c1"># sub-command: check-pandoc</span>
@@ -1503,8 +1505,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/cli.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">238</span>
-<span class="normal">239</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">239</span>
 <span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
@@ -1565,7 +1566,8 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 <span class="normal">297</span>
 <span class="normal">298</span>
 <span class="normal">299</span>
-<span class="normal">300</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">300</span>
+<span class="normal">301</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Parse the command line and dispatch to the selected subcommand handler.</span>
 
 <span class="sd">    Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the</span>
