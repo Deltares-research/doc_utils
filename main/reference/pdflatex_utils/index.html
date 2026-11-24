@@ -1083,9 +1083,9 @@
 
 <h1 id="ddocslatexpdflatex_utils"><code>ddocs.latex.pdflatex_utils</code><a class="headerlink" href="#ddocslatexpdflatex_utils" title="Permanent link">&para;</a></h1>
 <p>Locate, verify, and install pdfLaTeX. Confirms that <code>pdflatex</code> (and <code>biber</code>) are
-callable and, when missing, installs TeX Live via <strong>apt</strong> (Debian/Ubuntu with <code>sudo</code>)
-or the root-free <strong>TinyTeX</strong> installer (everywhere else), selected with
-<code>--backend auto|apt|tinytex</code>. TinyTeX's <code>bin</code> directory is prepended to <code>PATH</code> and the
+callable and, when missing, installs the root-free <strong>TinyTeX</strong> installer (the default on every platform) or,
+opt-in, TeX Live via <strong>apt</strong> (Debian/Ubuntu with <code>sudo</code>), selected with <code>--backend auto|tinytex|apt</code>.
+TinyTeX's <code>bin</code> directory is prepended to <code>PATH</code> and the
 <code>tlmgr</code> package collections that mirror the <code>texlive-*</code> packages are installed. Also
 provides <code>build_pdf</code>, which compiles a <code>.tex</code> file and installs packages reported
 missing in the build log on demand, plus the <code>pdflatex check</code> / <code>pdflatex download</code>
@@ -1111,11 +1111,12 @@ this module uses <strong>TinyTeX</strong> -- a lightweight, root-free, cross-pla
 built on TeX Live -- as the install backend:</p>
 <ol>
 <li><code>sanity_check</code> -- is <code>pdflatex</code> (or <code>biber</code>) already callable?</li>
-<li><code>check_pdflatex_installed</code> -- if not, install a TeX distribution. On Debian/Ubuntu it
-   uses <code>apt-get install texlive-*</code> (fast); elsewhere it falls back to TinyTeX (root-free,
-   cross-platform) and <code>tlmgr install</code>s the requested packages. Either way the packages a
-   bare <code>pdflatex</code> needs for Deltares documents are provided. Tune via
-   <code>ddocs pdflatex download --backend apt|tinytex|auto</code>, <code>--packages ...</code>, or <code>--no-packages</code>.</li>
+<li><code>check_pdflatex_installed</code> -- if not, install a TeX distribution. By default (<code>auto</code>) it
+   uses TinyTeX (root-free, cross-platform) and <code>tlmgr install</code>s the requested packages, so every
+   TeX package comes from one consistent TeX Live release. The faster but distro-dependent
+   <code>apt-get install texlive-*</code> path is opt-in. Either way the packages a bare <code>pdflatex</code> needs for
+   Deltares documents are provided. Tune via <code>ddocs pdflatex download --backend tinytex|apt|auto</code>,
+   <code>--packages ...</code>, or <code>--no-packages</code>.</li>
 <li><code>install_missing_packages</code> -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and <code>tlmgr install</code>s them on demand (TeX Live does not do this
    natively). <code>build_pdf</code> uses it to fetch any package a document still needs.</li>
@@ -1238,8 +1239,7 @@ reachable on <code>PATH</code> -- it never downloads or installs anything.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
-<span class="normal"> 68</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 68</span>
 <span class="normal"> 69</span>
 <span class="normal"> 70</span>
 <span class="normal"> 71</span>
@@ -1282,7 +1282,8 @@ reachable on <code>PATH</code> -- it never downloads or installs anything.</p>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
-<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sanity_check</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"pdflatex"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">111</span>
+<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sanity_check</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"pdflatex"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Check whether a TeX command is callable from the command line.</span>
 
 <span class="sd">    Runs `&lt;command&gt; --version` as a subprocess. This only inspects what is already</span>
@@ -1398,8 +1399,7 @@ globbing so it works across architectures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -1428,7 +1428,8 @@ globbing so it works across architectures.</p>
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
-<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_tex_bin_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_tex_bin_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Locate the TinyTeX `bin` directory that contains `pdflatex`.</span>
 
 <span class="sd">    TinyTeX installs the binaries under `&lt;root&gt;/bin/&lt;platform&gt;` (e.g.</span>
@@ -1563,8 +1564,7 @@ globbing so it works across architectures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
-<span class="normal">222</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
 <span class="normal">225</span>
@@ -1599,7 +1599,8 @@ globbing so it works across architectures.</p>
 <span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
-<span class="normal">257</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_tlmgr_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">257</span>
+<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_tlmgr_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Install TeX packages with `tlmgr`.</span>
 
 <span class="sd">    Args:</span>
@@ -1732,8 +1733,7 @@ globbing so it works across architectures.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">260</span>
-<span class="normal">261</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
 <span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
@@ -1766,7 +1766,8 @@ globbing so it works across architectures.</p>
 <span class="normal">291</span>
 <span class="normal">292</span>
 <span class="normal">293</span>
-<span class="normal">294</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">294</span>
+<span class="normal">295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Extract package names for files reported missing in a LaTeX build log.</span>
 
 <span class="sd">    Scans for `File `name.sty' not found` style errors and returns the file stems</span>
@@ -1897,8 +1898,7 @@ install_tlmgr_packages: Runs the actual <code>tlmgr install</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">297</span>
-<span class="normal">298</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">298</span>
 <span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
@@ -1925,7 +1925,8 @@ install_tlmgr_packages: Runs the actual <code>tlmgr install</code>.</p>
 <span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
-<span class="normal">325</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">325</span>
+<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_missing_packages</span><span class="p">(</span><span class="n">log_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Install packages for any files a LaTeX log reports as missing.</span>
 
 <span class="sd">    This is the TeX Live equivalent of MiKTeX's install-on-build behaviour: parse the</span>
@@ -2056,13 +2057,12 @@ runners, but it requires <code>apt-get</code> and root privileges.</p>
 
 <details class="see-also" open>
   <summary>See Also</summary>
-  <p>check_pdflatex_installed: Selects this backend automatically on Debian/Ubuntu.</p>
+  <p>check_pdflatex_installed: Selects this backend only when <code>backend="apt"</code> is requested.</p>
 </details>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">328</span>
-<span class="normal">329</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">329</span>
 <span class="normal">330</span>
 <span class="normal">331</span>
 <span class="normal">332</span>
@@ -2100,7 +2100,8 @@ runners, but it requires <code>apt-get</code> and root privileges.</p>
 <span class="normal">364</span>
 <span class="normal">365</span>
 <span class="normal">366</span>
-<span class="normal">367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_texlive_apt</span><span class="p">(</span><span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">APT_TEXLIVE_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">367</span>
+<span class="normal">368</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">install_texlive_apt</span><span class="p">(</span><span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">APT_TEXLIVE_PACKAGES</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Install a TeX Live subset on Debian/Ubuntu via `apt-get`.</span>
 
 <span class="sd">    Runs `apt-get update` then `apt-get install -y &lt;packages&gt;` (prefixed with `sudo`</span>
@@ -2125,7 +2126,7 @@ runners, but it requires <code>apt-get</code> and root privileges.</p>
 <span class="sd">            ```</span>
 
 <span class="sd">    See Also:</span>
-<span class="sd">        check_pdflatex_installed: Selects this backend automatically on Debian/Ubuntu.</span>
+<span class="sd">        check_pdflatex_installed: Selects this backend only when ``backend="apt"`` is requested.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">"apt-get"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -2163,12 +2164,14 @@ runners, but it requires <code>apt-get</code> and root privileges.</p>
 <p>If pdflatex is already on <code>PATH</code> this returns immediately. Otherwise a backend is
 used to install it:</p>
 <ul>
-<li><strong>apt</strong> -- on Debian/Ubuntu (with <code>sudo</code>) install the <code>texlive-*</code> packages via
-  <code>apt-get</code>. Much faster on CI than <code>tlmgr</code>.</li>
 <li><strong>tinytex</strong> -- download and run the official TinyTeX installer (root-free,
-  cross-platform), prepend its <code>bin</code> to <code>PATH</code>, and <code>tlmgr install</code> <code>packages</code>.</li>
+  cross-platform), prepend its <code>bin</code> to <code>PATH</code>, and <code>tlmgr install</code> <code>packages</code>.
+  All packages come from one TeX Live release, so versions are consistent.</li>
+<li><strong>apt</strong> -- opt-in; on Debian/Ubuntu (with <code>sudo</code>) install the <code>texlive-*</code> packages
+  via <code>apt-get</code>. Faster, but the distro's package versions can be mutually
+  incompatible (e.g. <code>caption</code> vs. KOMA-Script <code>tocbasic</code> on Ubuntu 26.04).</li>
 </ul>
-<p>With <code>backend="auto"</code> (default) apt is used when available, else TinyTeX. Either
+<p>With <code>backend="auto"</code> (default) TinyTeX is used on every platform. Either
 way the requested packages are installed so a bare <code>pdflatex</code> can compile Deltares
 documents; <code>build_pdf</code> additionally installs anything still missing on demand.</p>
 
@@ -2229,7 +2232,7 @@ engine is provisioned.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p><code>"auto"</code> (default), <code>"apt"</code>, or <code>"tinytex"</code>.</p>
+                <p><code>"auto"</code> (default, same as <code>"tinytex"</code>), <code>"apt"</code>, or <code>"tinytex"</code>.</p>
               </div>
             </td>
             <td>
@@ -2316,8 +2319,7 @@ pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">370</span>
-<span class="normal">371</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">371</span>
 <span class="normal">372</span>
 <span class="normal">373</span>
 <span class="normal">374</span>
@@ -2394,9 +2396,7 @@ pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</p>
 <span class="normal">445</span>
 <span class="normal">446</span>
 <span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_installed</span><span class="p">(</span>
+<span class="normal">448</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_pdflatex_installed</span><span class="p">(</span>
     <span class="n">install_packages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">packages</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">REQUIRED_TLMGR_PACKAGES</span><span class="p">,</span>
     <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"auto"</span><span class="p">,</span>
@@ -2406,12 +2406,14 @@ pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</p>
 <span class="sd">    If pdflatex is already on `PATH` this returns immediately. Otherwise a backend is</span>
 <span class="sd">    used to install it:</span>
 
-<span class="sd">    - **apt** -- on Debian/Ubuntu (with `sudo`) install the `texlive-*` packages via</span>
-<span class="sd">      `apt-get`. Much faster on CI than `tlmgr`.</span>
 <span class="sd">    - **tinytex** -- download and run the official TinyTeX installer (root-free,</span>
 <span class="sd">      cross-platform), prepend its `bin` to `PATH`, and `tlmgr install` `packages`.</span>
+<span class="sd">      All packages come from one TeX Live release, so versions are consistent.</span>
+<span class="sd">    - **apt** -- opt-in; on Debian/Ubuntu (with `sudo`) install the `texlive-*` packages</span>
+<span class="sd">      via `apt-get`. Faster, but the distro's package versions can be mutually</span>
+<span class="sd">      incompatible (e.g. `caption` vs. KOMA-Script `tocbasic` on Ubuntu 26.04).</span>
 
-<span class="sd">    With ``backend="auto"`` (default) apt is used when available, else TinyTeX. Either</span>
+<span class="sd">    With ``backend="auto"`` (default) TinyTeX is used on every platform. Either</span>
 <span class="sd">    way the requested packages are installed so a bare `pdflatex` can compile Deltares</span>
 <span class="sd">    documents; `build_pdf` additionally installs anything still missing on demand.</span>
 
@@ -2422,7 +2424,7 @@ pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</p>
 <span class="sd">        packages: tlmgr packages/collections for the **tinytex** backend. Defaults to</span>
 <span class="sd">            :data:`REQUIRED_TLMGR_PACKAGES`. Ignored by the apt backend, which uses</span>
 <span class="sd">            :data:`APT_TEXLIVE_PACKAGES`.</span>
-<span class="sd">        backend: ``"auto"`` (default), ``"apt"``, or ``"tinytex"``.</span>
+<span class="sd">        backend: ``"auto"`` (default, same as ``"tinytex"``), ``"apt"``, or ``"tinytex"``.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        True if pdflatex is accessible after the call, False otherwise.</span>
@@ -2448,12 +2450,7 @@ pdflatex_download_cli: CLI wrapper mapping the result to an exit code.</p>
 <span class="sd">    """</span>
     <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">(</span><span class="s2">"pdflatex"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">installed</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"auto"</span><span class="p">:</span>
-            <span class="n">use_apt</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Linux"</span> <span class="ow">and</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">"apt-get"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">use_apt</span> <span class="o">=</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"apt"</span>
-
-        <span class="k">if</span> <span class="n">use_apt</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"apt"</span><span class="p">:</span>
             <span class="n">apt_packages</span> <span class="o">=</span> <span class="n">APT_TEXLIVE_PACKAGES</span> <span class="k">if</span> <span class="n">install_packages</span> <span class="k">else</span> <span class="p">(</span><span class="s2">"texlive-latex-base"</span><span class="p">,)</span>
             <span class="n">install_texlive_apt</span><span class="p">(</span><span class="n">apt_packages</span><span class="p">)</span>
             <span class="n">installed</span> <span class="o">=</span> <span class="n">sanity_check</span><span class="p">(</span><span class="s2">"pdflatex"</span><span class="p">)</span>
@@ -2639,7 +2636,9 @@ install_missing_packages: Installs packages reported missing in the log.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">479</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
 <span class="normal">480</span>
 <span class="normal">481</span>
 <span class="normal">482</span>
@@ -2721,9 +2720,7 @@ install_missing_packages: Installs packages reported missing in the log.</p>
 <span class="normal">558</span>
 <span class="normal">559</span>
 <span class="normal">560</span>
-<span class="normal">561</span>
-<span class="normal">562</span>
-<span class="normal">563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_pdf</span><span class="p">(</span><span class="n">tex_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">max_runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">install_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="normal">561</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_pdf</span><span class="p">(</span><span class="n">tex_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">max_runs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">install_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Compile a `.tex` file to PDF with `pdflatex`, installing missing packages.</span>
 
 <span class="sd">    Ensures `pdflatex` is available (installing TinyTeX if needed), then runs it from</span>
@@ -2904,7 +2901,9 @@ signature. Defaults to None.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">566</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
 <span class="normal">567</span>
 <span class="normal">568</span>
 <span class="normal">569</span>
@@ -2927,9 +2926,7 @@ signature. Defaults to None.</p>
 <span class="normal">586</span>
 <span class="normal">587</span>
 <span class="normal">588</span>
-<span class="normal">589</span>
-<span class="normal">590</span>
-<span class="normal">591</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pdflatex_check_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">589</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pdflatex_check_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""CLI handler for `ddocs pdflatex check`: report whether pdflatex is callable.</span>
 
 <span class="sd">    This only probes `PATH` (via :func:`sanity_check`); it never downloads or installs</span>
@@ -3053,7 +3050,9 @@ default :data:<code>REQUIRED_TLMGR_PACKAGES</code>), and <code>backend</code> (a
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/pdflatex_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">594</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
 <span class="normal">595</span>
 <span class="normal">596</span>
 <span class="normal">597</span>
@@ -3093,9 +3092,7 @@ default :data:<code>REQUIRED_TLMGR_PACKAGES</code>), and <code>backend</code> (a
 <span class="normal">631</span>
 <span class="normal">632</span>
 <span class="normal">633</span>
-<span class="normal">634</span>
-<span class="normal">635</span>
-<span class="normal">636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pdflatex_download_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">634</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">pdflatex_download_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""CLI handler for `ddocs pdflatex download`: install pdflatex and TeX packages.</span>
 
 <span class="sd">    Ensures pdflatex is available (installing it via apt or TinyTeX if necessary) and</span>

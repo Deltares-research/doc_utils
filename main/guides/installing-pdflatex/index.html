@@ -1054,24 +1054,24 @@ ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class
 </thead>
 <tbody>
 <tr>
-<td><strong>apt</strong></td>
-<td>Debian/Ubuntu with <code>sudo</code></td>
-<td><code>apt-get install texlive-*</code> — prebuilt <code>.deb</code>s from a fast mirror; by far the quickest on CI. Needs root.</td>
+<td><strong>tinytex</strong></td>
+<td>everywhere</td>
+<td>Downloads and runs the official <strong>TinyTeX</strong> installer (root-free, cross-platform) and <code>tlmgr install</code>s the packages. All packages come from one TeX Live release, so versions are consistent.</td>
 </tr>
 <tr>
-<td><strong>tinytex</strong></td>
-<td>everywhere else</td>
-<td>Downloads and runs the official <strong>TinyTeX</strong> installer (root-free, cross-platform) and <code>tlmgr install</code>s the packages.</td>
+<td><strong>apt</strong></td>
+<td>opt-in; Debian/Ubuntu with <code>sudo</code></td>
+<td><code>apt-get install texlive-*</code> — prebuilt <code>.deb</code>s from a fast mirror. Needs root, and the distro's package versions can be mutually incompatible (see <a href="#troubleshooting-ubuntu-2604-captiontocbasic-error">Troubleshooting</a>).</td>
 </tr>
 <tr>
 <td><strong>auto</strong> <em>(default)</em></td>
 <td>—</td>
-<td>Use <strong>apt</strong> when <code>apt-get</code> is available on Linux, otherwise fall back to <strong>TinyTeX</strong>.</td>
+<td>Same as <strong>tinytex</strong> on every platform.</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code>ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>auto<span class="w">      </span><span class="c1"># default: apt on Debian/Ubuntu, else TinyTeX</span>
-ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>apt<span class="w">        </span><span class="c1"># force apt (fast; needs sudo)</span>
+<div class="highlight"><pre><span></span><code>ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>auto<span class="w">      </span><span class="c1"># default: TinyTeX</span>
+ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>apt<span class="w">        </span><span class="c1"># opt in to apt (faster; needs sudo)</span>
 ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>tinytex<span class="w">    </span><span class="c1"># force TinyTeX (no root, any OS)</span>
 </code></pre></div>
 <h2 id="controlling-which-packages-are-installed">Controlling which packages are installed<a class="headerlink" href="#controlling-which-packages-are-installed" title="Permanent link">&para;</a></h2>
@@ -1099,22 +1099,17 @@ and <code>tlmgr install</code>s what is missing), so a lean install is usually e
 compiles:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install "git+https://github.com/Deltares-research/doc_utils.git"</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ddocs get-tex-template --output-dir ./latex --no-ssh</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ddocs pdflatex download</span><span class="w">          </span><span class="c1"># auto -&gt; apt on Ubuntu runners (fast)</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ddocs pdflatex download</span><span class="w">          </span><span class="c1"># auto -&gt; TinyTeX</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdflatex docs/manual.tex</span><span class="w">          </span><span class="c1"># bare pdflatex; packages are already present</span>
 </code></pre></div>
-<p>On an Ubuntu runner the <code>auto</code> backend picks <strong>apt</strong>, so this is fast and the
-<code>texlive-*</code> packages (e.g. <code>lipsum.sty</code>) are available to the bare <code>pdflatex</code> step.</p>
-<div class="admonition warning">
-<p class="admonition-title">Ubuntu 26.04 runners</p>
-<p>On <code>ubuntu-latest</code> (now Ubuntu 26.04) the apt TeX Live currently fails to build the Deltares
-templates. Until this is fixed, pin the job to <code>ubuntu-24.04</code>. See
-<a href="#troubleshooting-ubuntu-2604-captiontocbasic-error">Troubleshooting</a>.</p>
-</div>
+<p>The <code>auto</code> backend installs <strong>TinyTeX</strong>, so every TeX package (e.g. <code>caption</code>, <code>tocbasic</code>, <code>lipsum.sty</code>) comes from
+one consistent TeX Live release and works the same on any runner image. The project's own CI builds the Deltares
+templates this way on <code>ubuntu-latest</code> (Ubuntu 26.04).</p>
 <h3 id="avoid-re-downloading-every-run">Avoid re-downloading every run<a class="headerlink" href="#avoid-re-downloading-every-run" title="Permanent link">&para;</a></h3>
 <p>The bytes only need to land once. Cache the TeX install between runs:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
 <span class="w">  </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.TinyTeX</span><span class="w">            </span><span class="c1"># or the apt cache for the apt backend</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.TinyTeX</span>
 <span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tex-${{ runner.os }}-v1</span>
 </code></pre></div>
 <p>First run downloads; subsequent runs restore from cache in seconds.</p>
@@ -1122,9 +1117,9 @@ templates. Until this is fixed, pin the job to <code>ubuntu-24.04</code>. See
 <p>The same functionality is available programmatically from <code>ddocs.latex</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.latex</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_pdflatex_installed</span><span class="p">,</span> <span class="n">build_pdf</span>
 
-<span class="c1"># Ensure pdflatex is available (apt or TinyTeX), installing the default packages</span>
+<span class="c1"># Ensure pdflatex is available (TinyTeX by default), installing the default packages</span>
 <span class="n">check_pdflatex_installed</span><span class="p">()</span>                       <span class="c1"># -&gt; True/False</span>
-<span class="n">check_pdflatex_installed</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">"tinytex"</span><span class="p">)</span>       <span class="c1"># force a backend</span>
+<span class="n">check_pdflatex_installed</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">"apt"</span><span class="p">)</span>           <span class="c1"># opt in to apt (Debian/Ubuntu + sudo)</span>
 <span class="n">check_pdflatex_installed</span><span class="p">(</span><span class="n">packages</span><span class="o">=</span><span class="p">[</span><span class="s2">"lipsum"</span><span class="p">])</span>     <span class="c1"># lean tinytex package set</span>
 <span class="n">check_pdflatex_installed</span><span class="p">(</span><span class="n">install_packages</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># engine only</span>
 
@@ -1141,11 +1136,11 @@ templates. Until this is fixed, pin the job to <code>ubuntu-24.04</code>. See
 <tbody>
 <tr>
 <td><code>check_pdflatex_installed(install_packages=True, packages=..., backend="auto")</code></td>
-<td>Ensure <code>pdflatex</code> is present; install via apt/TinyTeX if needed.</td>
+<td>Ensure <code>pdflatex</code> is present; install via TinyTeX (or apt, opt-in) if needed.</td>
 </tr>
 <tr>
 <td><code>install_texlive_apt(packages=APT_TEXLIVE_PACKAGES)</code></td>
-<td>The apt backend (Debian/Ubuntu).</td>
+<td>The opt-in apt backend (Debian/Ubuntu).</td>
 </tr>
 <tr>
 <td><code>build_pdf(tex_file, ...)</code></td>
@@ -1158,46 +1153,27 @@ templates. Until this is fixed, pin the job to <code>ubuntu-24.04</code>. See
 </tbody>
 </table>
 <h2 id="troubleshooting-ubuntu-2604-captiontocbasic-error">Troubleshooting: Ubuntu 26.04 <code>caption</code>/<code>tocbasic</code> error<a class="headerlink" href="#troubleshooting-ubuntu-2604-captiontocbasic-error" title="Permanent link">&para;</a></h2>
-<p><strong>Symptom.</strong> Building a Deltares document (e.g. with <code>build_pdf</code> or a bare <code>pdflatex</code>) on Ubuntu 26.04
-(<code>ubuntu-latest</code> on GitHub Actions) fails with:</p>
+<p><strong>Symptom.</strong> Building a Deltares document with the <strong>apt</strong> backend (or a distro-installed <code>pdflatex</code>) on Ubuntu 26.04
+fails with:</p>
 <div class="highlight"><pre><span></span><code>! LaTeX Error: Unknown message 'caption-code-by-class-deactivated' for module
 (LaTeX)        'tocbasic'.
 </code></pre></div>
 <p>The <code>RuntimeError</code> raised by <code>build_pdf</code> includes this error plus a log excerpt starting at it.</p>
 <p><strong>Cause.</strong> The apt TeX Live on 26.04 (<code>2025.20260124</code>) ships <code>caption</code> v3.6o (2023/08/05) together with a newer
 KOMA-Script <code>tocbasic</code>. The older <code>caption</code> raises a message that the newer <code>tocbasic</code> no longer defines, and the
-Deltares document classes load <code>caption</code>. Adding <code>texlive-latex-recommended</code> does <strong>not</strong> help, because both packages
-already come from it. Tracked in
-<a href="https://github.com/Deltares-research/doc_utils/issues/14">issue #14</a>.</p>
-<p><strong>Workarounds</strong> (until #14 is fixed):</p>
-<ol>
-<li>
-<p><strong>Pin the runner to Ubuntu 24.04</strong> <em>(verified: this is what the project's own CI does)</em>. Its TeX Live ships a
-   matching <code>caption</code>/<code>tocbasic</code> pair.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">build-docs</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span><span class="w">   </span><span class="c1"># not ubuntu-latest, until issue #14 is fixed</span>
-</code></pre></div>
-</li>
-<li>
-<p><strong>Use the TinyTeX backend</strong> <em>(not yet tested against this error)</em>. TinyTeX installs every package from one TeX Live
-   release via <code>tlmgr</code>, so the versions should be consistent. Do not install the apt <code>texlive-*</code> packages in the same
-   job, because <code>ddocs</code> skips the install when a <code>pdflatex</code> is already on <code>PATH</code>.</p>
-<div class="highlight"><pre><span></span><code>ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download<span class="w"> </span>--backend<span class="w"> </span>tinytex
-</code></pre></div>
-</li>
-</ol>
-<p><strong>Check whether you are affected.</strong> On the runner, print the installed versions:</p>
+Deltares document classes load <code>caption</code>. See <a href="https://github.com/Deltares-research/doc_utils/issues/14">issue #14</a>.</p>
+<p><strong>Fix.</strong> Use the default <strong>TinyTeX</strong> backend (<code>ddocs pdflatex download</code>, or <code>--backend tinytex</code>), which installs every
+package from one TeX Live release. Do not install the apt <code>texlive-*</code> packages in the same job, because <code>ddocs</code> skips
+the install when a <code>pdflatex</code> is already on <code>PATH</code>.</p>
+<p><strong>Check whether you are affected.</strong> Print the installed versions:</p>
 <div class="highlight"><pre><span></span><code>kpsewhich<span class="w"> </span>-all<span class="w"> </span>tocbasic.sty<span class="w"> </span>caption.sty
 grep<span class="w"> </span>-m1<span class="w"> </span>ProvidesPackage<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>kpsewhich<span class="w"> </span>caption.sty<span class="k">)</span><span class="s2">"</span><span class="w">   </span><span class="c1"># 2023/08/05 v3.6o means the old caption is installed</span>
 </code></pre></div>
-<p>Remove the pin once issue #14 is resolved.</p>
 <h2 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>apt needs root</strong> (<code>sudo</code>). On a machine without passwordless <code>sudo</code>, <code>auto</code> falls back
-  to TinyTeX.</li>
-<li><strong>TinyTeX downloads from CTAN per package</strong> via <code>tlmgr</code>, which is slower than apt — use
-  apt on Linux CI, or cache the install.</li>
+<li><strong>apt is opt-in and needs root</strong> (<code>sudo</code>). It is faster, but the distro's TeX package versions can be
+  inconsistent (see the Ubuntu 26.04 note above).</li>
+<li><strong>TinyTeX downloads from CTAN per package</strong> via <code>tlmgr</code>, which is slower than apt — cache <code>~/.TinyTeX</code> on CI.</li>
 <li><code>texlive-fonts-extra</code> (apt) / <code>collection-fontsextra</code> (tlmgr) is the heaviest item; drop
   it from <code>--packages</code> if your documents do not need exotic fonts.</li>
 <li>The <strong>TinyTeX backend downloads and runs the official upstream installer script</strong> (from
