@@ -39,6 +39,11 @@ directory.
 > **The default pattern is not recursive.** `*.md` matches only the top level of
 > `--input`. To walk subdirectories, pass a recursive glob: `--pattern "**/*.md"`.
 
+> **Recursive matches are flattened.** Every output file is written directly into `--output` as
+> `<name>.tex`, so the subdirectory structure is not preserved. If two files share a name (for example
+> `a/intro.md` and `b/intro.md`), the second silently overwrites the first and the run still reports
+> success. Keep file names unique when converting recursively.
+
 ## Fragments vs. standalone documents
 
 This is the most important choice, set by `--standalone`:
@@ -90,7 +95,7 @@ in scripts and CI:
 
 | Exit code | Meaning |
 |-----------|---------|
-| `0` | Every matched file converted successfully. |
+| `0` | Every matched file converted successfully. This includes the case where the pattern matched **no** files: a "No markdown files found" message is printed, but the exit code is still `0`. |
 | `1` | The input directory or template was missing, Pandoc was unavailable, or at least one file failed to convert. |
 
 ## Python API

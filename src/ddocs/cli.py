@@ -14,9 +14,8 @@ def create_parser() -> argparse.ArgumentParser:
 
     Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean``,
     ``check-pandoc`` and ``pdflatex`` (``check`` / ``download``) subcommands.
-    ``get-tex-template`` accepts ``--output-dir`` plus
-    the authentication options ``--token``, ``--username``, ``--password`` and
-    ``--no-ssh``.
+    ``get-tex-template`` accepts ``--output-dir`` plus the authentication options
+    ``--token``, ``--username``, ``--password`` and ``--no-ssh``.
 
     Returns:
         The configured ``argparse.ArgumentParser``.
