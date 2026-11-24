@@ -123,6 +123,48 @@ def clean_latex_build_files(directory: Path, pattern: str = "**/*", templates: b
             1
 
             ```
+        - Source files and the PDF are kept; minitoc and nomencl artifacts are removed:
+            ```python
+            >>> import tempfile
+            >>> from pathlib import Path
+            >>> from ddocs.latex.clean import clean_latex_build_files
+            >>> with tempfile.TemporaryDirectory() as tmp:
+            ...     for name in ["doc.tex", "doc.pdf", "doc.mtc0", "doc.nls"]:
+            ...         (Path(tmp) / name).touch()
+            ...     count = clean_latex_build_files(Path(tmp), pattern="*")
+            ...     sorted(p.name for p in Path(tmp).iterdir())
+            Removed: doc.mtc0
+            Removed: doc.nls
+            ['doc.pdf', 'doc.tex']
+
+            ```
+        - Also remove the files downloaded by ``ddocs get-tex-template``:
+            ```python
+            >>> import tempfile
+            >>> from pathlib import Path
+            >>> from ddocs.latex.clean import clean_latex_build_files
+            >>> with tempfile.TemporaryDirectory() as tmp:
+            ...     (Path(tmp) / "deltares_report.cls").touch()
+            ...     (Path(tmp) / "mystyle.sty").touch()
+            ...     count = clean_latex_build_files(Path(tmp), pattern="*", templates=True)
+            ...     sorted(p.name for p in Path(tmp).iterdir())
+            Removed: deltares_report.cls
+            ['mystyle.sty']
+
+            ```
+        - A missing directory is reported and nothing is removed:
+            ```python
+            >>> from pathlib import Path
+            >>> from ddocs.latex.clean import clean_latex_build_files
+            >>> clean_latex_build_files(Path("does-not-exist-dir"))
+            Error: Directory not found: does-not-exist-dir
+            0
+
+            ```
+
+    See Also:
+        clean_latex_cli: Command-line wrapper around this function.
+        ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed by ``templates=True``.
     """
     removed_count = 0
     if not directory.exists():
@@ -156,6 +198,37 @@ def clean_latex_cli(args: argparse.Namespace) -> int:
 
     Returns:
         0 on success, 1 when the directory is missing or is not a directory.
+
+    Examples:
+        - Clean a directory and read the exit code:
+            ```python
+            >>> import argparse
+            >>> import tempfile
+            >>> from pathlib import Path
+            >>> from ddocs.latex.clean import clean_latex_cli
+            >>> with tempfile.TemporaryDirectory() as tmp:
+            ...     (Path(tmp) / "doc.log").touch()
+            ...     args = argparse.Namespace(directory=Path(tmp), recursive=False, templates=False)
+            ...     clean_latex_cli(args)
+            Cleaning LaTeX build files from: ...
+            Removed: doc.log
+            Cleaned 1 LaTeX build file(s)
+            0
+
+            ```
+        - A missing directory gives exit code 1:
+            ```python
+            >>> import argparse
+            >>> from pathlib import Path
+            >>> from ddocs.latex.clean import clean_latex_cli
+            >>> clean_latex_cli(argparse.Namespace(directory=Path("nope-dir"), recursive=False))
+            Error: Directory not found: nope-dir
+            1
+
+            ```
+
+    See Also:
+        clean_latex_build_files: The function this CLI handler calls.
     """
     if not args.directory.exists():
         print(f"Error: Directory not found: {args.directory}")
