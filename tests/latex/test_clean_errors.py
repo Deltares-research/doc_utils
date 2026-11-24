@@ -52,6 +52,24 @@ class TestIsBuildFile:
         assert _is_build_file(directory) is False, "directories must not be treated as build files"
 
 
+class TestEditorFilesAreKept:
+    @pytest.mark.unit
+    def test_jetbrains_run_configuration_is_not_removed(self, tmp_path):
+        """Test a recursive clean keeps JetBrains shared run configurations (``.run/*.run.xml``).
+
+        Test scenario:
+            ``.run.xml`` collides with biber's run file name, so it must not be treated as a build artifact.
+        """
+        run_config = tmp_path / ".run" / "pytest.run.xml"
+        run_config.parent.mkdir()
+        run_config.write_text("<component/>")
+
+        removed = clean_latex_build_files(tmp_path)
+
+        assert removed == 0, f"nothing should be removed, got {removed}"
+        assert run_config.exists(), "the run configuration must be kept"
+
+
 class TestRemoveHelpers:
     @pytest.mark.unit
     def test_remove_file_reports_oserror(self, tmp_path, capsys):

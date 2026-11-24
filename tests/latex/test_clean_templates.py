@@ -10,7 +10,7 @@ from ddocs.latex.clean import clean_latex_build_files, clean_latex_cli
 
 EXTRA_ARTIFACTS = [
     "doc.maf", "doc.mtc", "doc.mtc0", "doc.mtc12", "doc.nlo", "doc.nls", "doc.nlg",
-    "doc.bcf", "doc.run.xml", "doc.glo", "doc.gls", "doc.glg", "doc.lol", "doc.loe", "doc.tdo",
+    "doc.bcf", "doc.glo", "doc.gls", "doc.glg", "doc.lol", "doc.loe", "doc.tdo",
 ]
 TEMPLATE_FILES = [
     "deltares_report.cls", "deltares_footer.sty", "deltares_chicago_like.bst", "deltares_nomentbl.ist",

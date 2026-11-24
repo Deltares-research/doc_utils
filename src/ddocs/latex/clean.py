@@ -18,7 +18,6 @@ LATEX_BUILD_EXTENSIONS: tuple[str, ...] = (
     ".bbl",  # Bibliography file (bibtex output)
     ".blg",  # Bibliography log file
     ".bcf",  # biblatex control file
-    ".run.xml",  # biblatex/biber run file
     ".toc",  # Table of contents
     ".lof",  # List of figures
     ".lot",  # List of tables
