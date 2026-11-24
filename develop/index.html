@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="guides/repo-cloner-authentication/">
+        <link rel="next" href="installation/">
       
       
         
@@ -318,10 +318,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#commands" class="md-nav__link">
     <span class="md-ellipsis">
       
         Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
       
     </span>
   </a>
@@ -339,10 +361,48 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#where-to-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to next
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -367,10 +427,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -388,8 +448,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -398,6 +458,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guides/converting-markdown-to-latex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Converting Markdown to LaTeX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -482,10 +570,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -503,8 +591,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -771,6 +859,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -782,10 +881,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
         Quick start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to next
       
     </span>
   </a>
@@ -816,7 +937,20 @@
 <p><code>ddocs</code> is a Python utility package for converting Markdown documentation to
 LaTeX, designed for Deltares documentation workflows. It wraps Pandoc with
 Deltares-specific LaTeX post-processing and ships a <code>ddocs</code> command-line
-interface.</p>
+interface, plus helpers for fetching the Deltares LaTeX templates and
+provisioning a <code>pdflatex</code> toolchain.</p>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Convert Markdown → LaTeX</strong> with Deltares-specific post-processing (Unicode
+  cleanup, table-width fixes, long-word wrapping) — see
+  <a href="guides/converting-markdown-to-latex/">Converting Markdown to LaTeX</a>.</li>
+<li><strong>Fetch the Deltares LaTeX templates</strong> from the private template repository,
+  with token/SSH authentication — see
+  <a href="guides/repo-cloner-authentication/">RepoCloner &amp; authentication</a>.</li>
+<li><strong>Provision pdfLaTeX</strong> (TinyTeX or apt) and the required TeX packages on demand —
+  see <a href="guides/installing-pdflatex/">Installing pdfLaTeX</a>.</li>
+<li><strong>Clean up</strong> LaTeX build artifacts when you're done.</li>
+</ul>
 <h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -840,10 +974,24 @@ interface.</p>
 </tr>
 <tr>
 <td><code>ddocs check-pandoc</code></td>
-<td>Verify Pandoc is installed; download it if missing.</td>
+<td>Verify the bundled Pandoc is callable (adds it to <code>PATH</code> if needed).</td>
+</tr>
+<tr>
+<td><code>ddocs pdflatex check</code></td>
+<td>Probe whether <code>pdflatex</code> is already installed (installs nothing).</td>
+</tr>
+<tr>
+<td><code>ddocs pdflatex download</code></td>
+<td>Install <code>pdflatex</code> and the required TeX packages (apt or TinyTeX).</td>
 </tr>
 </tbody>
 </table>
+<p>Run <code>ddocs --help</code> (or <code>ddocs &lt;command&gt; --help</code>) to see every option.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"git+https://github.com/Deltares-research/doc_utils.git"</span>
+</code></pre></div>
+<p>See <a href="installation/">Installation</a> for requirements, the <code>uv</code> workflow, and a
+development setup.</p>
 <h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Convert Markdown to LaTeX fragments</span>
 ddocs<span class="w"> </span>markdown-to-latex<span class="w"> </span>--input<span class="w"> </span>docs/mkdocs<span class="w"> </span>--output<span class="w"> </span>docs/latex
@@ -854,10 +1002,18 @@ ddocs<span class="w"> </span>markdown-to-latex<span class="w"> </span>-i<span cl
 <span class="c1"># Retrieve the Deltares LaTeX templates</span>
 ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>--output-dir<span class="w"> </span>./templates
 
-<span class="c1"># Clean LaTeX build files (use -r to recurse)</span>
+<span class="c1"># Ensure a TeX engine is available, then clean build files afterwards (-r recurses)</span>
+ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download
 ddocs<span class="w"> </span>clean<span class="w"> </span>--directory<span class="w"> </span>./docs/latex<span class="w"> </span>--recursive
 </code></pre></div>
-<p>See the <a href="reference/">API Reference</a> for module-level documentation.</p>
+<h2 id="where-to-next">Where to next<a class="headerlink" href="#where-to-next" title="Permanent link">&para;</a></h2>
+<ul>
+<li>New here? Start with <a href="installation/">Installation</a>, then
+  <a href="guides/converting-markdown-to-latex/">Converting Markdown to LaTeX</a>.</li>
+<li>Building PDFs in CI? See <a href="guides/installing-pdflatex/">Installing pdfLaTeX</a> and
+  <a href="guides/repo-cloner-authentication/">RepoCloner &amp; authentication</a>.</li>
+<li>Looking for module-level docs? See the <a href="reference/">API Reference</a>.</li>
+</ul>
 
 
 
