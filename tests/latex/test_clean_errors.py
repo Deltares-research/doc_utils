@@ -9,7 +9,7 @@ import pytest
 from ddocs.latex.clean import (
     _is_build_file,
     _remove_file,
-    _remove_template_directory,
+    _remove_template_pictures,
     clean_latex_build_files,
     clean_latex_cli,
 )
@@ -85,28 +85,41 @@ class TestRemoveHelpers:
         assert target.exists(), "file should still exist"
 
     @pytest.mark.unit
-    def test_remove_template_directory_reports_oserror(self, tmp_path, capsys):
-        """Test _remove_template_directory returns 0 and warns when rmtree fails."""
+    def test_remove_template_pictures_reports_rmdir_oserror(self, tmp_path, capsys):
+        """Test _remove_template_pictures warns when the emptied folder cannot be removed."""
         pictures = tmp_path / "pictures"
         pictures.mkdir()
-        (pictures / "a.png").write_text("x")
+        (pictures / "deltares_logo.pdf").write_text("x")
 
-        with patch("ddocs.latex.clean.shutil.rmtree", side_effect=OSError("locked")):
-            removed = _remove_template_directory(pictures, tmp_path)
+        with patch.object(Path, "rmdir", side_effect=OSError("locked")):
+            removed = _remove_template_pictures(pictures, tmp_path)
 
-        assert removed == 0, f"expected 0 removed, got {removed}"
+        assert removed == 1, f"the picture itself was removed, got {removed}"
         assert "Could not remove" in capsys.readouterr().out, "a warning should be printed"
 
     @pytest.mark.unit
-    def test_remove_template_directory_counts_nested_files(self, tmp_path):
-        """Test _remove_template_directory returns the number of files that were inside."""
+    def test_remove_template_pictures_counts_only_template_files(self, tmp_path):
+        """Test _remove_template_pictures returns the number of template pictures removed."""
         pictures = tmp_path / "pictures"
-        (pictures / "nested").mkdir(parents=True)
-        (pictures / "a.png").write_text("x")
-        (pictures / "nested" / "b.png").write_text("x")
+        pictures.mkdir()
+        (pictures / "deltares_logo.pdf").write_text("x")
+        (pictures / "trein.jpg").write_text("x")
+        (pictures / "mine.png").write_text("x")
 
-        assert _remove_template_directory(pictures, tmp_path) == 2, "both nested files should be counted"
-        assert not pictures.exists(), "directory should be gone"
+        assert _remove_template_pictures(pictures, tmp_path) == 2, "only the two template pictures are counted"
+        assert (pictures / "mine.png").exists(), "the user's file must be kept"
+        assert pictures.exists(), "the folder is kept while it still holds a user file"
+
+    @pytest.mark.unit
+    def test_remove_template_pictures_removes_emptied_folder(self, tmp_path):
+        """Test the folder is removed when only template pictures were in it."""
+        pictures = tmp_path / "pictures"
+        pictures.mkdir()
+        (pictures / "warning.png").write_text("x")
+
+        _remove_template_pictures(pictures, tmp_path)
+
+        assert not pictures.exists(), "an emptied pictures/ folder should be removed"
 
 
 class TestCleanLatexBuildFilesErrors:

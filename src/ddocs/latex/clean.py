@@ -8,8 +8,9 @@ downloads next to the document.
 
 import argparse
 import re
-import shutil
 from pathlib import Path
+
+from ddocs.latex.template_files import TEMPLATE_PICTURES, TEMPLATE_PICTURES_DIR
 
 # LaTeX build file extensions removed by default.
 LATEX_BUILD_EXTENSIONS: tuple[str, ...] = (
@@ -56,9 +57,6 @@ TEMPLATE_FILE_PATTERNS: tuple[str, ...] = (
     "deltares_*.ist",
 )
 
-# Directories fetched by ``ddocs get-tex-template`` (looked up directly under the cleaned directory).
-TEMPLATE_DIRECTORIES: tuple[str, ...] = ("pictures",)
-
 
 def _is_build_file(path: Path) -> bool:
     """Return True when `path` is a regular file with a LaTeX build-artifact extension."""
@@ -78,16 +76,31 @@ def _remove_file(file_path: Path, directory: Path) -> int:
     return removed
 
 
-def _remove_template_directory(template_dir: Path, directory: Path) -> int:
-    """Delete a downloaded template directory and return the number of files it held."""
-    file_count = sum(1 for p in template_dir.rglob("*") if p.is_file())
-    try:
-        shutil.rmtree(template_dir)
-        print(f"Removed: {template_dir.relative_to(directory)}/ ({file_count} file(s))")
-        removed = file_count
-    except OSError as e:
-        print(f"Warning: Could not remove {template_dir}: {e}")
-        removed = 0
+def _remove_template_pictures(pictures_dir: Path, directory: Path) -> int:
+    """Delete the downloaded template pictures from `pictures_dir` and keep everything else.
+
+    Only the files listed in :data:`ddocs.latex.template_files.TEMPLATE_PICTURES` are removed. The directory
+    itself is removed only when it is empty afterwards; otherwise the remaining files are reported and kept.
+
+    Returns:
+        Number of picture files removed.
+    """
+    removed = 0
+    for name in TEMPLATE_PICTURES:
+        picture = pictures_dir / name
+        if picture.is_file():
+            removed += _remove_file(picture, directory)
+
+    remaining = list(pictures_dir.iterdir())
+    relative = pictures_dir.relative_to(directory)
+    if remaining:
+        print(f"Kept: {relative}/ ({len(remaining)} item(s) that are not template pictures)")
+    else:
+        try:
+            pictures_dir.rmdir()
+            print(f"Removed: {relative}/")
+        except OSError as e:
+            print(f"Warning: Could not remove {pictures_dir}: {e}")
     return removed
 
 
@@ -102,9 +115,10 @@ def clean_latex_build_files(directory: Path, pattern: str = "**/*", templates: b
         directory: Directory to clean
         pattern: Glob pattern for subdirectories to include (default: "**/*" for recursive)
         templates: When True, also remove the files ``ddocs get-tex-template`` downloads:
-            ``deltares_*.cls/.sty/.bst/.ist`` and the ``pictures/`` directory, both looked up directly in
-            `directory` only (never in subdirectories, even for a recursive clean). The whole ``pictures/``
-            directory is deleted, including any file you added to it. Defaults to False.
+            ``deltares_*.cls/.sty/.bst/.ist`` and the template pictures in ``pictures/``, both looked up
+            directly in `directory` only (never in subdirectories, even for a recursive clean). Only the
+            known template pictures are removed from ``pictures/``; any other file you put there is kept, and
+            the directory is removed only when it ends up empty. Defaults to False.
 
     Returns:
         Number of files removed
@@ -181,10 +195,9 @@ def clean_latex_build_files(directory: Path, pattern: str = "**/*", templates: b
             for template_pattern in TEMPLATE_FILE_PATTERNS:
                 for file_path in sorted(p for p in directory.glob(template_pattern) if p.is_file()):
                     removed_count += _remove_file(file_path, directory)
-            for dir_name in TEMPLATE_DIRECTORIES:
-                template_dir = directory / dir_name
-                if template_dir.is_dir():
-                    removed_count += _remove_template_directory(template_dir, directory)
+            pictures_dir = directory / TEMPLATE_PICTURES_DIR
+            if pictures_dir.is_dir():
+                removed_count += _remove_template_pictures(pictures_dir, directory)
 
     return removed_count
 

@@ -26,9 +26,8 @@ def workspace(tmp_path: Path) -> Path:
     for name in EXTRA_ARTIFACTS + TEMPLATE_FILES:
         (tmp_path / name).write_text("x")
     (tmp_path / "pictures").mkdir()
-    (tmp_path / "pictures" / "logo.pdf").write_text("x")
-    (tmp_path / "pictures" / "nested").mkdir()
-    (tmp_path / "pictures" / "nested" / "a.png").write_text("x")
+    (tmp_path / "pictures" / "deltares_logo.pdf").write_text("x")
+    (tmp_path / "pictures" / "report_cover.svg").write_text("x")
     (tmp_path / "chapters").mkdir()
     (tmp_path / "chapters" / "intro.tex").write_text("x")
     (tmp_path / "chapters" / "intro.aux").write_text("x")
@@ -64,7 +63,7 @@ class TestExtendedArtifacts:
 class TestTemplatesOption:
     @pytest.mark.unit
     def test_templates_removed_when_requested(self, workspace):
-        """Test that templates=True removes template files and the pictures/ directory."""
+        """Test that templates=True removes template files and the template pictures (and the emptied folder)."""
         removed = clean_latex_build_files(workspace, pattern="*", templates=True)
 
         assert removed == len(EXTRA_ARTIFACTS) + len(TEMPLATE_FILES) + 2, f"unexpected removed count: {removed}"
@@ -87,6 +86,26 @@ class TestTemplatesOption:
         assert (tmp_path / "custom.cls").exists(), "non-template .cls must be kept"
         assert (tmp_path / "refs.bst").exists(), "non-template .bst must be kept"
         assert not (tmp_path / "deltares_report.cls").exists(), "template .cls should be removed"
+
+    @pytest.mark.unit
+    def test_user_pictures_are_kept(self, workspace, capsys):
+        """Test that files you added to pictures/ survive, together with the folder.
+
+        Test scenario:
+            ``pictures/`` holds two template pictures, a user image and a user subfolder; only the template
+            pictures are removed and the remaining items are reported.
+        """
+        (workspace / "pictures" / "my_diagram.png").write_text("x")
+        (workspace / "pictures" / "mine").mkdir()
+        (workspace / "pictures" / "mine" / "b.png").write_text("x")
+
+        clean_latex_build_files(workspace, pattern="*", templates=True)
+
+        assert not (workspace / "pictures" / "deltares_logo.pdf").exists(), "template picture should be removed"
+        assert not (workspace / "pictures" / "report_cover.svg").exists(), "template picture should be removed"
+        assert (workspace / "pictures" / "my_diagram.png").exists(), "user image must be kept"
+        assert (workspace / "pictures" / "mine" / "b.png").exists(), "user subfolder must be kept"
+        assert "Kept: pictures/ (2 item(s)" in capsys.readouterr().out, "the kept items should be reported"
 
     @pytest.mark.unit
     def test_templates_without_pictures_dir_is_fine(self, tmp_path):

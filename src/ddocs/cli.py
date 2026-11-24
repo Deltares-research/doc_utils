@@ -183,8 +183,8 @@ Examples:
         '--templates',
         action='store_true',
         help='Also remove the template files downloaded by get-tex-template '
-             '(deltares_*.cls/.sty/.bst/.ist and the whole pictures/ directory, including files you added), '
-             'looked up in the given directory only, not in subdirectories'
+             '(deltares_*.cls/.sty/.bst/.ist and the template pictures in pictures/; files you added to '
+             'pictures/ are kept), looked up in the given directory only, not in subdirectories'
     )
 
     # sub-command: check-pandoc
