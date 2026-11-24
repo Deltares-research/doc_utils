@@ -286,6 +286,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -300,10 +327,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -321,8 +348,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -331,6 +358,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/converting-markdown-to-latex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Converting Markdown to LaTeX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -417,10 +472,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -438,8 +493,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -852,8 +907,8 @@
 
 <h1 id="ddocscli"><code>ddocs.cli</code><a class="headerlink" href="#ddocscli" title="Permanent link">&para;</a></h1>
 <p>Command-line interface for <code>ddocs</code>. Builds the argument parser, wires up the
-<code>markdown-to-latex</code>, <code>get-tex-template</code>, <code>clean</code>, and <code>check-pandoc</code> subcommands,
-and dispatches to their handlers. Installed as the <code>ddocs</code> console script.</p>
+<code>markdown-to-latex</code>, <code>get-tex-template</code>, <code>clean</code>, <code>check-pandoc</code>, and <code>pdflatex</code>
+(<code>check</code> / <code>download</code>) subcommands, and dispatches to their handlers. Installed as the <code>ddocs</code> console script.</p>
 
 
 <div class="doc doc-object doc-module">
@@ -904,10 +959,10 @@ and dispatches to their handlers. Installed as the <code>ddocs</code> console sc
     <div class="doc doc-contents ">
 
         <p>Build the <code>ddocs</code> argument parser with all subcommands.</p>
-<p>Registers the <code>markdown-to-latex</code>, <code>get-tex-template</code>, <code>clean</code> and
-<code>check-pandoc</code> subcommands. <code>get-tex-template</code> accepts <code>--output-dir</code> plus
-the authentication options <code>--token</code>, <code>--username</code>, <code>--password</code> and
-<code>--no-ssh</code>.</p>
+<p>Registers the <code>markdown-to-latex</code>, <code>get-tex-template</code>, <code>clean</code>,
+<code>check-pandoc</code> and <code>pdflatex</code> (<code>check</code> / <code>download</code>) subcommands.
+<code>get-tex-template</code> accepts <code>--output-dir</code> plus the authentication options
+<code>--token</code>, <code>--username</code>, <code>--password</code> and <code>--no-ssh</code>.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -1161,10 +1216,10 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Build the ``ddocs`` argument parser with all subcommands.</span>
 
-<span class="sd">    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean`` and</span>
-<span class="sd">    ``check-pandoc`` subcommands. ``get-tex-template`` accepts ``--output-dir`` plus</span>
-<span class="sd">    the authentication options ``--token``, ``--username``, ``--password`` and</span>
-<span class="sd">    ``--no-ssh``.</span>
+<span class="sd">    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean``,</span>
+<span class="sd">    ``check-pandoc`` and ``pdflatex`` (``check`` / ``download``) subcommands.</span>
+<span class="sd">    ``get-tex-template`` accepts ``--output-dir`` plus the authentication options</span>
+<span class="sd">    ``--token``, ``--username``, ``--password`` and ``--no-ssh``.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The configured ``argparse.ArgumentParser``.</span>
