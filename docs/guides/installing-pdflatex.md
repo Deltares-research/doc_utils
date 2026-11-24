@@ -69,7 +69,8 @@ compiles:
 ```
 
 The `auto` backend installs **TinyTeX**, so every TeX package (e.g. `caption`, `tocbasic`, `lipsum.sty`) comes from
-one consistent TeX Live release and works the same on any runner image, including `ubuntu-latest`.
+one consistent TeX Live release and works the same on any runner image. The project's own CI builds the Deltares
+templates this way on `ubuntu-latest` (Ubuntu 26.04).
 
 ### Avoid re-downloading every run
 

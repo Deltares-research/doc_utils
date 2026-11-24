@@ -15,7 +15,7 @@ helpers for fetching the Deltares LaTeX templates and provisioning a `pdflatex` 
   directly-compilable documents.
 - **Template retrieval** — clone the private Deltares LaTeX template repository with token or
   SSH authentication.
-- **pdfLaTeX provisioning** — install a TeX engine (TinyTeX or apt) and the required packages
+- **pdfLaTeX provisioning** — install a TeX engine (TinyTeX; apt opt-in) and the required packages
   on demand.
 - **Build cleanup** — remove LaTeX build artifacts (`.aux`, `.log`, `.bbl`, …).
 
