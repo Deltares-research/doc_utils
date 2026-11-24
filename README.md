@@ -40,7 +40,7 @@ for the `uv` workflow and a development setup.
 |---------------------------|----------------------------------------------------------------------|
 | `ddocs markdown-to-latex` | Convert Markdown files to LaTeX fragments or standalone documents.   |
 | `ddocs get-tex-template`  | Clone the Deltares LaTeX repository and copy template files.         |
-| `ddocs clean`             | Remove LaTeX build artifacts (`.aux`, `.log`, `.bbl`, …).            |
+| `ddocs clean`             | Remove LaTeX build artifacts; `--templates` also removes downloaded templates. |
 | `ddocs check-pandoc`      | Verify the bundled Pandoc is callable (adds it to `PATH` if needed). |
 | `ddocs pdflatex check`    | Probe whether `pdflatex` is already installed (installs nothing).    |
 | `ddocs pdflatex download` | Install `pdflatex` and the required TeX packages (TinyTeX; apt opt-in).   |
@@ -62,6 +62,8 @@ ddocs get-tex-template --output-dir ./templates
 # Ensure a TeX engine is available, then clean build files afterwards (-r recurses)
 ddocs pdflatex download
 ddocs clean --directory ./docs/latex --recursive
+# ... and also remove the files fetched by get-tex-template (deltares_*.cls/.sty/.bst/.ist, pictures/)
+ddocs clean --directory ./docs/latex --templates
 ```
 
 ## Development
