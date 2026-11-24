@@ -71,6 +71,11 @@ compiles:
 On an Ubuntu runner the `auto` backend picks **apt**, so this is fast and the
 `texlive-*` packages (e.g. `lipsum.sty`) are available to the bare `pdflatex` step.
 
+!!! warning "Ubuntu 26.04 runners"
+    On `ubuntu-latest` (now Ubuntu 26.04) the apt TeX Live currently fails to build the Deltares
+    templates. Until this is fixed, pin the job to `ubuntu-24.04`. See
+    [Troubleshooting](#troubleshooting-ubuntu-2604-captiontocbasic-error).
+
 ### Avoid re-downloading every run
 
 The bytes only need to land once. Cache the TeX install between runs:
@@ -107,6 +112,52 @@ pdf = build_pdf("docs/manual.tex")                # -> Path to the produced PDF
 | `install_texlive_apt(packages=APT_TEXLIVE_PACKAGES)` | The apt backend (Debian/Ubuntu). |
 | `build_pdf(tex_file, ...)` | Compile a `.tex` to PDF, installing missing packages on demand. |
 | `sanity_check("pdflatex")` | Pure probe — is the command callable? |
+
+## Troubleshooting: Ubuntu 26.04 `caption`/`tocbasic` error
+
+**Symptom.** Building a Deltares document (e.g. with `build_pdf` or a bare `pdflatex`) on Ubuntu 26.04
+(`ubuntu-latest` on GitHub Actions) fails with:
+
+```text
+! LaTeX Error: Unknown message 'caption-code-by-class-deactivated' for module
+(LaTeX)        'tocbasic'.
+```
+
+The `RuntimeError` raised by `build_pdf` includes this error plus a log excerpt starting at it.
+
+**Cause.** The apt TeX Live on 26.04 (`2025.20260124`) ships `caption` v3.6o (2023/08/05) together with a newer
+KOMA-Script `tocbasic`. The older `caption` raises a message that the newer `tocbasic` no longer defines, and the
+Deltares document classes load `caption`. Adding `texlive-latex-recommended` does **not** help, because both packages
+already come from it. Tracked in
+[issue #14](https://github.com/Deltares-research/doc_utils/issues/14).
+
+**Workarounds** (until #14 is fixed):
+
+1. **Pin the runner to Ubuntu 24.04** *(verified: this is what the project's own CI does)*. Its TeX Live ships a
+   matching `caption`/`tocbasic` pair.
+
+    ```yaml
+    jobs:
+      build-docs:
+        runs-on: ubuntu-24.04   # not ubuntu-latest, until issue #14 is fixed
+    ```
+
+2. **Use the TinyTeX backend** *(not yet tested against this error)*. TinyTeX installs every package from one TeX Live
+   release via `tlmgr`, so the versions should be consistent. Do not install the apt `texlive-*` packages in the same
+   job, because `ddocs` skips the install when a `pdflatex` is already on `PATH`.
+
+    ```bash
+    ddocs pdflatex download --backend tinytex
+    ```
+
+**Check whether you are affected.** On the runner, print the installed versions:
+
+```bash
+kpsewhich -all tocbasic.sty caption.sty
+grep -m1 ProvidesPackage "$(kpsewhich caption.sty)"   # 2023/08/05 v3.6o means the old caption is installed
+```
+
+Remove the pin once issue #14 is resolved.
 
 ## Caveats
 

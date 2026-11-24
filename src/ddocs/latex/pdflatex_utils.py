@@ -450,13 +450,30 @@ def check_pdflatex_installed(
     return installed
 
 
-def _first_latex_error(log_text: str) -> str:
-    """Return the first LaTeX/pdfTeX error line from a build log, for diagnostics."""
-    for line in log_text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("!"):
-            return stripped
-    return "see the .log file for details"
+def _latex_error_parts(log_text: str, max_lines: int = 15) -> tuple[str, str]:
+    """Split a pdflatex build log into its first error line and the lines that follow it.
+
+    pdfTeX wraps long messages and prints the offending source context (`l.<n> ...`) and
+    help text after the `!` line, so the first line alone is often truncated. When the log
+    has no `!` line, the headline is a generic hint and the detail is the tail of the log.
+
+    Args:
+        log_text: Combined stdout/stderr of a pdflatex run.
+        max_lines: Maximum number of log lines covered, counting the first error line.
+
+    Returns:
+        A `(headline, detail)` tuple: the first error line (stripped) and the following
+        lines joined by newlines (empty when nothing follows the error).
+    """
+    lines = [line.strip() for line in log_text.splitlines()]
+    start = next((i for i, line in enumerate(lines) if line.startswith("!")), None)
+    if start is None:
+        headline = "see the .log file for details"
+        detail = "\n".join(lines[-max_lines:]).strip()
+    else:
+        headline = lines[start]
+        detail = "\n".join(lines[start + 1 : start + max_lines]).strip()
+    return headline, detail
 
 
 def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = True) -> Path:
@@ -484,7 +501,8 @@ def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = 
 
     Raises:
         RuntimeError: If pdflatex cannot be made available, or no PDF is produced (the
-            message includes the first LaTeX error from the build log).
+            message includes the first LaTeX error from the build log plus an excerpt of the
+            log starting at that error).
 
     Examples:
         - Build a PDF from a LaTeX file (requires a TeX engine):
@@ -537,7 +555,11 @@ def build_pdf(tex_file: str | Path, max_runs: int = 15, install_missing: bool = 
         previous_missing = missing
 
     if not (succeeded and pdf_path.exists()):
-        raise RuntimeError(f"pdflatex did not produce {pdf_path.name}: {_first_latex_error(log)}")
+        headline, detail = _latex_error_parts(log)
+        message = f"pdflatex did not produce {pdf_path.name}: {headline}"
+        if detail:
+            message += f"\n--- pdflatex log excerpt ---\n{detail}"
+        raise RuntimeError(message)
     return pdf_path
 
 

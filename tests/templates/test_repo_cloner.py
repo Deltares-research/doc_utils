@@ -360,11 +360,11 @@ class TestCloneRepoCli:
 
     @pytest.mark.unit
     def test_cli_copies_templates_and_cleans_up(self, tmp_path):
-        """Test clone_repo_cli clones, copies three template paths, and cleans up.
+        """Test clone_repo_cli clones, copies four template paths, and cleans up.
 
         Test scenario:
             RepoCloner is replaced by a fake recording context-manager use; the CLI
-            must enter/exit the manager (cleanup), clone once, copy 3 paths, return 0.
+            must enter/exit the manager (cleanup), clone once, copy 4 paths, return 0.
         """
         from ddocs.templates.repo_cloner import clone_repo_cli
 
@@ -396,7 +396,8 @@ class TestCloneRepoCli:
         assert rc == 0, f"clone_repo_cli should return 0, got {rc}"
         assert created["cloned"] is True, "clone() should have been called"
         assert created["cleaned"] is True, "context manager __exit__ (cleanup) should run"
-        assert len(created["copied"]) == 3, f"should copy 3 template paths, got {created.get('copied')}"
+        assert len(created["copied"]) == 4, f"should copy 4 template paths, got {created.get('copied')}"
+        assert "MiKTeX/makeindex/deltares" in created["copied"], "makeindex style folder (.ist files) should be copied"
         assert created["url"] == "https://github.com/Deltares/LatexInstallation", "wrong repo URL"
 
     @pytest.mark.unit

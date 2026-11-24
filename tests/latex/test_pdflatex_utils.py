@@ -473,6 +473,41 @@ class TestBuildPdf:
                 pdflatex_utils.build_pdf(tex)
 
     @pytest.mark.unit
+    def test_failure_message_includes_log_excerpt_without_repeating_headline(self, tmp_path):
+        """Test the RuntimeError carries the log excerpt after the headline, without duplicating it.
+
+        Test scenario:
+            pdflatex fails with a wrapped multi-line error -> the message has the first error line
+            as headline, then an excerpt with the continuation and source context, and the first
+            error line appears exactly once.
+        """
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        log = "! LaTeX Error: Unknown message 'x' for module\n(LaTeX)        'tocbasic'.\nl.12 \\usepackage{caption}"
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout=log, stderr="")):
+            with pytest.raises(RuntimeError) as excinfo:
+                pdflatex_utils.build_pdf(tex)
+        message = str(excinfo.value)
+        assert "pdflatex log excerpt" in message, "message should contain the excerpt section"
+        assert "'tocbasic'." in message and "l.12" in message, "continuation and source context should be included"
+        assert message.count("! LaTeX Error: Unknown message") == 1, "first error line should not be repeated"
+
+    @pytest.mark.unit
+    def test_failure_message_omits_excerpt_when_nothing_follows_error(self, tmp_path):
+        """Test a single-line error yields just the headline, with no empty excerpt section."""
+        tex = tmp_path / "doc.tex"
+        tex.write_text("x", encoding="utf-8")
+        with patch("ddocs.latex.pdflatex_utils.check_pdflatex_installed", return_value=True), \
+             patch("ddocs.latex.pdflatex_utils.subprocess.run",
+                   return_value=MagicMock(returncode=1, stdout="! Undefined control sequence", stderr="")):
+            with pytest.raises(RuntimeError) as excinfo:
+                pdflatex_utils.build_pdf(tex)
+        assert "pdflatex log excerpt" not in str(excinfo.value), "no excerpt section expected"
+        assert "! Undefined control sequence" in str(excinfo.value), "headline should still be present"
+
+    @pytest.mark.unit
     def test_stops_when_install_fails(self, tmp_path):
         """Test the loop stops (no spin) when tlmgr cannot install the missing package.
 
@@ -515,19 +550,47 @@ class TestBuildPdf:
         assert mock_run.call_count == 2, f"should stop after no progress; ran {mock_run.call_count} times"
 
 
-class TestFirstLatexError:
-    """Tests for the _first_latex_error log helper."""
+class TestLatexErrorParts:
+    """Tests for the _latex_error_parts log helper."""
 
     @pytest.mark.unit
-    def test_returns_first_error_line(self):
-        """Test the first ``!``-prefixed line is returned, stripped."""
+    def test_headline_is_first_error_line_stripped(self):
+        """Test the first ``!``-prefixed line is the headline, stripped, and earlier lines are ignored."""
         log = "This is pdfTeX\n  ! LaTeX Error: File `tikz.sty' not found.\nmore"
-        assert pdflatex_utils._first_latex_error(log) == "! LaTeX Error: File `tikz.sty' not found."
+        headline, _ = pdflatex_utils._latex_error_parts(log)
+        assert headline == "! LaTeX Error: File `tikz.sty' not found."
 
     @pytest.mark.unit
-    def test_falls_back_when_no_error_line(self):
-        """Test a helpful fallback is returned when no error line is present."""
-        assert "log file" in pdflatex_utils._first_latex_error("clean output, no errors")
+    def test_detail_holds_lines_after_the_error(self):
+        """Test the detail has the continuation and source context but not the headline or earlier lines."""
+        log = "preamble\n! LaTeX Error: Unknown message 'x' for module\n  'caption'.\nl.12 \\usepackage{caption}\nlater"
+        headline, detail = pdflatex_utils._latex_error_parts(log)
+        assert headline.startswith("! LaTeX Error"), "headline should be the error line"
+        assert detail.splitlines() == ["'caption'.", "l.12 \\usepackage{caption}", "later"], "detail should follow it"
+        assert "preamble" not in detail, "lines before the error should be dropped"
+
+    @pytest.mark.unit
+    def test_detail_empty_when_nothing_follows_error(self):
+        """Test the detail is empty for a single-line error."""
+        assert pdflatex_utils._latex_error_parts("! Undefined control sequence") == (
+            "! Undefined control sequence",
+            "",
+        )
+
+    @pytest.mark.unit
+    def test_limits_line_count(self):
+        """Test headline plus detail cover at most ``max_lines`` log lines."""
+        log = "! boom\n" + "\n".join(f"line {i}" for i in range(50))
+        _, detail = pdflatex_utils._latex_error_parts(log, max_lines=5)
+        assert detail.splitlines() == ["line 0", "line 1", "line 2", "line 3"]
+
+    @pytest.mark.unit
+    def test_falls_back_to_hint_and_log_tail_without_error_line(self):
+        """Test a generic hint and the log tail are returned when no ``!`` line exists."""
+        log = "\n".join(f"line {i}" for i in range(30))
+        headline, detail = pdflatex_utils._latex_error_parts(log, max_lines=3)
+        assert "log file" in headline, "headline should be the generic hint"
+        assert detail.splitlines() == ["line 27", "line 28", "line 29"], "detail should be the log tail"
 
 
 class TestPdflatexDownloadCli:

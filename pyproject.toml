@@ -1,6 +1,6 @@
 [project]
 name = "Deltares-HMS-Docs"
-version = "0.2.0"
+version = "0.2.2"
 description = "Documentation utility "
 authors = [
     {name = "Mostafa Farrag",email = "mostafa.farrag@deltares.nl"}
@@ -45,7 +45,7 @@ docs = [
     "mkdocs-mermaid2-plugin  >=1.2.1",
     "jupyter-contrib-nbextensions  >=0.7.0",
     "mkdocs-panzoom-plugin",
-    "notebook<7.0",
+    "notebook<8.0",
     "jupyter",
 ]
 
@@ -94,7 +94,7 @@ markers = [
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.2.0"
+version = "0.2.2"
 tag_format = "$version"
 version_files = [
     "pyproject.toml:^version",
