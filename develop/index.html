@@ -970,7 +970,7 @@ provisioning a <code>pdflatex</code> toolchain.</p>
 </tr>
 <tr>
 <td><code>ddocs clean</code></td>
-<td>Remove LaTeX build artifacts (<code>.aux</code>, <code>.log</code>, <code>.bbl</code>, …).</td>
+<td>Remove LaTeX build artifacts (<code>.aux</code>, <code>.log</code>, <code>.bbl</code>, …); <code>--templates</code> also removes downloaded templates.</td>
 </tr>
 <tr>
 <td><code>ddocs check-pandoc</code></td>
@@ -1005,6 +1005,8 @@ ddocs<span class="w"> </span>get-tex-template<span class="w"> </span>--output-di
 <span class="c1"># Ensure a TeX engine is available, then clean build files afterwards (-r recurses)</span>
 ddocs<span class="w"> </span>pdflatex<span class="w"> </span>download
 ddocs<span class="w"> </span>clean<span class="w"> </span>--directory<span class="w"> </span>./docs/latex<span class="w"> </span>--recursive
+<span class="c1"># ... and also remove the files fetched by get-tex-template (deltares_*.cls/.sty/.bst/.ist, pictures/)</span>
+ddocs<span class="w"> </span>clean<span class="w"> </span>--directory<span class="w"> </span>./docs/latex<span class="w"> </span>--templates
 </code></pre></div>
 <h2 id="where-to-next">Where to next<a class="headerlink" href="#where-to-next" title="Permanent link">&para;</a></h2>
 <ul>
