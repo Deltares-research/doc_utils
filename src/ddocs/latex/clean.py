@@ -102,8 +102,9 @@ def clean_latex_build_files(directory: Path, pattern: str = "**/*", templates: b
         directory: Directory to clean
         pattern: Glob pattern for subdirectories to include (default: "**/*" for recursive)
         templates: When True, also remove the files ``ddocs get-tex-template`` downloads:
-            ``deltares_*.cls/.sty/.bst/.ist`` (in `directory`, or below it when recursive) and the
-            ``pictures/`` directory directly under `directory`. Defaults to False.
+            ``deltares_*.cls/.sty/.bst/.ist`` and the ``pictures/`` directory, both looked up directly in
+            `directory` only (never in subdirectories, even for a recursive clean). The whole ``pictures/``
+            directory is deleted, including any file you added to it. Defaults to False.
 
     Returns:
         Number of files removed
@@ -178,8 +179,7 @@ def clean_latex_build_files(directory: Path, pattern: str = "**/*", templates: b
 
         if templates:
             for template_pattern in TEMPLATE_FILE_PATTERNS:
-                glob_pattern = f"**/{template_pattern}" if recursive else template_pattern
-                for file_path in sorted(p for p in directory.glob(glob_pattern) if p.is_file()):
+                for file_path in sorted(p for p in directory.glob(template_pattern) if p.is_file()):
                     removed_count += _remove_file(file_path, directory)
             for dir_name in TEMPLATE_DIRECTORIES:
                 template_dir = directory / dir_name

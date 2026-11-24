@@ -96,6 +96,25 @@ class TestTemplatesOption:
         assert clean_latex_build_files(tmp_path, pattern="*", templates=True) == 1, "only the .cls is removed"
 
     @pytest.mark.unit
+    def test_template_files_in_subdirectories_are_kept_when_recursive(self, tmp_path):
+        """Test a recursive clean with templates=True only removes template files directly in the directory.
+
+        Test scenario:
+            ``deltares_report.cls`` exists at the top level and in a subdirectory; only the top-level one is
+            removed, while build artifacts in the subdirectory are still cleaned.
+        """
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "deltares_report.cls").write_text("x")
+        (tmp_path / "sub" / "deltares_report.cls").write_text("x")
+        (tmp_path / "sub" / "doc.aux").write_text("x")
+
+        clean_latex_build_files(tmp_path, templates=True)
+
+        assert not (tmp_path / "deltares_report.cls").exists(), "top-level template should be removed"
+        assert (tmp_path / "sub" / "deltares_report.cls").exists(), "nested template must be kept"
+        assert not (tmp_path / "sub" / "doc.aux").exists(), "recursive artifact clean should still reach sub/"
+
+    @pytest.mark.unit
     def test_pictures_only_removed_directly_under_directory(self, tmp_path):
         """Test that a nested pictures/ directory is left alone even for a recursive clean."""
         nested = tmp_path / "sub" / "pictures"
