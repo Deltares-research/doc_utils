@@ -1072,8 +1072,46 @@ Source files (<code>.tex</code>) and the produced <code>.pdf</code> are never to
 <span class="n">Removed</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">aux</span>
 <span class="mi">1</span>
 </code></pre></div></li>
+<li>Source files and the PDF are kept; minitoc and nomencl artifacts are removed:
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.latex.clean</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_latex_build_files</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"doc.tex"</span><span class="p">,</span> <span class="s2">"doc.pdf"</span><span class="p">,</span> <span class="s2">"doc.mtc0"</span><span class="p">,</span> <span class="s2">"doc.nls"</span><span class="p">]:</span>
+<span class="o">...</span>         <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+<span class="o">...</span>     <span class="n">count</span> <span class="o">=</span> <span class="n">clean_latex_build_files</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">),</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">"*"</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
+<span class="n">Removed</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">mtc0</span>
+<span class="n">Removed</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">nls</span>
+<span class="p">[</span><span class="s1">'doc.pdf'</span><span class="p">,</span> <span class="s1">'doc.tex'</span><span class="p">]</span>
+</code></pre></div></li>
+<li>Also remove the files downloaded by <code>ddocs get-tex-template</code>:
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.latex.clean</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_latex_build_files</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+<span class="o">...</span>     <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"deltares_report.cls"</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+<span class="o">...</span>     <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"mystyle.sty"</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+<span class="o">...</span>     <span class="n">count</span> <span class="o">=</span> <span class="n">clean_latex_build_files</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">),</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">templates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
+<span class="n">Removed</span><span class="p">:</span> <span class="n">deltares_report</span><span class="o">.</span><span class="n">cls</span>
+<span class="p">[</span><span class="s1">'mystyle.sty'</span><span class="p">]</span>
+</code></pre></div></li>
+<li>A missing directory is reported and nothing is removed:
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.latex.clean</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_latex_build_files</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">clean_latex_build_files</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"does-not-exist-dir"</span><span class="p">))</span>
+<span class="n">Error</span><span class="p">:</span> <span class="n">Directory</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span> <span class="n">does</span><span class="o">-</span><span class="ow">not</span><span class="o">-</span><span class="n">exist</span><span class="o">-</span><span class="nb">dir</span>
+<span class="mi">0</span>
+</code></pre></div></li>
 </ul>
 
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>clean_latex_cli: Command-line wrapper around this function.
+ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed by <code>templates=True</code>.</p>
+</details>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/clean.py</code></summary>
@@ -1130,7 +1168,49 @@ Source files (<code>.tex</code>) and the produced <code>.pdf</code> are never to
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
-<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_build_files</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"**/*"</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_build_files</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"**/*"</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Clean LaTeX build artifacts (and optionally downloaded templates) from a directory.</span>
 
 <span class="sd">    Removes the files generated by pdflatex, bibtex, makeindex, minitoc, nomencl and</span>
@@ -1161,6 +1241,48 @@ Source files (<code>.tex</code>) and the produced <code>.pdf</code> are never to
 <span class="sd">            1</span>
 
 <span class="sd">            ```</span>
+<span class="sd">        - Source files and the PDF are kept; minitoc and nomencl artifacts are removed:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            &gt;&gt;&gt; import tempfile</span>
+<span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">            &gt;&gt;&gt; from ddocs.latex.clean import clean_latex_build_files</span>
+<span class="sd">            &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">            ...     for name in ["doc.tex", "doc.pdf", "doc.mtc0", "doc.nls"]:</span>
+<span class="sd">            ...         (Path(tmp) / name).touch()</span>
+<span class="sd">            ...     count = clean_latex_build_files(Path(tmp), pattern="*")</span>
+<span class="sd">            ...     sorted(p.name for p in Path(tmp).iterdir())</span>
+<span class="sd">            Removed: doc.mtc0</span>
+<span class="sd">            Removed: doc.nls</span>
+<span class="sd">            ['doc.pdf', 'doc.tex']</span>
+
+<span class="sd">            ```</span>
+<span class="sd">        - Also remove the files downloaded by ``ddocs get-tex-template``:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            &gt;&gt;&gt; import tempfile</span>
+<span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">            &gt;&gt;&gt; from ddocs.latex.clean import clean_latex_build_files</span>
+<span class="sd">            &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">            ...     (Path(tmp) / "deltares_report.cls").touch()</span>
+<span class="sd">            ...     (Path(tmp) / "mystyle.sty").touch()</span>
+<span class="sd">            ...     count = clean_latex_build_files(Path(tmp), pattern="*", templates=True)</span>
+<span class="sd">            ...     sorted(p.name for p in Path(tmp).iterdir())</span>
+<span class="sd">            Removed: deltares_report.cls</span>
+<span class="sd">            ['mystyle.sty']</span>
+
+<span class="sd">            ```</span>
+<span class="sd">        - A missing directory is reported and nothing is removed:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">            &gt;&gt;&gt; from ddocs.latex.clean import clean_latex_build_files</span>
+<span class="sd">            &gt;&gt;&gt; clean_latex_build_files(Path("does-not-exist-dir"))</span>
+<span class="sd">            Error: Directory not found: does-not-exist-dir</span>
+<span class="sd">            0</span>
+
+<span class="sd">            ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        clean_latex_cli: Command-line wrapper around this function.</span>
+<span class="sd">        ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed by ``templates=True``.</span>
 <span class="sd">    """</span>
     <span class="n">removed_count</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -1260,38 +1382,101 @@ Source files (<code>.tex</code>) and the produced <code>.pdf</code> are never to
     </table>
 
 
+<p><span class="doc-section-title">Examples:</span></p>
+    <ul>
+<li>Clean a directory and read the exit code:
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.latex.clean</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_latex_cli</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+<span class="o">...</span>     <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"doc.log"</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+<span class="o">...</span>     <span class="n">args</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">templates</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="o">...</span>     <span class="n">clean_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">Cleaning</span> <span class="n">LaTeX</span> <span class="n">build</span> <span class="n">files</span> <span class="n">from</span><span class="p">:</span> <span class="o">...</span>
+<span class="n">Removed</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">log</span>
+<span class="n">Cleaned</span> <span class="mi">1</span> <span class="n">LaTeX</span> <span class="n">build</span> <span class="n">file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="mi">0</span>
+</code></pre></div></li>
+<li>A missing directory gives exit code 1:
+    <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ddocs.latex.clean</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_latex_cli</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">clean_latex_cli</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">"nope-dir"</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="n">Error</span><span class="p">:</span> <span class="n">Directory</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span> <span class="n">nope</span><span class="o">-</span><span class="nb">dir</span>
+<span class="mi">1</span>
+</code></pre></div></li>
+</ul>
+
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>clean_latex_build_files: The function this CLI handler calls.</p>
+</details>
+
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/clean.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""CLI interface for cleaning LaTeX build files.</span>
 
 <span class="sd">    Args:</span>
@@ -1299,6 +1484,37 @@ Source files (<code>.tex</code>) and the produced <code>.pdf</code> are never to
 
 <span class="sd">    Returns:</span>
 <span class="sd">        0 on success, 1 when the directory is missing or is not a directory.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        - Clean a directory and read the exit code:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            &gt;&gt;&gt; import argparse</span>
+<span class="sd">            &gt;&gt;&gt; import tempfile</span>
+<span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">            &gt;&gt;&gt; from ddocs.latex.clean import clean_latex_cli</span>
+<span class="sd">            &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">            ...     (Path(tmp) / "doc.log").touch()</span>
+<span class="sd">            ...     args = argparse.Namespace(directory=Path(tmp), recursive=False, templates=False)</span>
+<span class="sd">            ...     clean_latex_cli(args)</span>
+<span class="sd">            Cleaning LaTeX build files from: ...</span>
+<span class="sd">            Removed: doc.log</span>
+<span class="sd">            Cleaned 1 LaTeX build file(s)</span>
+<span class="sd">            0</span>
+
+<span class="sd">            ```</span>
+<span class="sd">        - A missing directory gives exit code 1:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            &gt;&gt;&gt; import argparse</span>
+<span class="sd">            &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">            &gt;&gt;&gt; from ddocs.latex.clean import clean_latex_cli</span>
+<span class="sd">            &gt;&gt;&gt; clean_latex_cli(argparse.Namespace(directory=Path("nope-dir"), recursive=False))</span>
+<span class="sd">            Error: Directory not found: nope-dir</span>
+<span class="sd">            1</span>
+
+<span class="sd">            ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        clean_latex_build_files: The function this CLI handler calls.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Directory not found: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">directory</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
