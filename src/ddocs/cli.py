@@ -75,7 +75,7 @@ Examples:
   # Check whether pdflatex is installed (probe only)
   ddocs pdflatex check
 
-  # Download/install pdflatex (apt on Debian/Ubuntu, else TinyTeX)
+  # Download/install pdflatex (TinyTeX by default; --backend apt is opt-in)
   ddocs pdflatex download
         """
     )
@@ -222,7 +222,7 @@ def _add_pdflatex_install_options(parser: argparse.ArgumentParser) -> None:
         '--backend',
         choices=['auto', 'apt', 'tinytex'],
         default='auto',
-        help='Install backend: apt (fast, Debian/Ubuntu+sudo), tinytex (cross-platform), or auto'
+        help='Install backend: tinytex (default via auto, cross-platform) or apt (opt-in, Debian/Ubuntu+sudo)'
     )
 
 

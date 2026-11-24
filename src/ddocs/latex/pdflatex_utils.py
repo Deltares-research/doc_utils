@@ -6,11 +6,12 @@ this module uses **TinyTeX** -- a lightweight, root-free, cross-platform distrib
 built on TeX Live -- as the install backend:
 
 1. `sanity_check` -- is `pdflatex` (or `biber`) already callable?
-2. `check_pdflatex_installed` -- if not, install a TeX distribution. On Debian/Ubuntu it
-   uses `apt-get install texlive-*` (fast); elsewhere it falls back to TinyTeX (root-free,
-   cross-platform) and `tlmgr install`s the requested packages. Either way the packages a
-   bare `pdflatex` needs for Deltares documents are provided. Tune via
-   `ddocs pdflatex download --backend apt|tinytex|auto`, `--packages ...`, or `--no-packages`.
+2. `check_pdflatex_installed` -- if not, install a TeX distribution. By default (``auto``) it
+   uses TinyTeX (root-free, cross-platform) and `tlmgr install`s the requested packages, so every
+   TeX package comes from one consistent TeX Live release. The faster but distro-dependent
+   `apt-get install texlive-*` path is opt-in. Either way the packages a bare `pdflatex` needs for
+   Deltares documents are provided. Tune via `ddocs pdflatex download --backend tinytex|apt|auto`,
+   `--packages ...`, or `--no-packages`.
 3. `install_missing_packages` -- a MiKTeX-style helper that scans a LaTeX build log
    for missing files and `tlmgr install`s them on demand (TeX Live does not do this
    natively). `build_pdf` uses it to fetch any package a document still needs.
@@ -350,7 +351,7 @@ def install_texlive_apt(packages: tuple[str, ...] | list[str] = APT_TEXLIVE_PACK
             ```
 
     See Also:
-        check_pdflatex_installed: Selects this backend automatically on Debian/Ubuntu.
+        check_pdflatex_installed: Selects this backend only when ``backend="apt"`` is requested.
     """
     if shutil.which("apt-get") is None:
         return False
@@ -377,12 +378,14 @@ def check_pdflatex_installed(
     If pdflatex is already on `PATH` this returns immediately. Otherwise a backend is
     used to install it:
 
-    - **apt** -- on Debian/Ubuntu (with `sudo`) install the `texlive-*` packages via
-      `apt-get`. Much faster on CI than `tlmgr`.
     - **tinytex** -- download and run the official TinyTeX installer (root-free,
       cross-platform), prepend its `bin` to `PATH`, and `tlmgr install` `packages`.
+      All packages come from one TeX Live release, so versions are consistent.
+    - **apt** -- opt-in; on Debian/Ubuntu (with `sudo`) install the `texlive-*` packages
+      via `apt-get`. Faster, but the distro's package versions can be mutually
+      incompatible (e.g. `caption` vs. KOMA-Script `tocbasic` on Ubuntu 26.04).
 
-    With ``backend="auto"`` (default) apt is used when available, else TinyTeX. Either
+    With ``backend="auto"`` (default) TinyTeX is used on every platform. Either
     way the requested packages are installed so a bare `pdflatex` can compile Deltares
     documents; `build_pdf` additionally installs anything still missing on demand.
 
@@ -393,7 +396,7 @@ def check_pdflatex_installed(
         packages: tlmgr packages/collections for the **tinytex** backend. Defaults to
             :data:`REQUIRED_TLMGR_PACKAGES`. Ignored by the apt backend, which uses
             :data:`APT_TEXLIVE_PACKAGES`.
-        backend: ``"auto"`` (default), ``"apt"``, or ``"tinytex"``.
+        backend: ``"auto"`` (default, same as ``"tinytex"``), ``"apt"``, or ``"tinytex"``.
 
     Returns:
         True if pdflatex is accessible after the call, False otherwise.
@@ -419,12 +422,7 @@ def check_pdflatex_installed(
     """
     installed = sanity_check("pdflatex")
     if not installed:
-        if backend == "auto":
-            use_apt = platform.system() == "Linux" and shutil.which("apt-get") is not None
-        else:
-            use_apt = backend == "apt"
-
-        if use_apt:
+        if backend == "apt":
             apt_packages = APT_TEXLIVE_PACKAGES if install_packages else ("texlive-latex-base",)
             install_texlive_apt(apt_packages)
             installed = sanity_check("pdflatex")

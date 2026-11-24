@@ -24,13 +24,13 @@ ddocs pdflatex download     # install using the best available backend
 
 | Backend              | When it is used           | Notes                                                                                                                |
 |----------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------|
-| **apt**              | Debian/Ubuntu with `sudo` | `apt-get install texlive-*` — prebuilt `.deb`s from a fast mirror; by far the quickest on CI. Needs root.            |
-| **tinytex**          | everywhere else           | Downloads and runs the official **TinyTeX** installer (root-free, cross-platform) and `tlmgr install`s the packages. |
-| **auto** *(default)* | —                         | Use **apt** when `apt-get` is available on Linux, otherwise fall back to **TinyTeX**.                                |
+| **tinytex**          | everywhere                | Downloads and runs the official **TinyTeX** installer (root-free, cross-platform) and `tlmgr install`s the packages. All packages come from one TeX Live release, so versions are consistent. |
+| **apt**              | opt-in; Debian/Ubuntu with `sudo` | `apt-get install texlive-*` — prebuilt `.deb`s from a fast mirror. Needs root, and the distro's package versions can be mutually incompatible (see [Troubleshooting](#troubleshooting-ubuntu-2604-captiontocbasic-error)). |
+| **auto** *(default)* | —                         | Same as **tinytex** on every platform.                                                                               |
 
 ```bash
-ddocs pdflatex download --backend auto      # default: apt on Debian/Ubuntu, else TinyTeX
-ddocs pdflatex download --backend apt        # force apt (fast; needs sudo)
+ddocs pdflatex download --backend auto      # default: TinyTeX
+ddocs pdflatex download --backend apt        # opt in to apt (faster; needs sudo)
 ddocs pdflatex download --backend tinytex    # force TinyTeX (no root, any OS)
 ```
 
@@ -64,17 +64,13 @@ compiles:
 ```yaml
 - run: pip install "git+https://github.com/Deltares-research/doc_utils.git"
 - run: ddocs get-tex-template --output-dir ./latex --no-ssh
-- run: ddocs pdflatex download          # auto -> apt on Ubuntu runners (fast)
+- run: ddocs pdflatex download          # auto -> TinyTeX
 - run: pdflatex docs/manual.tex          # bare pdflatex; packages are already present
 ```
 
-On an Ubuntu runner the `auto` backend picks **apt**, so this is fast and the
-`texlive-*` packages (e.g. `lipsum.sty`) are available to the bare `pdflatex` step.
-
-!!! warning "Ubuntu 26.04 runners"
-    On `ubuntu-latest` (now Ubuntu 26.04) the apt TeX Live currently fails to build the Deltares
-    templates. Until this is fixed, pin the job to `ubuntu-24.04`. See
-    [Troubleshooting](#troubleshooting-ubuntu-2604-captiontocbasic-error).
+The `auto` backend installs **TinyTeX**, so every TeX package (e.g. `caption`, `tocbasic`, `lipsum.sty`) comes from
+one consistent TeX Live release and works the same on any runner image. The project's own CI builds the Deltares
+templates this way on `ubuntu-latest` (Ubuntu 26.04).
 
 ### Avoid re-downloading every run
 
@@ -83,7 +79,7 @@ The bytes only need to land once. Cache the TeX install between runs:
 ```yaml
 - uses: actions/cache@v4
   with:
-    path: ~/.TinyTeX            # or the apt cache for the apt backend
+    path: ~/.TinyTeX
     key: tex-${{ runner.os }}-v1
 ```
 
@@ -96,9 +92,9 @@ The same functionality is available programmatically from `ddocs.latex`:
 ```python
 from ddocs.latex import check_pdflatex_installed, build_pdf
 
-# Ensure pdflatex is available (apt or TinyTeX), installing the default packages
+# Ensure pdflatex is available (TinyTeX by default), installing the default packages
 check_pdflatex_installed()                       # -> True/False
-check_pdflatex_installed(backend="tinytex")       # force a backend
+check_pdflatex_installed(backend="apt")           # opt in to apt (Debian/Ubuntu + sudo)
 check_pdflatex_installed(packages=["lipsum"])     # lean tinytex package set
 check_pdflatex_installed(install_packages=False)  # engine only
 
@@ -108,15 +104,15 @@ pdf = build_pdf("docs/manual.tex")                # -> Path to the produced PDF
 
 | Function | Purpose |
 | --- | --- |
-| `check_pdflatex_installed(install_packages=True, packages=..., backend="auto")` | Ensure `pdflatex` is present; install via apt/TinyTeX if needed. |
-| `install_texlive_apt(packages=APT_TEXLIVE_PACKAGES)` | The apt backend (Debian/Ubuntu). |
+| `check_pdflatex_installed(install_packages=True, packages=..., backend="auto")` | Ensure `pdflatex` is present; install via TinyTeX (or apt, opt-in) if needed. |
+| `install_texlive_apt(packages=APT_TEXLIVE_PACKAGES)` | The opt-in apt backend (Debian/Ubuntu). |
 | `build_pdf(tex_file, ...)` | Compile a `.tex` to PDF, installing missing packages on demand. |
 | `sanity_check("pdflatex")` | Pure probe — is the command callable? |
 
 ## Troubleshooting: Ubuntu 26.04 `caption`/`tocbasic` error
 
-**Symptom.** Building a Deltares document (e.g. with `build_pdf` or a bare `pdflatex`) on Ubuntu 26.04
-(`ubuntu-latest` on GitHub Actions) fails with:
+**Symptom.** Building a Deltares document with the **apt** backend (or a distro-installed `pdflatex`) on Ubuntu 26.04
+fails with:
 
 ```text
 ! LaTeX Error: Unknown message 'caption-code-by-class-deactivated' for module
@@ -127,44 +123,24 @@ The `RuntimeError` raised by `build_pdf` includes this error plus a log excerpt 
 
 **Cause.** The apt TeX Live on 26.04 (`2025.20260124`) ships `caption` v3.6o (2023/08/05) together with a newer
 KOMA-Script `tocbasic`. The older `caption` raises a message that the newer `tocbasic` no longer defines, and the
-Deltares document classes load `caption`. Adding `texlive-latex-recommended` does **not** help, because both packages
-already come from it. Tracked in
-[issue #14](https://github.com/Deltares-research/doc_utils/issues/14).
+Deltares document classes load `caption`. See [issue #14](https://github.com/Deltares-research/doc_utils/issues/14).
 
-**Workarounds** (until #14 is fixed):
+**Fix.** Use the default **TinyTeX** backend (`ddocs pdflatex download`, or `--backend tinytex`), which installs every
+package from one TeX Live release. Do not install the apt `texlive-*` packages in the same job, because `ddocs` skips
+the install when a `pdflatex` is already on `PATH`.
 
-1. **Pin the runner to Ubuntu 24.04** *(verified: this is what the project's own CI does)*. Its TeX Live ships a
-   matching `caption`/`tocbasic` pair.
-
-    ```yaml
-    jobs:
-      build-docs:
-        runs-on: ubuntu-24.04   # not ubuntu-latest, until issue #14 is fixed
-    ```
-
-2. **Use the TinyTeX backend** *(not yet tested against this error)*. TinyTeX installs every package from one TeX Live
-   release via `tlmgr`, so the versions should be consistent. Do not install the apt `texlive-*` packages in the same
-   job, because `ddocs` skips the install when a `pdflatex` is already on `PATH`.
-
-    ```bash
-    ddocs pdflatex download --backend tinytex
-    ```
-
-**Check whether you are affected.** On the runner, print the installed versions:
+**Check whether you are affected.** Print the installed versions:
 
 ```bash
 kpsewhich -all tocbasic.sty caption.sty
 grep -m1 ProvidesPackage "$(kpsewhich caption.sty)"   # 2023/08/05 v3.6o means the old caption is installed
 ```
 
-Remove the pin once issue #14 is resolved.
-
 ## Caveats
 
-- **apt needs root** (`sudo`). On a machine without passwordless `sudo`, `auto` falls back
-  to TinyTeX.
-- **TinyTeX downloads from CTAN per package** via `tlmgr`, which is slower than apt — use
-  apt on Linux CI, or cache the install.
+- **apt is opt-in and needs root** (`sudo`). It is faster, but the distro's TeX package versions can be
+  inconsistent (see the Ubuntu 26.04 note above).
+- **TinyTeX downloads from CTAN per package** via `tlmgr`, which is slower than apt — cache `~/.TinyTeX` on CI.
 - `texlive-fonts-extra` (apt) / `collection-fontsextra` (tlmgr) is the heaviest item; drop
   it from `--packages` if your documents do not need exotic fonts.
 - The **TinyTeX backend downloads and runs the official upstream installer script** (from

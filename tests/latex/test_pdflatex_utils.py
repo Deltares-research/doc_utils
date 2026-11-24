@@ -238,19 +238,32 @@ class TestCheckPdflatexInstalled:
         mock_pkgs.assert_not_called()
 
     @pytest.mark.unit
-    def test_auto_backend_uses_apt_on_debian(self):
-        """Test the auto backend installs via apt when apt-get is available on Linux.
+    def test_auto_backend_uses_tinytex_on_debian(self):
+        """Test the auto backend uses TinyTeX, not apt, even when apt-get is available on Linux.
 
         Test scenario:
-            pdflatex missing, Linux + apt present -> install_texlive_apt is used and
-            TinyTeX is not downloaded.
+            pdflatex missing, Linux + apt present -> install_texlive_apt is NOT used; TinyTeX is
+            installed so all TeX packages come from one release (issue #14).
         """
         with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
              patch("ddocs.latex.pdflatex_utils.platform.system", return_value="Linux"), \
              patch("ddocs.latex.pdflatex_utils.shutil.which", return_value="/usr/bin/apt-get"), \
+             patch("ddocs.latex.pdflatex_utils.install_texlive_apt") as mock_apt, \
+             patch("ddocs.latex.pdflatex_utils.find_tex_bin_dir", side_effect=[None, "/bin/dir"]), \
+             patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_tt, \
+             patch("ddocs.latex.pdflatex_utils._prepend_to_path"), \
+             patch("ddocs.latex.pdflatex_utils.install_tlmgr_packages", return_value=True):
+            assert check_pdflatex_installed(backend="auto") is True
+        mock_apt.assert_not_called()
+        mock_tt.assert_called_once()
+
+    @pytest.mark.unit
+    def test_apt_backend_installs_via_apt(self):
+        """Test the opt-in apt backend installs via apt without downloading TinyTeX."""
+        with patch("ddocs.latex.pdflatex_utils.sanity_check", side_effect=[False, True]), \
              patch("ddocs.latex.pdflatex_utils.install_texlive_apt", return_value=True) as mock_apt, \
              patch("ddocs.latex.pdflatex_utils._install_tinytex") as mock_tt:
-            assert check_pdflatex_installed(backend="auto") is True
+            assert check_pdflatex_installed(backend="apt") is True
         mock_apt.assert_called_once()
         mock_tt.assert_not_called()
 

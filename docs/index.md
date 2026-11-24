@@ -14,7 +14,7 @@ provisioning a `pdflatex` toolchain.
 - **Fetch the Deltares LaTeX templates** from the private template repository,
   with token/SSH authentication — see
   [RepoCloner & authentication](guides/repo-cloner-authentication.md).
-- **Provision pdfLaTeX** (TinyTeX or apt) and the required TeX packages on demand —
+- **Provision pdfLaTeX** (TinyTeX; apt opt-in) and the required TeX packages on demand —
   see [Installing pdfLaTeX](guides/installing-pdflatex.md).
 - **Clean up** LaTeX build artifacts when you're done.
 
@@ -27,7 +27,7 @@ provisioning a `pdflatex` toolchain.
 | `ddocs clean` | Remove LaTeX build artifacts (`.aux`, `.log`, `.bbl`, …). |
 | `ddocs check-pandoc` | Verify the bundled Pandoc is callable (adds it to `PATH` if needed). |
 | `ddocs pdflatex check` | Probe whether `pdflatex` is already installed (installs nothing). |
-| `ddocs pdflatex download` | Install `pdflatex` and the required TeX packages (apt or TinyTeX). |
+| `ddocs pdflatex download` | Install `pdflatex` and the required TeX packages (TinyTeX; apt opt-in). |
 
 Run `ddocs --help` (or `ddocs <command> --help`) to see every option.
 
