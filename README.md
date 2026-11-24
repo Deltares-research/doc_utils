@@ -43,7 +43,7 @@ for the `uv` workflow and a development setup.
 | `ddocs clean`             | Remove LaTeX build artifacts (`.aux`, `.log`, `.bbl`, …).            |
 | `ddocs check-pandoc`      | Verify the bundled Pandoc is callable (adds it to `PATH` if needed). |
 | `ddocs pdflatex check`    | Probe whether `pdflatex` is already installed (installs nothing).    |
-| `ddocs pdflatex download` | Install `pdflatex` and the required TeX packages (apt or TinyTeX).   |
+| `ddocs pdflatex download` | Install `pdflatex` and the required TeX packages (TinyTeX; apt opt-in).   |
 
 Run `ddocs --help` or `ddocs <command> --help` for the full option list.
 

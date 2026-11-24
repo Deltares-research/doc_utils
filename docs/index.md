@@ -14,7 +14,7 @@ provisioning a `pdflatex` toolchain.
 - **Fetch the Deltares LaTeX templates** from the private template repository,
   with token/SSH authentication — see
   [RepoCloner & authentication](guides/repo-cloner-authentication.md).
-- **Provision pdfLaTeX** (TinyTeX or apt) and the required TeX packages on demand —
+- **Provision pdfLaTeX** (TinyTeX; apt opt-in) and the required TeX packages on demand —
   see [Installing pdfLaTeX](guides/installing-pdflatex.md).
 - **Clean up** LaTeX build artifacts when you're done.
 

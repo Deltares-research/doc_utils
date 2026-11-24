@@ -13,10 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.11"]
-        # Pinned to 24.04: ubuntu-latest (26.04) ships a TeX Live whose `caption` (v3.6o) is older than its
-        # KOMA-Script `tocbasic`, which breaks the Deltares template build
-        # ("Unknown message 'caption-code-by-class-deactivated' for module 'tocbasic'").
-        os: [ubuntu-24.04]
+        os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -36,19 +33,12 @@ jobs:
           sudo apt-get install -y pandoc
           pandoc --version
 
-      - name: Install LaTeX (TeX Live)
-        # Provides a system pdflatex/biber so the PDF e2e test uses it instead of
-        # downloading TinyTeX on the runner. Mirrors the tlmgr collections that
-        # pdflatex_utils would otherwise install.
-        run: |
-          sudo apt-get install -y \
-            texlive-latex-base \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            texlive-fonts-extra \
-            texlive-bibtex-extra \
-            texlive-science biber
-          pdflatex --version
+      - name: Cache TinyTeX
+        # ddocs installs TinyTeX (one consistent TeX Live release) on first use; cache it between runs.
+        uses: actions/cache@v4
+        with:
+          path: ~/.TinyTeX
+          key: tinytex-${{ runner.os }}-v1
 
       - name: tests
         # A token with read access to the private Deltares/LatexInstallation repo is
