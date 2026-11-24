@@ -1103,7 +1103,8 @@ compiles:</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pdflatex docs/manual.tex</span><span class="w">          </span><span class="c1"># bare pdflatex; packages are already present</span>
 </code></pre></div>
 <p>The <code>auto</code> backend installs <strong>TinyTeX</strong>, so every TeX package (e.g. <code>caption</code>, <code>tocbasic</code>, <code>lipsum.sty</code>) comes from
-one consistent TeX Live release and works the same on any runner image, including <code>ubuntu-latest</code>.</p>
+one consistent TeX Live release and works the same on any runner image. The project's own CI builds the Deltares
+templates this way on <code>ubuntu-latest</code> (Ubuntu 26.04).</p>
 <h3 id="avoid-re-downloading-every-run">Avoid re-downloading every run<a class="headerlink" href="#avoid-re-downloading-every-run" title="Permanent link">&para;</a></h3>
 <p>The bytes only need to land once. Cache the TeX install between runs:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>

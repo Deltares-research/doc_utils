@@ -1084,7 +1084,8 @@
 <h1 id="ddocslatexpdflatex_utils"><code>ddocs.latex.pdflatex_utils</code><a class="headerlink" href="#ddocslatexpdflatex_utils" title="Permanent link">&para;</a></h1>
 <p>Locate, verify, and install pdfLaTeX. Confirms that <code>pdflatex</code> (and <code>biber</code>) are
 callable and, when missing, installs the root-free <strong>TinyTeX</strong> installer (the default on every platform) or,
-opt-in, TeX Live via <strong>apt</strong> (Debian/Ubuntu with <code>sudo</code>), selected with <code>--backend auto|tinytex|apt</code>. TinyTeX's <code>bin</code> directory is prepended to <code>PATH</code> and the
+opt-in, TeX Live via <strong>apt</strong> (Debian/Ubuntu with <code>sudo</code>), selected with <code>--backend auto|tinytex|apt</code>.
+TinyTeX's <code>bin</code> directory is prepended to <code>PATH</code> and the
 <code>tlmgr</code> package collections that mirror the <code>texlive-*</code> packages are installed. Also
 provides <code>build_pdf</code>, which compiles a <code>.tex</code> file and installs packages reported
 missing in the build log on demand, plus the <code>pdflatex check</code> / <code>pdflatex download</code>
