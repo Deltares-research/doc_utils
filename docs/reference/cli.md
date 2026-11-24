@@ -1,8 +1,8 @@
 # `ddocs.cli`
 
 Command-line interface for `ddocs`. Builds the argument parser, wires up the
-`markdown-to-latex`, `get-tex-template`, `clean`, and `check-pandoc` subcommands,
-and dispatches to their handlers. Installed as the `ddocs` console script.
+`markdown-to-latex`, `get-tex-template`, `clean`, `check-pandoc`, and `pdflatex`
+(`check` / `download`) subcommands, and dispatches to their handlers. Installed as the `ddocs` console script.
 
 ::: ddocs.cli
     options:

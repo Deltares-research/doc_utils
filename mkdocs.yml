@@ -49,7 +49,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Installation: installation.md
   - Guides:
+      - Converting Markdown to LaTeX: guides/converting-markdown-to-latex.md
       - RepoCloner & authentication: guides/repo-cloner-authentication.md
       - Installing pdfLaTeX: guides/installing-pdflatex.md
   - API Reference:
