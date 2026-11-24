@@ -961,9 +961,8 @@
         <p>Build the <code>ddocs</code> argument parser with all subcommands.</p>
 <p>Registers the <code>markdown-to-latex</code>, <code>get-tex-template</code>, <code>clean</code>,
 <code>check-pandoc</code> and <code>pdflatex</code> (<code>check</code> / <code>download</code>) subcommands.
-<code>get-tex-template</code> accepts <code>--output-dir</code> plus
-the authentication options <code>--token</code>, <code>--username</code>, <code>--password</code> and
-<code>--no-ssh</code>.</p>
+<code>get-tex-template</code> accepts <code>--output-dir</code> plus the authentication options
+<code>--token</code>, <code>--username</code>, <code>--password</code> and <code>--no-ssh</code>.</p>
 
 
     <p><span class="doc-section-title">Returns:</span></p>
@@ -1214,15 +1213,13 @@ the authentication options <code>--token</code>, <code>--username</code>, <code>
 <span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Build the ``ddocs`` argument parser with all subcommands.</span>
 
 <span class="sd">    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean``,</span>
 <span class="sd">    ``check-pandoc`` and ``pdflatex`` (``check`` / ``download``) subcommands.</span>
-<span class="sd">    ``get-tex-template`` accepts ``--output-dir`` plus</span>
-<span class="sd">    the authentication options ``--token``, ``--username``, ``--password`` and</span>
-<span class="sd">    ``--no-ssh``.</span>
+<span class="sd">    ``get-tex-template`` accepts ``--output-dir`` plus the authentication options</span>
+<span class="sd">    ``--token``, ``--username``, ``--password`` and ``--no-ssh``.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The configured ``argparse.ArgumentParser``.</span>
@@ -1488,7 +1485,8 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/cli.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">230</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
+<span class="normal">230</span>
 <span class="normal">231</span>
 <span class="normal">232</span>
 <span class="normal">233</span>
@@ -1549,8 +1547,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Handles <code>get-tex-template</code
 <span class="normal">288</span>
 <span class="normal">289</span>
 <span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Parse the command line and dispatch to the selected subcommand handler.</span>
 
 <span class="sd">    Builds the parser via :func:`create_parser`, parses ``sys.argv``, and calls the</span>

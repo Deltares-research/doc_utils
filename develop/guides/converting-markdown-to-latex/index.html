@@ -1088,6 +1088,10 @@ directory.</p>
 <blockquote>
 <p><strong>The default pattern is not recursive.</strong> <code>*.md</code> matches only the top level of
 <code>--input</code>. To walk subdirectories, pass a recursive glob: <code>--pattern "**/*.md"</code>.</p>
+<p><strong>Recursive matches are flattened.</strong> Every output file is written directly into <code>--output</code> as
+<code>&lt;name&gt;.tex</code>, so the subdirectory structure is not preserved. If two files share a name (for example
+<code>a/intro.md</code> and <code>b/intro.md</code>), the second silently overwrites the first and the run still reports
+success. Keep file names unique when converting recursively.</p>
 </blockquote>
 <h2 id="fragments-vs-standalone-documents">Fragments vs. standalone documents<a class="headerlink" href="#fragments-vs-standalone-documents" title="Permanent link">&para;</a></h2>
 <p>This is the most important choice, set by <code>--standalone</code>:</p>
@@ -1175,7 +1179,7 @@ in scripts and CI:</p>
 <tbody>
 <tr>
 <td><code>0</code></td>
-<td>Every matched file converted successfully.</td>
+<td>Every matched file converted successfully. This includes the case where the pattern matched <strong>no</strong> files: a "No markdown files found" message is printed, but the exit code is still <code>0</code>.</td>
 </tr>
 <tr>
 <td><code>1</code></td>
