@@ -66,20 +66,36 @@ ddocs clean --directory ./docs/latex --recursive
 
 ## Development
 
-Install the package with its development dependencies:
+Clone the repository and install it with the `dev` (tests, linting) and `docs` (MkDocs) dependency
+groups. These are [PEP 735](https://peps.python.org/pep-0735/) dependency groups, not extras, so
+`pip install ".[dev]"` does not work:
 
 ```bash
-pip install -e ".[dev]"
+uv sync --group dev --group docs
+# or, with pip >= 25.1
+pip install -e . --group dev --group docs
 ```
 
 > The project pins its environment outside the repo and uses `uv`. See `CLAUDE.md` for the
 > exact `UV_PROJECT_ENVIRONMENT` setup, test commands, and code-style conventions.
+
+### Building the documentation
+
+```bash
+mkdocs serve            # live-reload preview at http://127.0.0.1:8000
+mkdocs build --strict   # one-shot build; fails on broken links/refs
+```
+
+The site is versioned with `mike` and published to GitHub Pages by the **Deploy MkDocs** workflow.
 
 ### Running the tests
 
 ```bash
 pytest
 ```
+
+Tests are tagged with markers (`unit`, `integration`, `e2e`, `slow`, `long`, …); list them with
+`pytest --markers` and select with `-m`.
 
 The suite includes **live** tests (marked `integration` / `e2e`) that clone the private
 `Deltares/LatexInstallation` repository and build a PDF. They require network access and

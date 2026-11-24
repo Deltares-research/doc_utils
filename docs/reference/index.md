@@ -1,7 +1,7 @@
 # API Reference
 
 The `ddocs` package provides utilities for converting Markdown documentation to
-LaTeX, retrieving Deltares LaTeX templates, and managing the Pandoc toolchain.
+LaTeX, retrieving Deltares LaTeX templates, and managing the Pandoc and pdfLaTeX toolchains.
 Its public command-line entry point is `ddocs` (see [`cli`](cli.md)).
 
 ## Modules
@@ -12,7 +12,7 @@ Its public command-line entry point is `ddocs` (see [`cli`](cli.md)).
 | [`ddocs.markdown`](markdown.md) | Markdown-to-LaTeX conversion and Deltares post-processing. |
 | [`ddocs.latex.clean`](clean.md) | Remove LaTeX build artifacts (the `clean` command). |
 | [`ddocs.markdown.pandoc_utils`](pandoc_utils.md) | Locate and verify the bundled Pandoc executable. |
-| [`ddocs.latex.pdflatex_utils`](pdflatex_utils.md) | Locate, verify, and install pdfLaTeX via TinyTeX. |
+| [`ddocs.latex.pdflatex_utils`](pdflatex_utils.md) | Locate, verify, and install pdfLaTeX (apt or TinyTeX), and build PDFs. |
 | [`ddocs.templates.repo_cloner`](repo_cloner.md) | Clone the Deltares LaTeX template repository and copy files out of it. |
 
 ## Package

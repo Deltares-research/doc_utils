@@ -1,10 +1,13 @@
 # `ddocs.latex.pdflatex_utils`
 
-Locate, verify, and install pdfLaTeX using **TinyTeX** as the backend. Confirms that
-`pdflatex` (and `biber`) are callable, downloads and runs the root-free TinyTeX
-installer when missing, prepends its `bin` directory to `PATH`, and installs the
-`tlmgr` package collections that mirror the `texlive-*` packages. Also provides a
-MiKTeX-style helper that installs packages reported missing in a LaTeX build log.
+Locate, verify, and install pdfLaTeX. Confirms that `pdflatex` (and `biber`) are
+callable and, when missing, installs TeX Live via **apt** (Debian/Ubuntu with `sudo`)
+or the root-free **TinyTeX** installer (everywhere else), selected with
+`--backend auto|apt|tinytex`. TinyTeX's `bin` directory is prepended to `PATH` and the
+`tlmgr` package collections that mirror the `texlive-*` packages are installed. Also
+provides `build_pdf`, which compiles a `.tex` file and installs packages reported
+missing in the build log on demand, plus the `pdflatex check` / `pdflatex download`
+CLI handlers. See [Installing pdfLaTeX](../guides/installing-pdflatex.md).
 
 ::: ddocs.latex.pdflatex_utils
     options:

@@ -12,8 +12,9 @@ from ddocs.templates import clone_repo_cli
 def create_parser() -> argparse.ArgumentParser:
     """Build the ``ddocs`` argument parser with all subcommands.
 
-    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean`` and
-    ``check-pandoc`` subcommands. ``get-tex-template`` accepts ``--output-dir`` plus
+    Registers the ``markdown-to-latex``, ``get-tex-template``, ``clean``,
+    ``check-pandoc`` and ``pdflatex`` (``check`` / ``download``) subcommands.
+    ``get-tex-template`` accepts ``--output-dir`` plus
     the authentication options ``--token``, ``--username``, ``--password`` and
     ``--no-ssh``.
 
