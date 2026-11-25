@@ -69,6 +69,9 @@ Examples:
   # Clean LaTeX build files
   ddocs clean --directory ./docs/latex
 
+  # ... and also remove the template files downloaded by get-tex-template
+  ddocs clean --directory ./docs/latex --templates
+
   # Check that Pandoc is installed (download it if missing)
   ddocs check-pandoc
 
@@ -175,6 +178,13 @@ Examples:
         "-r",
         action='store_true',
         help='Clean recursively in subdirectories'
+    )
+    clean.add_argument(
+        '--templates',
+        action='store_true',
+        help='Also remove the template files downloaded by get-tex-template '
+             '(deltares_*.cls/.sty/.bst/.ist and the template pictures in pictures/; files you added to '
+             'pictures/ are kept), looked up in the given directory only, not in subdirectories'
     )
 
     # sub-command: check-pandoc
