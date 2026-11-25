@@ -66,7 +66,7 @@ class TestTemplatesOption:
         """Test that templates=True removes template files and the template pictures (and the emptied folder)."""
         removed = clean_latex_build_files(workspace, pattern="*", templates=True)
 
-        assert removed == len(EXTRA_ARTIFACTS) + len(TEMPLATE_FILES) + 2, f"unexpected removed count: {removed}"
+        assert removed == len(EXTRA_ARTIFACTS) + len(TEMPLATE_FILES) + 3, f"unexpected removed count: {removed}"
         for name in TEMPLATE_FILES:
             assert not (workspace / name).exists(), f"{name} should have been removed"
         assert not (workspace / "pictures").exists(), "pictures/ should have been removed"
@@ -106,6 +106,31 @@ class TestTemplatesOption:
         assert (workspace / "pictures" / "my_diagram.png").exists(), "user image must be kept"
         assert (workspace / "pictures" / "mine" / "b.png").exists(), "user subfolder must be kept"
         assert "Kept: pictures/ (2 item(s)" in capsys.readouterr().out, "the kept items should be reported"
+
+    @pytest.mark.integration
+    def test_empty_pictures_dir_is_removed_and_counted(self, tmp_path, capsys):
+        """Test that removing an already-empty pictures/ folder is counted and reported in the summary.
+
+        Test scenario:
+            ``pictures/`` is empty; the folder is deleted, counted as one item, and the CLI does not claim that
+            nothing was cleaned.
+        """
+        (tmp_path / "pictures").mkdir()
+        args = argparse.Namespace(directory=tmp_path, recursive=False, templates=True)
+
+        assert clean_latex_cli(args) == 0, "clean should succeed"
+        out = capsys.readouterr().out
+        assert not (tmp_path / "pictures").exists(), "the empty folder should be removed"
+        assert "Cleaned 1 item(s)" in out, f"summary should count the folder, got: {out}"
+        assert "No LaTeX build files found" not in out, "summary must not claim nothing was cleaned"
+
+    @pytest.mark.unit
+    def test_extension_matching_is_case_insensitive(self, tmp_path):
+        """Test that upper-case artifact names (``DOC.AUX``) are cleaned like lower-case ones."""
+        (tmp_path / "DOC.AUX").write_text("x")
+
+        assert clean_latex_build_files(tmp_path, pattern="*") == 1, "DOC.AUX should be removed"
+        assert not (tmp_path / "DOC.AUX").exists(), "DOC.AUX should be gone"
 
     @pytest.mark.unit
     def test_templates_without_pictures_dir_is_fine(self, tmp_path):
