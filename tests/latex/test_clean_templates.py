@@ -42,7 +42,7 @@ class TestExtendedArtifacts:
         Test scenario:
             Non-recursive clean of a directory holding every newly supported artifact.
         """
-        removed = clean_latex_build_files(workspace, pattern="*")
+        removed = clean_latex_build_files(workspace, recursive=False)
 
         assert removed == len(EXTRA_ARTIFACTS), f"expected {len(EXTRA_ARTIFACTS)} removed, got {removed}"
         for name in EXTRA_ARTIFACTS:
@@ -64,7 +64,7 @@ class TestTemplatesOption:
     @pytest.mark.unit
     def test_templates_removed_when_requested(self, workspace):
         """Test that templates=True removes template files and the template pictures (and the emptied folder)."""
-        removed = clean_latex_build_files(workspace, pattern="*", templates=True)
+        removed = clean_latex_build_files(workspace, templates=True, recursive=False)
 
         assert removed == len(EXTRA_ARTIFACTS) + len(TEMPLATE_FILES) + 3, f"unexpected removed count: {removed}"
         for name in TEMPLATE_FILES:
@@ -80,7 +80,7 @@ class TestTemplatesOption:
         for name in ["mystyle.sty", "custom.cls", "refs.bst", "deltares_report.cls"]:
             (tmp_path / name).write_text("x")
 
-        clean_latex_build_files(tmp_path, pattern="*", templates=True)
+        clean_latex_build_files(tmp_path, templates=True, recursive=False)
 
         assert (tmp_path / "mystyle.sty").exists(), "non-template .sty must be kept"
         assert (tmp_path / "custom.cls").exists(), "non-template .cls must be kept"
@@ -99,7 +99,7 @@ class TestTemplatesOption:
         (workspace / "pictures" / "mine").mkdir()
         (workspace / "pictures" / "mine" / "b.png").write_text("x")
 
-        clean_latex_build_files(workspace, pattern="*", templates=True)
+        clean_latex_build_files(workspace, templates=True, recursive=False)
 
         assert not (workspace / "pictures" / "deltares_logo.pdf").exists(), "template picture should be removed"
         assert not (workspace / "pictures" / "report_cover.svg").exists(), "template picture should be removed"
@@ -129,7 +129,7 @@ class TestTemplatesOption:
         """Test that upper-case artifact names (``DOC.AUX``) are cleaned like lower-case ones."""
         (tmp_path / "DOC.AUX").write_text("x")
 
-        assert clean_latex_build_files(tmp_path, pattern="*") == 1, "DOC.AUX should be removed"
+        assert clean_latex_build_files(tmp_path, recursive=False) == 1, "DOC.AUX should be removed"
         assert not (tmp_path / "DOC.AUX").exists(), "DOC.AUX should be gone"
 
     @pytest.mark.unit
@@ -137,7 +137,7 @@ class TestTemplatesOption:
         """Test that a missing pictures/ directory is not an error."""
         (tmp_path / "deltares_report.cls").write_text("x")
 
-        assert clean_latex_build_files(tmp_path, pattern="*", templates=True) == 1, "only the .cls is removed"
+        assert clean_latex_build_files(tmp_path, templates=True, recursive=False) == 1, "only the .cls is removed"
 
     @pytest.mark.unit
     def test_template_files_in_subdirectories_are_kept_when_recursive(self, tmp_path):

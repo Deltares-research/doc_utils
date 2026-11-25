@@ -122,6 +122,54 @@ class TestRemoveHelpers:
         assert not pictures.exists(), "an emptied pictures/ folder should be removed"
 
 
+class TestDeprecatedPattern:
+    @pytest.mark.unit
+    def test_pattern_emits_deprecation_warning(self, tmp_path):
+        """Test that passing the deprecated ``pattern`` argument warns."""
+        with pytest.warns(DeprecationWarning, match="'pattern' argument"):
+            clean_latex_build_files(tmp_path, pattern="*")
+
+    @pytest.mark.unit
+    @pytest.mark.parametrize("pattern, nested_removed", [("**/*", True), ("*", False)])
+    def test_pattern_keeps_its_old_meaning(self, tmp_path, pattern, nested_removed):
+        """Test that the legacy values still map to recursive (``"**/*"``) and non-recursive (``"*"``).
+
+        Args:
+            tmp_path: Pytest temporary directory.
+            pattern: The deprecated pattern value.
+            nested_removed: Whether the nested artifact should be removed.
+        """
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "sub" / "doc.aux").write_text("x")
+
+        with pytest.warns(DeprecationWarning):
+            clean_latex_build_files(tmp_path, pattern)
+
+        assert (not (tmp_path / "sub" / "doc.aux").exists()) is nested_removed, f"pattern={pattern!r}"
+
+    @pytest.mark.unit
+    def test_recursive_takes_precedence_over_pattern(self, tmp_path):
+        """Test that an explicit ``recursive`` wins when the deprecated ``pattern`` is also given."""
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "sub" / "doc.aux").write_text("x")
+
+        with pytest.warns(DeprecationWarning):
+            clean_latex_build_files(tmp_path, pattern="**/*", recursive=False)
+
+        assert (tmp_path / "sub" / "doc.aux").exists(), "recursive=False must win over pattern"
+
+    @pytest.mark.unit
+    def test_recursive_defaults_to_true_without_warning(self, tmp_path, recwarn):
+        """Test that the default is recursive and does not warn."""
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "sub" / "doc.aux").write_text("x")
+
+        clean_latex_build_files(tmp_path)
+
+        assert not (tmp_path / "sub" / "doc.aux").exists(), "default should clean recursively"
+        assert not [w for w in recwarn if issubclass(w.category, DeprecationWarning)], "default must not warn"
+
+
 class TestCleanLatexBuildFilesErrors:
     @pytest.mark.unit
     def test_missing_directory_returns_zero(self, tmp_path, capsys):
