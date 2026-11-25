@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html), and the format is maintained by [Commitizen](https://commitizen-tools.github.io/commitizen/) using [Conventional Commits](https://www.conventionalcommits.org/).
 
+## 0.2.4 (2026-11-25)
+
+### Fix
+
+- **latex**: clean all pdflatex artifacts, add --templates, and replace pattern with recursive (#25)
+
 ## 0.2.3 (2026-11-24)
 
 ### Fix
