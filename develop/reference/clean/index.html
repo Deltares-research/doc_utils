@@ -962,7 +962,7 @@ downloads next to the document.</p>
 
 
 <a href="#ddocs.latex.clean.clean_latex_build_files" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">clean_latex_build_files</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">clean_latex_build_files</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -1003,24 +1003,6 @@ case-insensitively on every platform, so <code>DOC.AUX</code> is treated like <c
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>pattern</code>
-            </td>
-            <td>
-                  <code><span title="str">str</span> | None</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Deprecated, use <code>recursive</code>. <code>"**/*"</code> meant recursive and any other value meant
-non-recursive. Passing it emits a :class:<code>DeprecationWarning</code>; <code>recursive</code> takes precedence when
-both are given.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
                 <code>templates</code>
             </td>
             <td>
@@ -1044,16 +1026,15 @@ the directory is removed only when it ends up empty. Defaults to False.</p>
                 <code>recursive</code>
             </td>
             <td>
-                  <code><span title="bool">bool</span> | None</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Clean subdirectories too (True) or only <code>directory</code> itself (False). Defaults to True, which
-is also what applies when neither <code>recursive</code> nor <code>pattern</code> is given.</p>
+                <p>Clean subdirectories too (True) or only <code>directory</code> itself (False). Defaults to True.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                  <code>True</code>
             </td>
           </tr>
       </tbody>
@@ -1076,29 +1057,6 @@ is also what applies when neither <code>recursive</code> nor <code>pattern</code
             <td>
               <div class="doc-md-description">
                 <p>Number of items removed: files, plus one for each emptied <code>pictures/</code> folder that was deleted.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<p><span class="doc-section-title">Warns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code>DeprecationWarning</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>If the deprecated <code>pattern</code> argument is passed.</p>
               </div>
             </td>
           </tr>
@@ -1162,7 +1120,8 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/clean.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">108</span>
+<span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
@@ -1256,33 +1215,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 <span class="normal">200</span>
 <span class="normal">201</span>
 <span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_build_files</span><span class="p">(</span>
-    <span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">templates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_build_files</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">templates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Clean LaTeX build artifacts (and optionally downloaded templates) from a directory.</span>
 
 <span class="sd">    Removes the files generated by pdflatex, bibtex, makeindex, minitoc, nomencl and</span>
@@ -1292,22 +1225,15 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 
 <span class="sd">    Args:</span>
 <span class="sd">        directory: Directory to clean</span>
-<span class="sd">        pattern: Deprecated, use `recursive`. ``"**/*"`` meant recursive and any other value meant</span>
-<span class="sd">            non-recursive. Passing it emits a :class:`DeprecationWarning`; `recursive` takes precedence when</span>
-<span class="sd">            both are given.</span>
 <span class="sd">        templates: When True, also remove the files ``ddocs get-tex-template`` downloads:</span>
 <span class="sd">            ``deltares_*.cls/.sty/.bst/.ist`` and the template pictures in ``pictures/``, both looked up</span>
 <span class="sd">            directly in `directory` only (never in subdirectories, even for a recursive clean). Only the</span>
 <span class="sd">            known template pictures are removed from ``pictures/``; any other file you put there is kept, and</span>
 <span class="sd">            the directory is removed only when it ends up empty. Defaults to False.</span>
-<span class="sd">        recursive: Clean subdirectories too (True) or only `directory` itself (False). Defaults to True, which</span>
-<span class="sd">            is also what applies when neither `recursive` nor `pattern` is given.</span>
+<span class="sd">        recursive: Clean subdirectories too (True) or only `directory` itself (False). Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Number of items removed: files, plus one for each emptied ``pictures/`` folder that was deleted.</span>
-
-<span class="sd">    Warns:</span>
-<span class="sd">        DeprecationWarning: If the deprecated `pattern` argument is passed.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        - Remove the build artifacts next to a document:</span>
@@ -1372,14 +1298,6 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">directory</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Path is not a directory: </span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">"The 'pattern' argument of clean_latex_build_files is deprecated; use 'recursive' instead."</span><span class="p">,</span>
-                <span class="ne">DeprecationWarning</span><span class="p">,</span>
-                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">recursive</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">recursive</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pattern</span> <span class="o">==</span> <span class="s2">"**/*"</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"**/*"</span> <span class="k">if</span> <span class="n">recursive</span> <span class="k">else</span> <span class="s2">"*"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">_is_build_file</span><span class="p">(</span><span class="n">p</span><span class="p">)):</span>
             <span class="n">removed_count</span> <span class="o">+=</span> <span class="n">_remove_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
@@ -1503,7 +1421,28 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/ddocs/latex/clean.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
 <span class="normal">230</span>
@@ -1541,28 +1480,7 @@ ddocs.templates.repo_cloner.clone_repo_cli: Downloads the template files removed
 <span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_latex_cli</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""CLI interface for cleaning LaTeX build files.</span>
 
 <span class="sd">    Args:</span>
