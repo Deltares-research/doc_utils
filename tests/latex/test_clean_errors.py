@@ -122,52 +122,43 @@ class TestRemoveHelpers:
         assert not pictures.exists(), "an emptied pictures/ folder should be removed"
 
 
-class TestDeprecatedPattern:
+class TestSignature:
     @pytest.mark.unit
-    def test_pattern_emits_deprecation_warning(self, tmp_path):
-        """Test that passing the deprecated ``pattern`` argument warns."""
-        with pytest.warns(DeprecationWarning, match="'pattern' argument"):
+    def test_pattern_argument_was_removed(self, tmp_path):
+        """Test that the old ``pattern`` argument is rejected instead of being silently ignored."""
+        with pytest.raises(TypeError, match="pattern"):
             clean_latex_build_files(tmp_path, pattern="*")
 
     @pytest.mark.unit
-    @pytest.mark.parametrize("pattern, nested_removed", [("**/*", True), ("*", False)])
-    def test_pattern_keeps_its_old_meaning(self, tmp_path, pattern, nested_removed):
-        """Test that the legacy values still map to recursive (``"**/*"``) and non-recursive (``"*"``).
+    def test_second_positional_argument_is_rejected(self, tmp_path):
+        """Test that an old-style positional call like ``clean_latex_build_files(dir, "*")`` fails loudly.
 
-        Args:
-            tmp_path: Pytest temporary directory.
-            pattern: The deprecated pattern value.
-            nested_removed: Whether the nested artifact should be removed.
+        Test scenario:
+            ``templates`` and ``recursive`` are keyword-only, so a leftover positional pattern string cannot be
+            mistaken for a flag.
         """
-        (tmp_path / "sub").mkdir()
-        (tmp_path / "sub" / "doc.aux").write_text("x")
-
-        with pytest.warns(DeprecationWarning):
-            clean_latex_build_files(tmp_path, pattern)
-
-        assert (not (tmp_path / "sub" / "doc.aux").exists()) is nested_removed, f"pattern={pattern!r}"
+        with pytest.raises(TypeError):
+            clean_latex_build_files(tmp_path, "*")
 
     @pytest.mark.unit
-    def test_recursive_takes_precedence_over_pattern(self, tmp_path):
-        """Test that an explicit ``recursive`` wins when the deprecated ``pattern`` is also given."""
-        (tmp_path / "sub").mkdir()
-        (tmp_path / "sub" / "doc.aux").write_text("x")
-
-        with pytest.warns(DeprecationWarning):
-            clean_latex_build_files(tmp_path, pattern="**/*", recursive=False)
-
-        assert (tmp_path / "sub" / "doc.aux").exists(), "recursive=False must win over pattern"
-
-    @pytest.mark.unit
-    def test_recursive_defaults_to_true_without_warning(self, tmp_path, recwarn):
-        """Test that the default is recursive and does not warn."""
+    def test_recursive_defaults_to_true(self, tmp_path):
+        """Test that the default is recursive."""
         (tmp_path / "sub").mkdir()
         (tmp_path / "sub" / "doc.aux").write_text("x")
 
         clean_latex_build_files(tmp_path)
 
         assert not (tmp_path / "sub" / "doc.aux").exists(), "default should clean recursively"
-        assert not [w for w in recwarn if issubclass(w.category, DeprecationWarning)], "default must not warn"
+
+    @pytest.mark.unit
+    def test_recursive_false_skips_subdirectories(self, tmp_path):
+        """Test that recursive=False leaves nested artifacts alone."""
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "sub" / "doc.aux").write_text("x")
+
+        clean_latex_build_files(tmp_path, recursive=False)
+
+        assert (tmp_path / "sub" / "doc.aux").exists(), "recursive=False must skip subdirectories"
 
 
 class TestCleanLatexBuildFilesErrors:
