@@ -35,7 +35,7 @@ jobs:
 
       - name: Cache TinyTeX
         # ddocs installs TinyTeX (one consistent TeX Live release) on first use; cache it between runs.
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.TinyTeX
           key: tinytex-${{ runner.os }}-v1
